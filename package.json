@@ -38,7 +38,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.1.6",
-    "@angular/cli": "^19.1.6",
+    "@angular/cli": "^19.2.0",
     "@angular/compiler-cli": "^19.1.5",
     "@cloudflare/workers-types": "^4.20250204.0",
     "@types/node": "^22.13.1",
