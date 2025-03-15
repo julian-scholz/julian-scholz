@@ -14,7 +14,8 @@
          class="relative top-3 ml-(--shelf-margin-left) mr-(--shelf-margin-right) flex items-end justify-center gap-(--shelf-book-gap) *:shrink-0">
       @for (bookDetailEntry of bookDetails(); track bookDetailEntry; let i = $index) {
         <app-book-recommendations-book [bookIndex]="i" [bookWidth]="bookWidth()"
-                                       [bookDetails]="bookDetailEntry"></app-book-recommendations-book>
+                                       [bookDetails]="bookDetailEntry"
+        />
       }
     </div>
   </div>

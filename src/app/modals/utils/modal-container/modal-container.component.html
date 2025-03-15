@@ -18,14 +18,13 @@
             <div class="modal-body mt-2">
               @switch (shownTemplate) {
                 @case (templateModel.INSPIRATIONS) {
-                  <ng-container [ngTemplateOutlet]="inspirations"></ng-container>
+                  <ng-container [ngTemplateOutlet]="inspirations"/>
                 }
                 @case (templateModel.LEGAL_NOTICE) {
-                  <ng-container [ngTemplateOutlet]="legalNotice"></ng-container>
+                  <ng-container [ngTemplateOutlet]="legalNotice"/>
                 }
                 @case (templateModel.PRIVACY_POLICY) {
-                  <ng-container
-                    [ngTemplateOutlet]="privacyPolicy"></ng-container>
+                  <ng-container [ngTemplateOutlet]="privacyPolicy"/>
                 }
               }
             </div>

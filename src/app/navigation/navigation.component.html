@@ -28,8 +28,8 @@
             <app-navigation-entry
               [navigationEntry]="navigationEntry"
               [navigationEntryIndex]="i"
-              [navigationLastEntry]="isLast">
-            </app-navigation-entry>
+              [navigationLastEntry]="isLast"
+            />
           </li>
         }
       </ul>
@@ -38,7 +38,7 @@
                   before:h-12 before:w-14 before:origin-[100%_50%] before:transition-[scale]
                   before:duration-200 before:[scale:calc(1-var(--header-nav-expanded))_1] dark:bg-dark-void-light"
       >
-        <app-theme-mode-toggle></app-theme-mode-toggle>
+        <app-theme-mode-toggle/>
       </div>
     </div>
   </nav>

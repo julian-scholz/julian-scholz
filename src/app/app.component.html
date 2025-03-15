@@ -1,25 +1,19 @@
-<app-header></app-header>
+<app-header/>
 
-<app-navigation></app-navigation>
+<app-navigation/>
 
 <div class="py-5"></div>
 
 <main>
-  <app-about-me></app-about-me>
+  <app-about-me/>
 
-  <app-book-recommendations
-    [id]="navigationEntries.bookRecommendations.id"
-  ></app-book-recommendations>
+  <app-book-recommendations [id]="navigationEntries.bookRecommendations.id"/>
 
-  <app-vita
-    [id]="navigationEntries.vita.id"
-  ></app-vita>
+  <app-vita [id]="navigationEntries.vita.id"/>
 
-  <app-favorites
-    [id]="navigationEntries.favorites.id"
-  ></app-favorites>
+  <app-favorites [id]="navigationEntries.favorites.id"/>
 </main>
 
-<app-back-to-top-button></app-back-to-top-button>
+<app-back-to-top-button/>
 
-<ng-container #modalContainer></ng-container>
+<ng-container #modalContainer/>
