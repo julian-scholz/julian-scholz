@@ -41,7 +41,7 @@
     "@angular/cli": "^19.2.8",
     "@angular/compiler-cli": "^19.2.7",
     "@cloudflare/workers-types": "^4.20250422.0",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.3",
     "angular-eslint": "^19.3.0",
     "eslint": "^9.25.1",
     "eslint-config-prettier": "^9.1.0",
