@@ -7,10 +7,11 @@ import {
   PLATFORM_ID,
   signal,
   viewChild,
+  DOCUMENT
 } from '@angular/core';
 import { BookRecommendationsShelfComponent } from './shelf/shelf.component';
 import { BookModel } from './book/models/book.model';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { debounceTime, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { gsap } from '../lib/misc/gsap/gsap';

@@ -9,13 +9,13 @@ import {
   PLATFORM_ID,
   signal,
   viewChild,
+  DOCUMENT
 } from '@angular/core';
 import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
 import {
-  DOCUMENT,
   isPlatformBrowser,
   NgOptimizedImage,
-  NgStyle,
+  NgStyle
 } from '@angular/common';
 import { FavoritesOverlayComponent } from './favorites-overlay/favorites-overlay.component';
 import { FooterComponent } from '../footer/footer.component';

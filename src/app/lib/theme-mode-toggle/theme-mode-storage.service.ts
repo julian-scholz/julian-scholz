@@ -1,6 +1,6 @@
-import { inject, Injectable, InjectionToken, PLATFORM_ID } from '@angular/core';
+import { inject, Injectable, InjectionToken, PLATFORM_ID, DOCUMENT } from '@angular/core';
 import { ThemeMode } from './utils/theme-mode-toggle.enum';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 
 export const THEME_MODE_STORAGE_SERVICE = new InjectionToken<ThemeModeStorage>(
   'THEME_MODE_STORAGE',

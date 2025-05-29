@@ -8,6 +8,7 @@ import {
   Renderer2,
   RendererStyleFlags2,
   viewChild,
+  DOCUMENT
 } from '@angular/core';
 import {
   faComputer,
@@ -20,10 +21,9 @@ import {
 import { VitaEntryModel } from './models/vita-entry.model';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
-  DOCUMENT,
   isPlatformBrowser,
   NgStyle,
-  UpperCasePipe,
+  UpperCasePipe
 } from '@angular/common';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { gsap } from '../lib/misc/gsap/gsap';

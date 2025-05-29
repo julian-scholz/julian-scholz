@@ -10,8 +10,9 @@ import {
   Renderer2,
   signal,
   viewChild,
+  DOCUMENT
 } from '@angular/core';
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HeaderNavComponent } from './nav/nav.component';
 import { ThemeMode } from '../lib/theme-mode-toggle/utils/theme-mode-toggle.enum';
 import { RingModel } from './models/ring.model';

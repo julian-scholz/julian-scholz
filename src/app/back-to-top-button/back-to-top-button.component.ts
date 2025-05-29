@@ -6,15 +6,15 @@ import {
   inject,
   PLATFORM_ID,
   signal,
+  DOCUMENT
 } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import {
-  DOCUMENT,
   isPlatformBrowser,
   NgStyle,
-  ViewportScroller,
+  ViewportScroller
 } from '@angular/common';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
