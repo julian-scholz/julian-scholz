@@ -3,9 +3,3 @@ name = "julian-scholz"
 pages_build_output_dir = "dist/julian-scholz/browser"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
-
-[vars]
-NODE_VERSION = "22.16.0"
-
-[env.production.vars]
-NODE_VERSION = "22.16.0"
