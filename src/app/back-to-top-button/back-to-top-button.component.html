@@ -1,19 +1,30 @@
 <div
   [ngStyle]="{'--back-to-top-button-right-offset-multiplier': isVisible() ? '1' : '-3'}"
-  class="fixed bottom-6 right-[calc(1.5rem*(var(--back-to-top-button-right-offset-multiplier)))] z-50 flex
-         size-[4.25rem] items-center justify-center transition-[right] duration-1000
-         2xl:bottom-20 2xl:right-[calc(5rem*(var(--back-to-top-button-right-offset-multiplier)))]"
+  class="
+    fixed
+    right-[calc(1.5rem*(var(--back-to-top-button-right-offset-multiplier)))]
+    bottom-6 z-50 flex size-[4.25rem] items-center justify-center
+    transition-[right] duration-1000
+    2xl:right-[calc(5rem*(var(--back-to-top-button-right-offset-multiplier)))]
+    2xl:bottom-20
+  "
 >
   <svg class="size-full" viewBox="0 0 100 100">
     <circle
-      class="fill-dark-void stroke-transparent dark:fill-dark-void-light"
+      class="
+        fill-dark-void stroke-transparent
+        dark:fill-dark-void-light
+      "
       stroke-width="6"
       cx="50"
       cy="50"
       [attr.r]="radiusOuterCircle"
     ></circle>
     <circle
-      class="origin-[50%_50%] -rotate-90 fill-transparent stroke-vanilla-light transition-[stroke-dashoffset] duration-500 ease-out"
+      class="
+        origin-[50%_50%] -rotate-90 fill-transparent stroke-vanilla-light
+        transition-[stroke-dashoffset] duration-500 ease-out
+      "
       stroke-width="4"
       stroke-linecap="round"
       cx="50"
@@ -24,7 +35,10 @@
     ></circle>
   </svg>
   <button
-    class="absolute flex size-12 items-center justify-center rounded-full bg-transparent"
+    class="
+      absolute flex size-12 items-center justify-center rounded-full
+      bg-transparent
+    "
     (click)="navigateToTop()" aria-label="Zurück zum Seitenanfang">
     <fa-icon [icon]="faCaretUp" size="2xl" class="text-vanilla"></fa-icon>
   </button>

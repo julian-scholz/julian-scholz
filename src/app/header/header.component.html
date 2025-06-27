@@ -1,18 +1,34 @@
 <header>
   <h1 class="hidden">Willkommen auf meiner Website!</h1>
   <div
-    class="flex min-h-svh select-none flex-wrap content-center text-[clamp(2rem,6vw+5rem,12rem)]"
+    class="
+      flex min-h-svh flex-wrap content-center text-[clamp(2rem,6vw+5rem,12rem)]
+      select-none
+    "
     [style.font-weight]="fontWeight">
-    <span class="ml-2 sm:ml-[10vw] lg:ml-[15vw]">{{ firstLine }}</span>
-    <app-header-nav class="sticky -top-px z-40 w-full sm:z-auto"/>
-    <span class="relative ml-auto mr-2 inline-block text-transparent sm:mr-[10vw]">
+    <span class="
+      ml-2
+      sm:ml-[10vw]
+      lg:ml-[15vw]
+    ">{{ firstLine }}</span>
+    <app-header-nav class="
+      sticky -top-px z-40 w-full
+      sm:z-auto
+    "/>
+    <span class="
+      relative mr-2 ml-auto inline-block text-transparent
+      sm:mr-[10vw]
+    ">
       <span>{{ secondLine }}</span>
       <canvas #canvas
               [ngStyle]="{
                 '--header-second-line-top': showCanvas() ? '0' : '200%'
               }"
-              class="pointer-events-none absolute inset-0 top-(--header-second-line-top) size-full
-                     brightness-100 transition-[top] duration-1000"
+              class="
+                pointer-events-none absolute inset-0
+                top-(--header-second-line-top) size-full brightness-100
+                transition-[top] duration-1000
+              "
               aria-hidden="true"></canvas>
   </span>
   </div>

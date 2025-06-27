@@ -1,17 +1,27 @@
-<div class="relative mx-auto my-5 w-fit border-b-[0.75rem] border-solid
-            border-b-dark-void-dark bg-transparent after:absolute
-
-            after:inset-x-8 after:-bottom-3 after:h-2.5 after:bg-transparent after:shadow-[0_0_1rem_0.125rem] after:shadow-dark-void
-            after:[transform:rotateX(-25deg)] dark:border-b-dark-void-light/60 dark:after:shadow-transparent">
-  <div class="after:relative after:block after:border-b-[1.5rem]
-              after:border-solid after:border-b-dark-void
-              after:bg-dark-void after:[clip-path:polygon(1.5rem_0,calc(100%-1.5rem)_0,100%_100%,0_100%)] dark:after:border-b-dark-void-light dark:after:bg-dark-void-light">
+<div class="
+  relative mx-auto my-5 w-fit border-b-[0.75rem] border-solid
+  border-b-dark-void-dark bg-transparent
+  after:absolute after:inset-x-8 after:-bottom-3 after:h-2.5
+  after:[transform:rotateX(-25deg)] after:bg-transparent
+  after:shadow-[0_0_1rem_0.125rem] after:shadow-dark-void
+  dark:border-b-dark-void-light/60 dark:after:shadow-transparent
+">
+  <div class="
+    after:relative after:block after:border-b-[1.5rem] after:border-solid
+    after:border-b-dark-void after:bg-dark-void
+    after:[clip-path:polygon(1.5rem_0,calc(100%-1.5rem)_0,100%_100%,0_100%)]
+    dark:after:border-b-dark-void-light dark:after:bg-dark-void-light
+  ">
     <div [ngStyle]="{
       '--shelf-book-gap': bookGap() + 'px',
       '--shelf-margin-left': shelfMarginLeft() + 'px',
       '--shelf-margin-right': shelfMarginRight() + 'px'
     }"
-         class="relative top-3 ml-(--shelf-margin-left) mr-(--shelf-margin-right) flex items-end justify-center gap-(--shelf-book-gap) *:shrink-0">
+         class="
+           relative top-3 mr-(--shelf-margin-right) ml-(--shelf-margin-left)
+           flex items-end justify-center gap-(--shelf-book-gap)
+           *:shrink-0
+         ">
       @for (bookDetailEntry of bookDetails(); track bookDetailEntry; let i = $index) {
         <app-book-recommendations-book [bookIndex]="i" [bookWidth]="bookWidth()"
                                        [bookDetails]="bookDetailEntry"

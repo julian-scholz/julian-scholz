@@ -90,6 +90,9 @@
 @utility bg-custom-light-dark {
   @apply bg-snow dark:bg-dark-void;
 }
+@utility bg-custom-light-dark-90 {
+  @apply bg-snow/90 dark:bg-dark-void/90;
+}
 @utility text-custom-light-dark {
   @apply text-dark-void dark:text-snow;
 }

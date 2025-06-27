@@ -4,26 +4,45 @@
   '--favorites-overlay-tag-list-item-py': '0.5rem',
   '--favorites-overlay-tag-list-item-line-height': '1.75rem'
 }"
-     class="h-full max-h-[calc(2*var(--favorites-overlay-py)+calc(calc(var(--favorites-overlay-tag-list-cols)-1)*var(--favorites-overlay-items-gap-y))+calc(var(--favorites-overlay-tag-list-cols)*calc(2*(var(--favorites-overlay-tag-list-item-py))+var(--favorites-overlay-tag-list-item-line-height))))]
-            cursor-pointer overflow-hidden
-            rounded-(--favorites-overlay-border-radius)
-            bg-dark-void/80
-            transition-[border-radius] duration-[3000ms] [--favorites-overlay-items-gap-y:0.25rem] [--favorites-overlay-py:0.75rem] [transform:translateZ(0)]
-            sm:[--favorites-overlay-items-gap-y:1rem] sm:[--favorites-overlay-py:1.5rem] dark:bg-dark-void-light/80"
+     class="
+       h-full
+       max-h-[calc(2*var(--favorites-overlay-py)+calc(calc(var(--favorites-overlay-tag-list-cols)-1)*var(--favorites-overlay-items-gap-y))+calc(var(--favorites-overlay-tag-list-cols)*calc(2*(var(--favorites-overlay-tag-list-item-py))+var(--favorites-overlay-tag-list-item-line-height))))]
+       cursor-pointer overflow-hidden
+       rounded-(--favorites-overlay-border-radius) bg-dark-void/80
+       transition-[border-radius] duration-[3000ms]
+       [transform:translateZ(0)]
+       [--favorites-overlay-items-gap-y:0.25rem]
+       [--favorites-overlay-py:0.75rem]
+       sm:[--favorites-overlay-items-gap-y:1rem]
+       sm:[--favorites-overlay-py:1.5rem]
+       dark:bg-dark-void-light/80
+     "
      (click)="processOverlayChanges(true)" (keyup)="processOverlayChanges(true)" tabindex="0">
   <div
-    class="relative flex h-full flex-col gap-x-0 gap-y-(--favorites-overlay-items-gap-y) px-0 py-(--favorites-overlay-py)">
+    class="
+      relative flex h-full flex-col gap-x-0
+      gap-y-(--favorites-overlay-items-gap-y) px-0 py-(--favorites-overlay-py)
+    ">
     @for (tagListEntry of tagList(); track tagListEntry; let i = $index) {
       <div
         [ngStyle]="{
           '--favorites-overlay-entry-direction': i % 2 ? 'reverse': 'normal',
           '--favorites-overlay-entry-duration': tagListEntry.duration
          }"
-        class="favorites-overlay-tag-list-item flex w-fit animate-[favoritesOverlayLoop_var(--favorites-overlay-entry-duration)_linear_var(--favorites-overlay-entry-direction)_infinite] xl:hover:[animation-play-state:paused]">
+        class="
+          favorites-overlay-tag-list-item flex w-fit
+          animate-[favoritesOverlayLoop_var(--favorites-overlay-entry-duration)_linear_var(--favorites-overlay-entry-direction)_infinite]
+          xl:hover:[animation-play-state:paused]
+        ">
         @for (_ of [0, 1]; track _) {
           @for (tagListTextEntry of tagListEntry.tags; track tagListTextEntry) {
-            <div class="mr-4 flex items-center gap-x-1 gap-y-0 rounded bg-dark-void/50 px-5
-                    py-(--favorites-overlay-tag-list-item-py) text-lg font-normal leading-(--favorites-overlay-tag-list-item-line-height) text-snow [transform:translateZ(0)]"
+            <div class="
+              mr-4 flex items-center gap-x-1 gap-y-0 rounded bg-dark-void/50
+              px-5 py-(--favorites-overlay-tag-list-item-py) text-lg
+              leading-(--favorites-overlay-tag-list-item-line-height)
+              font-normal text-snow
+              [transform:translateZ(0)]
+            "
             >
               <span class="text-vanilla">#</span>{{ tagListTextEntry }}
             </div>

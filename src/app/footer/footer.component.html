@@ -1,17 +1,28 @@
-<footer class="bg-custom-light-dark rounded-5xl bg-opacity-90!">
-  <div class="px-8 py-6 md:flex md:items-center">
-    <div class="flex justify-center space-x-6 md:order-2 md:ml-12">
+<footer class="rounded-5xl bg-custom-light-dark-90">
+  <div class="
+    px-8 py-6
+    md:flex md:items-center
+  ">
+    <div class="
+      flex justify-center space-x-6
+      md:order-2 md:ml-12
+    ">
       <a href="mailto:mail@julian-scholz.dev" class="animate-bounce" aria-label="Mail">
         <fa-icon [icon]="faEnvelope" size="xl" class="text-custom-light-dark"></fa-icon>
       </a>
-      @for (footerLink of sortedFooterLinkEntries; track footerLink; let i = $index) {
+      @for (footerLink of sortedFooterLinkEntries; track footerLink) {
         <a
           [href]="footerLink.url" target="_blank" [attr.aria-label]="footerLink.name">
-          <fa-icon [icon]="footerLink.iconDefinition" size="xl" class="text-custom-light-dark"></fa-icon>
+          <fa-icon [icon]="footerLink.iconDefinition" size="xl" class="
+            text-custom-light-dark
+          "></fa-icon>
         </a>
       }
     </div>
-    <div class="mt-6 flex flex-col text-center text-xs leading-5 md:order-1 md:mt-0">
+    <div class="
+      mt-6 flex flex-col text-center text-xs leading-5
+      md:order-1 md:mt-0
+    ">
       <button (click)="openInspirationsModal()">&copy; {{ currentYear }} Julian Scholz, Alle Rechte vorbehalten.
       </button>
       <div class="flex justify-evenly">

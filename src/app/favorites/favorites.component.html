@@ -3,22 +3,41 @@
     <h2>Favoriten</h2>
     <div class="divider"></div>
   </div>
-  <div id="favorites-scroll-trigger" class="relative overflow-hidden *:w-full">
+  <div id="favorites-scroll-trigger" class="
+    relative overflow-hidden
+    *:w-full
+  ">
     <section [ngStyle]="{
       '--favorites-grid-wrapper-z-index': showFavoritesOverlay() ? '30' : '10',
     }"
-             class="absolute inset-x-0 z-(--favorites-grid-wrapper-z-index) h-svh px-5 landscape:h-lvh">
+             class="
+               absolute inset-x-0 z-(--favorites-grid-wrapper-z-index) h-svh
+               px-5
+               landscape:h-lvh
+             ">
       <div [ngStyle]="{
       '--favorites-child-opacity': showFavoritesOverlay() ? '1' : '0',
       '--favorites-child-top': showFavoritesOverlay() ? '0' : '100%'
     }"
-           class="flex h-full flex-col items-center gap-5 *:relative *:flex *:max-w-full *:flex-auto *:items-center *:overflow-hidden">
+           class="
+             flex h-full flex-col items-center gap-5
+             *:relative *:flex *:max-w-full *:flex-auto *:items-center
+             *:overflow-hidden
+           ">
         <div></div>
         <app-favorites-overlay
-          class="top-(--favorites-child-top) w-96 opacity-(--favorites-child-opacity) transition-[opacity,top] duration-[1500ms] 2xl:w-[35rem]"
+          class="
+            top-(--favorites-child-top) w-96 opacity-(--favorites-child-opacity)
+            transition-[opacity,top] duration-[1500ms]
+            2xl:w-[35rem]
+          "
         />
         <app-footer
-          class="top-(--favorites-child-top) shrink-0! opacity-(--favorites-child-opacity) transition-[opacity,top] delay-500 duration-[1500ms]"
+          class="
+            top-(--favorites-child-top) shrink-0!
+            opacity-(--favorites-child-opacity) transition-[opacity,top]
+            delay-500 duration-[1500ms]
+          "
         />
       </div>
     </section>
@@ -35,8 +54,13 @@
       '--favorites-outline-width': outlineWidth(),
       '--favorites-outline-offset': outlineOffset
     }"
-         class="absolute top-0 z-(--favorites-wrapper-z-index) flex h-lvh flex-col">
-      <div class="relative size-full max-h-full max-w-full [perspective:500px]">
+         class="
+           absolute top-0 z-(--favorites-wrapper-z-index) flex h-lvh flex-col
+         ">
+      <div class="
+        relative size-full max-h-full max-w-full
+        [perspective:500px]
+      ">
         @if (selectedForegroundImage) {
           <img #scrollImage
                [ngSrc]="selectedForegroundImage"
@@ -46,9 +70,14 @@
                [ngStyle]="{
                 '--favorites-img-z-index': showFavoritesOverlay() ? '20': '30'
              }"
-               class="z-(--favorites-img-z-index) m-auto !size-auto max-h-full max-w-full object-contain
-                    outline outline-[calc(var(--favorites-outline-width)*1px)] outline-offset-[calc(var(--favorites-outline-offset)*-1px)] outline-snow
-                    will-change-transform dark:outline-dark-void"
+               class="
+                 z-(--favorites-img-z-index) m-auto !size-auto max-h-full
+                 max-w-full object-contain
+                 outline-[calc(var(--favorites-outline-width)*1px)]
+                 outline-offset-[calc(var(--favorites-outline-offset)*-1px)]
+                 outline-snow will-change-transform
+                 dark:outline-dark-void
+               "
                alt="Retro-Fernseher mit ausgeschnittenem Bildschirm."
                (load)="afterForegroundImageLoad()">
         }

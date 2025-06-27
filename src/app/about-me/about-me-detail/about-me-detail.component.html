@@ -4,9 +4,11 @@
 }"
       [ngClass]="{'italic': detail().italic, 'bg-linear-to-r from-transparent to-transparent': !active()}"
       [attr.aria-hidden]="!active()"
-      class="text-(--about-me-span-text-color)
-             opacity-[calc(0.1+var(--about-me-span-active))] transition-[color] duration-700
-             ease-out"
+      class="
+        text-(--about-me-span-text-color)
+        opacity-[calc(0.1+var(--about-me-span-active))] transition-[color]
+        duration-700 ease-out
+      "
 >{{ detail().text }}</span>
 @if (detail().endOfLine || detail().endOfSection) {
   <span [ngClass]="{'mt-16': detail().endOfSection}" class="block" aria-hidden="true"></span>

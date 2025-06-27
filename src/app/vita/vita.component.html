@@ -2,35 +2,57 @@
   <h2>Vita</h2>
   <div class="divider"></div>
   <ol #vitaEntriesElement
-      class="[&_mark]:text-custom-light-dark relative ms-3 border-s border-dark-void dark:border-snow
-             [&_mark]:bg-transparent [&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-light)]
-             [&_mark]:[--vita-entry-mark-highlighted:0] [&_mark]:![background-position:calc((1-var(--vita-entry-mark-highlighted))*110%)_0]
-             [&_mark]:[background:linear-gradient(120deg,var(--vita-entry-mark-highlight-color,transparent)_50%,transparent_50%)_110%_0_/_200%_100%_no-repeat]
-             [&_mark]:[transition:background-position_1s] dark:[&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-dark)]">
+      class="
+        relative ms-3 border-s border-dark-void
+        dark:border-snow
+        dark:[&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-dark)]
+        [&_mark]:bg-transparent
+        [&_mark]:![background-position:calc((1-var(--vita-entry-mark-highlighted))*110%)_0]
+        [&_mark]:text-custom-light-dark
+        [&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-light)]
+        [&_mark]:[--vita-entry-mark-highlighted:0]
+        [&_mark]:[background:linear-gradient(120deg,var(--vita-entry-mark-highlight-color,transparent)_50%,transparent_50%)_110%_0_/_200%_100%_no-repeat]
+        [&_mark]:[transition:background-position_1s]
+      ">
     @for (vitaEntry of vitaEntries; track vitaEntry; let isLast = $last) {
       <li
         [ngStyle]="{'--vita-entry-margin-bottom': !isLast ? '2.5rem' : '0'}"
-        class="relative mb-(--vita-entry-margin-bottom) ms-6">
+        class="relative ms-6 mb-(--vita-entry-margin-bottom)">
         <div
-          class="absolute -start-9 top-1 flex size-6 items-center justify-center rounded-full bg-dark-void-dark ring-[0.3125rem] ring-dark-void dark:bg-dark-void dark:ring-dark-void-light"
+          class="
+            absolute -start-9 top-1 flex size-6 items-center justify-center
+            rounded-full bg-dark-void-dark ring-[0.3125rem] ring-dark-void
+            dark:bg-dark-void dark:ring-dark-void-light
+          "
           aria-hidden="true">
-          <fa-icon [icon]="vitaEntry.iconDefinition" size="sm" class="text-vanilla"></fa-icon>
+          <fa-icon [icon]="vitaEntry.iconDefinition" size="sm" class="
+            text-vanilla
+          "></fa-icon>
         </div>
         <div class="flex items-center">
           <h3>{{ vitaEntry.title }}</h3>
           @if (vitaEntry.titleDescription) {
             <div
-              class="mb-2 ms-4 select-none rounded bg-dark-void px-2.5 py-0.5 text-sm font-medium text-vanilla-light transition
-                     duration-300 ease-in-out hover:scale-[1.2] hover:bg-vanilla-light hover:text-dark-void dark:bg-dark-void-light">
+              class="
+                ms-4 mb-2 rounded bg-dark-void px-2.5 py-0.5 text-sm font-medium
+                text-vanilla-light transition duration-300 ease-in-out
+                select-none
+                hover:scale-[1.2] hover:bg-vanilla-light hover:text-dark-void
+                dark:bg-dark-void-light
+              ">
               {{ vitaEntry.titleDescription | uppercase }}
             </div>
           }
         </div>
         <time
-          class="mb-4 block text-sm font-normal italic leading-none">{{ vitaEntry.timePeriod }}
+          class="mb-4 block text-sm leading-none font-normal italic">{{ vitaEntry.timePeriod }}
         </time>
         <div
-          class="mb-4 inline-block rounded-sm bg-dark-void px-2.5 py-0.5 text-sm font-normal text-snow dark:bg-dark-void-light"
+          class="
+            mb-4 inline-block rounded-sm bg-dark-void px-2.5 py-0.5 text-sm
+            font-normal text-snow
+            dark:bg-dark-void-light
+          "
           aria-hidden="true">
           <fa-icon [icon]="faLocationDot" class="me-1 text-vanilla"></fa-icon>
           {{ vitaEntry.location }}

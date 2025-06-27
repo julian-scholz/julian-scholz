@@ -1,24 +1,36 @@
-<div class="sticky top-0 z-40 flex justify-center py-5 [--header-nav-item-width:4.25rem]
-            [--header-nav-logo-gap:0.5rem]
-            [--header-nav-ul-gap:0.25rem]
-            sm:[--header-nav-item-width:5rem]
-            sm:[--header-nav-logo-gap:0.75rem]
-            sm:[--header-nav-ul-gap:1rem]
-            2xl:bottom-8"
+<div class="
+  sticky top-0 z-40 flex justify-center py-5
+  [--header-nav-item-width:4.25rem]
+  [--header-nav-logo-gap:0.5rem]
+  [--header-nav-ul-gap:0.25rem]
+  sm:[--header-nav-item-width:5rem] sm:[--header-nav-logo-gap:0.75rem]
+  sm:[--header-nav-ul-gap:1rem]
+  2xl:bottom-8
+"
 >
   <nav [ngStyle]="{'--header-nav-expanded': navbarExpanded()}"
-       class="rounded-5xl flex h-12 overflow-hidden bg-dark-void pl-0 text-sm dark:bg-dark-void-light"
+       class="
+         flex h-12 overflow-hidden rounded-5xl bg-dark-void pl-0 text-sm
+         dark:bg-dark-void-light
+       "
   >
     <div [ngStyle]="{'--header-nav-item-count': sortedRouteEntries.length}"
-         class="grid grid-cols-[auto_calc(var(--header-nav-expanded)*(var(--header-nav-item-count)*var(--header-nav-item-width)))_auto]
-                transition-[grid-template-columns] duration-1000 ease-header-nav-function"
+         class="
+           grid
+           grid-cols-[auto_calc(var(--header-nav-expanded)*(var(--header-nav-item-count)*var(--header-nav-item-width)))_auto]
+           transition-[grid-template-columns] duration-1000
+           ease-header-nav-function
+         "
     >
       <button class="grid w-12 place-items-center pl-(--header-nav-logo-gap)" (click)="navigateToTop()"
               aria-label="Zurück zum Seitenanfang">
         <fa-icon [icon]="faJs" size="xl"
-                 class="rotate-[calc(var(--header-nav-intent,0)*360deg)]
-                        text-vanilla transition-transform
-                        duration-500 hover:[--header-nav-intent:1] focus-visible:[--header-nav-intent:1]">
+                 class="
+                   rotate-[calc(var(--header-nav-intent,0)*360deg)] text-vanilla
+                   transition-transform duration-500
+                   hover:[--header-nav-intent:1]
+                   focus-visible:[--header-nav-intent:1]
+                 ">
         </fa-icon>
       </button>
       <ul class="m-0 flex list-none items-center px-(--header-nav-ul-gap) py-0">
@@ -33,10 +45,16 @@
           </li>
         }
       </ul>
-      <div class="relative flex items-center gap-x-0 gap-y-(--header-nav-logo-gap) bg-dark-void
-                  px-(--header-nav-logo-gap) transition-[padding] duration-1000 ease-header-nav-function before:absolute before:right-full
-                  before:h-12 before:w-14 before:origin-[100%_50%] before:transition-[scale]
-                  before:duration-200 before:[scale:calc(1-var(--header-nav-expanded))_1] dark:bg-dark-void-light"
+      <div class="
+        relative flex items-center gap-x-0 gap-y-(--header-nav-logo-gap)
+        bg-dark-void px-(--header-nav-logo-gap) transition-[padding]
+        duration-1000 ease-header-nav-function
+        before:absolute before:right-full before:h-12 before:w-14
+        before:origin-[100%_50%]
+        before:[scale:calc(1-var(--header-nav-expanded))_1]
+        before:transition-[scale] before:duration-200
+        dark:bg-dark-void-light
+      "
       >
         <app-theme-mode-toggle/>
       </div>

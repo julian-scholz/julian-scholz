@@ -43,16 +43,11 @@
     "@cloudflare/workers-types": "^4.20250627.0",
     "@types/node": "^22.15.33",
     "angular-eslint": "^20.1.1",
-    "eslint": "^9.29.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.5.1",
-    "eslint-plugin-tailwindcss": "^4.0.0-alpha.0",
+    "@typescript-eslint/eslint-plugin": "^8.35.0",
+    "eslint-plugin-better-tailwindcss": "^3.4.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "prettier": "^3.6.2",
-    "prettier-eslint": "^16.4.2",
     "typescript": "~5.8.3",
-    "typescript-eslint": "^8.35.0",
     "wrangler": "^4.22.0"
   }
 }
