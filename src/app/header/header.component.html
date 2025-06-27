@@ -6,11 +6,13 @@
       select-none
     "
     [style.font-weight]="fontWeight">
-    <span class="
-      ml-2
-      sm:ml-[10vw]
-      lg:ml-[15vw]
-    ">{{ firstLine }}</span>
+    <span [ngStyle]="{'--header-first-line-left': showCanvas() ? '0' : '-100%'}"
+          class="
+            relative left-(--header-first-line-left) ml-2 transition-[left]
+            duration-1000
+            sm:ml-[10vw]
+            lg:ml-[15vw]
+          ">{{ firstLine }}</span>
     <app-header-nav class="
       sticky -top-px z-40 w-full
       sm:z-auto
