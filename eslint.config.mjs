@@ -1,23 +1,36 @@
 // eslint.config.mjs
 import eslintParserTypeScript from "@typescript-eslint/parser";
-import eslintParserAngular from "angular-eslint";
+import eslintPluginTypeScript from "@typescript-eslint/eslint-plugin";
+import eslintAngular from "angular-eslint";
 import eslintPluginBetterTailwindcss from "eslint-plugin-better-tailwindcss";
 
 export default [
   {
     files: ["**/*.ts"],
+    processor: eslintAngular.processInlineTemplates,
     languageOptions: {
       parser: eslintParserTypeScript,
       parserOptions: {
         project: true
       }
     },
-    processor: eslintParserAngular.processInlineTemplates
+    plugins: {
+      "@typescript-eslint": eslintPluginTypeScript
+    },
+    rules: {
+      ...eslintPluginTypeScript.configs.recommended.rules
+    },
   },
   {
     files: ["**/*.html"],
     languageOptions: {
-      parser: eslintParserAngular.templateParser
+      parser: eslintAngular.templateParser
+    },
+    plugins: {
+      "@angular-eslint/template": eslintAngular.templatePlugin
+    },
+    rules: {
+      ...eslintAngular.configs.recommended
     }
   },
   {
@@ -26,8 +39,7 @@ export default [
     },
     rules: {
       ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
-
-      "better-tailwindcss/enforce-consistent-line-wrapping": ["warn", {lineBreakStyle: "windows"}]
+      "better-tailwindcss/enforce-consistent-line-wrapping": ["warn", {lineBreakStyle: "unix"}]
     },
     settings: {
       "better-tailwindcss": {

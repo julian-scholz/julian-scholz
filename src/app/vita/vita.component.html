@@ -5,7 +5,6 @@
       class="
         relative ms-3 border-s border-dark-void
         dark:border-snow
-        dark:[&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-dark)]
         [&_mark]:bg-transparent
         [&_mark]:![background-position:calc((1-var(--vita-entry-mark-highlighted))*110%)_0]
         [&_mark]:text-custom-light-dark
@@ -13,6 +12,7 @@
         [&_mark]:[--vita-entry-mark-highlighted:0]
         [&_mark]:[background:linear-gradient(120deg,var(--vita-entry-mark-highlight-color,transparent)_50%,transparent_50%)_110%_0_/_200%_100%_no-repeat]
         [&_mark]:[transition:background-position_1s]
+        dark:[&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-dark)]
       ">
     @for (vitaEntry of vitaEntries; track vitaEntry; let isLast = $last) {
       <li

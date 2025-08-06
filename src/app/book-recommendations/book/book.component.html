@@ -17,7 +17,7 @@
         [ngSrc]="bookDetails().cover.imagePath" [width]="bookWidth()" [height]="bookDetails().cover.height"
         disableOptimizedSrcset
         [loaderParams]="{imageFormat: 'webp'}" priority
-        [ngClass]="{'shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]! [transform:perspective(1500px)_rotateY(-150deg)]!': isBookCoverOpen()}"
+        [ngClass]="{'[transform:perspective(1500px)_rotateY(-150deg)]! shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]!': isBookCoverOpen()}"
         class="
           relative z-[calc(21+var(--book-index))] origin-[0_70%] cursor-pointer
           rounded-[2px_3px_3px_2px] opacity-100
@@ -32,11 +32,12 @@
       <div [ngClass]="{'ml-[1px]! [transform:perspective(1500px)_rotateY(-300deg)]! sm:[transform:perspective(1500px)_rotateY(-330deg)]!': isBookCoverOpen()}"
            class="
              absolute top-0 -left-full z-[calc(20+var(--book-index))] size-full
-             origin-[100%_70%] cursor-pointer rounded-[3px_0_0_3px] border-[3px]
-             border-r-0 border-solid border-(--book-backface-color) bg-snow
+             origin-[100%_70%]
+             [transform:perspective(1500px)_rotateY(-180deg)]
+             cursor-pointer rounded-[3px_0_0_3px] border-[3px] border-r-0
+             border-solid border-(--book-backface-color) bg-snow
              shadow-[-10px_0_10px_--theme(--color-dark-void-dark/0.2),inset_40px_0_60px_--theme(--color-dark-void-dark/0.15),0_0_0_1px_--theme(--color-snow/0.15)]
              transition-all duration-500 ease-[ease]
-             [transform:perspective(1500px)_rotateY(-180deg)]
              [backface-visibility:hidden]
              group-hover/item:[transform:perspective(1500px)_rotateY(-202deg)]
            "
