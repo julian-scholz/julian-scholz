@@ -82,14 +82,14 @@ export class ThemeModeToggleService {
     renderer: Renderer2,
     angularDocument: Document,
   ): void {
-    if (angularDocument.startViewTransition !== undefined) {
+    /*if (angularDocument.startViewTransition !== undefined) {
       setTimeout(() => {
         angularDocument.startViewTransition(() =>
           this.toggleThemeMode(renderer, angularDocument.documentElement),
         );
       }, 700);
-    } else {
+    } else {*/
       this.toggleThemeMode(renderer, angularDocument.documentElement);
-    }
+    //}
   }
 }
