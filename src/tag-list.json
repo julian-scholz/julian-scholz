@@ -48,7 +48,9 @@
     "tags": [
       "Security",
       "ApplicationSecurity",
-      "OWASPTop10"
+      "OWASPTop10",
+      "OAuth",
+      "OIDC"
     ]
   },
   {
