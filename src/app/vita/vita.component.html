@@ -6,11 +6,11 @@
         relative ms-3 border-s border-dark-void
         dark:border-snow
         [&_mark]:bg-transparent
-        [&_mark]:![background-position:calc((1-var(--vita-entry-mark-highlighted))*110%)_0]
+        [&_mark]:bg-position-[calc((1-var(--vita-entry-mark-highlighted))*110%)_0]!
         [&_mark]:text-custom-light-dark
         [&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-light)]
         [&_mark]:[--vita-entry-mark-highlighted:0]
-        [&_mark]:[background:linear-gradient(120deg,var(--vita-entry-mark-highlight-color,transparent)_50%,transparent_50%)_110%_0_/_200%_100%_no-repeat]
+        [&_mark]:[background:linear-gradient(120deg,var(--vita-entry-mark-highlight-color,transparent)_50%,transparent_50%)_110%_0/200%_100%_no-repeat]
         [&_mark]:[transition:background-position_1s]
         dark:[&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-dark)]
       ">
@@ -20,7 +20,7 @@
         class="relative ms-6 mb-(--vita-entry-margin-bottom)">
         <div
           class="
-            absolute -start-9 top-1 flex size-6 items-center justify-center
+            absolute -inset-s-9 top-1 flex size-6 items-center justify-center
             rounded-full bg-dark-void-dark ring-[0.3125rem] ring-dark-void
             dark:bg-dark-void dark:ring-dark-void-light
           "
@@ -34,9 +34,9 @@
           @if (vitaEntry.titleDescription) {
             <div
               class="
-                ms-4 mb-2 rounded bg-dark-void px-2.5 py-0.5 text-sm font-medium
-                text-vanilla-light transition duration-300 ease-in-out
-                select-none
+                ms-4 mb-2 rounded-sm bg-dark-void px-2.5 py-0.5 text-sm
+                font-medium text-vanilla-light transition duration-300
+                ease-in-out select-none
                 hover:scale-[1.2] hover:bg-vanilla-light hover:text-dark-void
                 dark:bg-dark-void-light
               ">

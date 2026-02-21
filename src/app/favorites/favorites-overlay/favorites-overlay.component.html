@@ -7,10 +7,9 @@
      class="
        h-full
        max-h-[calc(2*var(--favorites-overlay-py)+calc(calc(var(--favorites-overlay-tag-list-cols)-1)*var(--favorites-overlay-items-gap-y))+calc(var(--favorites-overlay-tag-list-cols)*calc(2*(var(--favorites-overlay-tag-list-item-py))+var(--favorites-overlay-tag-list-item-line-height))))]
-       [transform:translateZ(0)]
-       cursor-pointer overflow-hidden
+       transform-[translateZ(0)] cursor-pointer overflow-hidden
        rounded-(--favorites-overlay-border-radius) bg-dark-void/80
-       transition-[border-radius] duration-[3000ms]
+       transition-[border-radius] duration-3000
        [--favorites-overlay-items-gap-y:0.25rem]
        [--favorites-overlay-py:0.75rem]
        sm:[--favorites-overlay-items-gap-y:1rem]
@@ -37,9 +36,8 @@
         @for (_ of [0, 1]; track _) {
           @for (tagListTextEntry of tagListEntry.tags; track tagListTextEntry) {
             <div class="
-              mr-4 flex
-              [transform:translateZ(0)]
-              items-center gap-x-1 gap-y-0 rounded bg-dark-void/50 px-5
+              mr-4 flex transform-[translateZ(0)] items-center gap-x-1 gap-y-0
+              rounded-sm bg-dark-void/50 px-5
               py-(--favorites-overlay-tag-list-item-py) text-lg
               leading-(--favorites-overlay-tag-list-item-line-height)
               font-normal text-snow

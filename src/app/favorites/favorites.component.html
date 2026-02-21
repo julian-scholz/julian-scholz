@@ -28,15 +28,15 @@
         <app-favorites-overlay
           class="
             top-(--favorites-child-top) w-96 opacity-(--favorites-child-opacity)
-            transition-[opacity,top] duration-[1500ms]
-            2xl:w-[35rem]
+            transition-[opacity,top] duration-1500
+            2xl:w-140
           "
         />
         <app-footer
           class="
             top-(--favorites-child-top) shrink-0!
             opacity-(--favorites-child-opacity) transition-[opacity,top]
-            delay-500 duration-[1500ms]
+            delay-500 duration-1500
           "
         />
       </div>
@@ -57,10 +57,7 @@
          class="
            absolute top-0 z-(--favorites-wrapper-z-index) flex h-lvh flex-col
          ">
-      <div class="
-        relative size-full max-h-full max-w-full
-        [perspective:500px]
-      ">
+      <div class="relative size-full max-h-full max-w-full perspective-normal">
         @if (selectedForegroundImage) {
           <img #scrollImage
                [ngSrc]="selectedForegroundImage"
@@ -71,7 +68,7 @@
                 '--favorites-img-z-index': showFavoritesOverlay() ? '20': '30'
              }"
                class="
-                 z-(--favorites-img-z-index) m-auto !size-auto max-h-full
+                 z-(--favorites-img-z-index) m-auto size-auto! max-h-full
                  max-w-full object-contain
                  outline-[calc(var(--favorites-outline-width)*1px)]
                  outline-offset-[calc(var(--favorites-outline-offset)*-1px)]

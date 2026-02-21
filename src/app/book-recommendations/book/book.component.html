@@ -17,29 +17,26 @@
         [ngSrc]="bookDetails().cover.imagePath" [width]="bookWidth()" [height]="bookDetails().cover.height"
         disableOptimizedSrcset
         [loaderParams]="{imageFormat: 'webp'}" priority
-        [ngClass]="{'[transform:perspective(1500px)_rotateY(-150deg)]! shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]!': isBookCoverOpen()}"
+        [ngClass]="{'transform-[perspective(1500px)_rotateY(-150deg)]! shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]!': isBookCoverOpen()}"
         class="
           relative z-[calc(21+var(--book-index))] origin-[0_70%] cursor-pointer
           rounded-[2px_3px_3px_2px] opacity-100
           shadow-[1px_1px_4px_--theme(--color-dark-void-dark/0.5)]
-          transition-all duration-500 ease-[ease]
-          [backface-visibility:hidden]
-          group-hover/item:[transform:perspective(1500px)_rotateY(-22deg)]
+          transition-all duration-500 ease-[ease] backface-hidden
+          group-hover/item:transform-[perspective(1500px)_rotateY(-22deg)]
           group-hover/item:shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]
         "
         [alt]="bookDetails().details.title + ': ' + bookDetails().details.subtitle"
         (click)="toggleCoverOpen()" (keyup)="toggleCoverOpen()" tabindex="0"/>
-      <div [ngClass]="{'ml-[1px]! [transform:perspective(1500px)_rotateY(-300deg)]! sm:[transform:perspective(1500px)_rotateY(-330deg)]!': isBookCoverOpen()}"
+      <div [ngClass]="{'ml-px! transform-[perspective(1500px)_rotateY(-300deg)]! sm:transform-[perspective(1500px)_rotateY(-330deg)]!': isBookCoverOpen()}"
            class="
              absolute top-0 -left-full z-[calc(20+var(--book-index))] size-full
-             origin-[100%_70%]
-             [transform:perspective(1500px)_rotateY(-180deg)]
+             origin-[100%_70%] transform-[perspective(1500px)_rotateY(-180deg)]
              cursor-pointer rounded-[3px_0_0_3px] border-[3px] border-r-0
              border-solid border-(--book-backface-color) bg-snow
              shadow-[-10px_0_10px_--theme(--color-dark-void-dark/0.2),inset_40px_0_60px_--theme(--color-dark-void-dark/0.15),0_0_0_1px_--theme(--color-snow/0.15)]
-             transition-all duration-500 ease-[ease]
-             [backface-visibility:hidden]
-             group-hover/item:[transform:perspective(1500px)_rotateY(-202deg)]
+             transition-all duration-500 ease-[ease] backface-hidden
+             group-hover/item:transform-[perspective(1500px)_rotateY(-202deg)]
            "
            (click)="toggleCoverOpen()" (keyup)="toggleCoverOpen()" tabindex="0">
         <div class="
@@ -58,7 +55,7 @@
           *:absolute *:size-full *:rounded-[2px_3px_3px_2px] *:border
           *:border-l-0 *:border-solid *:border-snow *:bg-snow
           *:shadow-[1px_1px_1px_1px_--theme(--color-dark-void-dark/0.2)]
-          after:absolute after:bottom-[-9px] after:left-[-2px] after:z-0
+          after:absolute after:-bottom-2.25 after:-left-0.5 after:z-0
           after:block after:size-0 after:border-[5px] after:border-solid
           after:border-t-(--book-backface-color)
           after:border-r-(--book-backface-color) after:border-b-transparent
@@ -76,13 +73,13 @@
             </div>
             <span class="absolute right-0 bottom-0 me-2 mb-2 text-xs">1</span>
           </li>
-          <li class="top-[2px] left-[2px] z-4"></li>
-          <li class="top-[4px] left-[4px] z-3"></li>
-          <li class="top-[6px] left-[6px] z-2"></li>
+          <li class="top-0.5 left-0.5 z-4"></li>
+          <li class="top-1 left-1 z-3"></li>
+          <li class="top-1.5 left-1.5 z-2"></li>
         </ul>
       </div>
       <div class="
-        absolute top-[8px] left-[9px] z-1 size-full rounded-[2px_3px_3px_2px]
+        absolute top-2 left-2.25 z-1 size-full rounded-[2px_3px_3px_2px]
         bg-(--book-backface-color)
       "></div>
     </li>

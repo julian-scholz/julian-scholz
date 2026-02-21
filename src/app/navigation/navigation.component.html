@@ -1,8 +1,6 @@
 <div class="
-  sticky top-0 z-40 flex justify-center py-5
-  [--header-nav-item-width:4.25rem]
-  [--header-nav-logo-gap:0.5rem]
-  [--header-nav-ul-gap:0.25rem]
+  sticky top-0 z-40 flex justify-center py-5 [--header-nav-item-width:4.25rem]
+  [--header-nav-logo-gap:0.5rem] [--header-nav-ul-gap:0.25rem]
   sm:[--header-nav-item-width:5rem] sm:[--header-nav-logo-gap:0.75rem]
   sm:[--header-nav-ul-gap:1rem]
   2xl:bottom-8
@@ -51,7 +49,7 @@
         duration-1000 ease-header-nav-function
         before:absolute before:right-full before:h-12 before:w-14
         before:origin-[100%_50%]
-        before:[scale:calc(1-var(--header-nav-expanded))_1]
+        before:scale-[calc(1-var(--header-nav-expanded))_1]
         before:transition-[scale] before:duration-200
         dark:bg-dark-void-light
       "

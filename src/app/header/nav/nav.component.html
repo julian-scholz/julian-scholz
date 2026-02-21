@@ -3,9 +3,7 @@
     bg-linear-to-r from-dark-void to-vanilla-darker py-16 text-center text-base
     dark:from-dark-void-light dark:to-vanilla-dark
   ">
-  <ul class="
-    relative mx-auto w-16 rotate-[-35deg] skew-x-[20deg] skew-y-[5deg]
-  ">
+  <ul class="relative mx-auto w-16 rotate-[-35deg] skew-x-20 skew-y-[5deg]">
     @for (navEntry of sortedNavEntries; track navEntry) {
       <li>
         <a
@@ -16,22 +14,22 @@
             before:absolute before:top-1 before:-left-2 before:h-10 before:w-2
             before:skew-y-[-45deg] before:bg-vanilla-dark
             after:absolute after:-bottom-9 after:left-6 after:h-16 after:w-2
-            after:rotate-90 after:skew-x-0 after:skew-y-[45deg]
+            after:rotate-90 after:skew-x-0 after:skew-y-45
             after:bg-vanilla-light
             hover:bg-vanilla
-            xl:transition-all xl:duration-[250ms] xl:ease-linear
-            xl:before:transition-all xl:before:duration-[250ms]
-            xl:before:ease-linear xl:after:transition-all
-            xl:after:duration-[250ms] xl:after:ease-linear
+            xl:transition-all xl:duration-250 xl:ease-linear
+            xl:before:transition-all xl:before:duration-250
+            xl:before:ease-linear
+            xl:after:transition-all xl:after:duration-250 xl:after:ease-linear
             xl:hover:translate-x-3.5 xl:hover:-translate-y-3.5
             xl:hover:shadow-[-2rem_2rem_0] xl:hover:shadow-vanilla-darker/10
-            xl:hover:transition-all xl:hover:duration-[250ms]
-            xl:hover:ease-linear xl:hover:before:top-2 xl:hover:before:-left-4
-            xl:hover:before:w-4 xl:hover:before:transition-all
-            xl:hover:before:duration-[250ms] xl:hover:before:ease-linear
+            xl:hover:transition-all xl:hover:duration-250 xl:hover:ease-linear
+            xl:hover:before:top-2 xl:hover:before:-left-4 xl:hover:before:w-4
+            xl:hover:before:transition-all xl:hover:before:duration-250
+            xl:hover:before:ease-linear
             xl:hover:after:-bottom-10 xl:hover:after:left-4 xl:hover:after:h-16
             xl:hover:after:w-4 xl:hover:after:transition-all
-            xl:hover:after:duration-[250ms] xl:hover:after:ease-linear
+            xl:hover:after:duration-250 xl:hover:after:ease-linear
           "
           [href]="navEntry.url" target="_blank" [attr.aria-label]="navEntry.name">
           <fa-icon [icon]="navEntry.iconDefinition" class="text-dark-void"></fa-icon>
