@@ -9,7 +9,8 @@ import {
   PLATFORM_ID,
   signal,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
 import {
@@ -33,6 +34,7 @@ import { environment } from '../../environment/environment';
     FavoritesOverlayComponent,
     FooterComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './favorites.component.html',
 })
 export class FavoritesComponent implements OnInit, OnDestroy {

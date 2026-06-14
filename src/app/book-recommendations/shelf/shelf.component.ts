@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, ChangeDetectionStrategy } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { BookRecommendationsBookComponent } from '../book/book.component';
 import { BookModel } from '../book/models/book.model';
@@ -6,6 +6,7 @@ import { BookModel } from '../book/models/book.model';
 @Component({
   selector: 'app-book-recommendations-shelf',
   imports: [NgStyle, BookRecommendationsBookComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './shelf.component.html',
 })
 export class BookRecommendationsShelfComponent {

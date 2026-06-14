@@ -5,6 +5,7 @@ import {
   OnDestroy,
   PLATFORM_ID,
   signal,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faJs } from '@fortawesome/free-brands-svg-icons';
@@ -24,6 +25,7 @@ import { NavigationEntryModel } from './navigation-entry/models/navigation-entry
     ThemeModeToggleComponent,
     NavigationEntryComponent,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './navigation.component.html',
 })
 export class NavigationComponent implements AfterViewInit, OnDestroy {

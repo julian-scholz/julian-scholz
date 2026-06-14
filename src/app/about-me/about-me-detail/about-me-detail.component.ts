@@ -6,6 +6,7 @@ import {
   signal,
   inject,
   PLATFORM_ID,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { isPlatformBrowser, NgClass, NgStyle } from '@angular/common';
 import { AboutMeDetailModel } from './models/about-me-detail.model';
@@ -14,6 +15,7 @@ import { ScrollTrigger } from '../../lib/misc/gsap/gsap';
 @Component({
   selector: 'app-about-me-detail',
   imports: [NgStyle, NgClass],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './about-me-detail.component.html',
 })
 export class AboutMeDetailComponent implements AfterViewInit, OnDestroy {

@@ -4,6 +4,7 @@ import {
   inject,
   viewChild,
   ViewContainerRef,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { NavigationComponent } from './navigation/navigation.component';
@@ -39,6 +40,7 @@ import { navigationEntries } from './app.routes';
       },
     },
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './app.component.html',
 })
 export class AppComponent implements AfterViewInit {

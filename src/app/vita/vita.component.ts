@@ -8,7 +8,8 @@ import {
   Renderer2,
   RendererStyleFlags2,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   faComputer,
@@ -31,6 +32,7 @@ import { gsap } from '../lib/misc/gsap/gsap';
 @Component({
   selector: 'app-vita',
   imports: [FaIconComponent, UpperCasePipe, NgStyle],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './vita.component.html',
 })
 export class VitaComponent implements AfterViewInit, OnDestroy {

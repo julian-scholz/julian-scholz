@@ -1,4 +1,4 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +8,7 @@ import { ModalTemplate } from './utils/modal-template.enum';
 @Component({
   selector: 'app-modal-container',
   imports: [FaIconComponent, NgTemplateOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './modal-container.component.html',
 })
 export class ModalContainerComponent {

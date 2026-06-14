@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NavService } from '../header/nav/nav.service';
 import { NavEntryModel } from '../header/nav/models/nav-entry.model';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -10,6 +10,7 @@ import { ModalTemplate } from '../modals/utils/modal-container/utils/modal-templ
 @Component({
   selector: 'app-footer',
   imports: [FaIconComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './footer.component.html',
 })
 export class FooterComponent implements OnInit {

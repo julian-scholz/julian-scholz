@@ -6,7 +6,8 @@ import {
   inject,
   PLATFORM_ID,
   signal,
-  DOCUMENT
+  DOCUMENT,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
@@ -22,6 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-back-to-top-button',
   imports: [FaIconComponent, NgStyle],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './back-to-top-button.component.html',
 })
 export class BackToTopButtonComponent implements AfterViewInit {

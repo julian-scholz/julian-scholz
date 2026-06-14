@@ -6,7 +6,8 @@ import {
   OnDestroy,
   PLATFORM_ID,
   signal,
-  DOCUMENT
+  DOCUMENT,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import {
   isPlatformBrowser,
@@ -19,6 +20,7 @@ import { NavigationEntryModel } from './models/navigation-entry.model';
 @Component({
   selector: 'app-navigation-entry',
   imports: [NgStyle],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './navigation-entry.component.html',
 })
 export class NavigationEntryComponent implements AfterViewInit, OnDestroy {

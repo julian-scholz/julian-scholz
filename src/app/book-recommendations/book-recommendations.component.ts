@@ -7,7 +7,8 @@ import {
   PLATFORM_ID,
   signal,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { BookRecommendationsShelfComponent } from './shelf/shelf.component';
 import { BookModel } from './book/models/book.model';
@@ -20,6 +21,7 @@ import { environment } from '../../environment/environment';
 @Component({
   selector: 'app-book-recommendations',
   imports: [BookRecommendationsShelfComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './book-recommendations.component.html',
 })
 export class BookRecommendationsComponent implements AfterViewInit {

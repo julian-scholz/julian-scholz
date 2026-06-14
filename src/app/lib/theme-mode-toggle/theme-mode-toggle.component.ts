@@ -5,7 +5,8 @@ import {
   inject,
   Renderer2,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { ThemeModeToggleService } from './theme-mode-toggle.service';
 import { ThemeMode } from './utils/theme-mode-toggle.enum';
@@ -24,6 +25,7 @@ import {
     },
   ],
   templateUrl: './theme-mode-toggle.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class ThemeModeToggleComponent implements AfterViewInit {

@@ -1,10 +1,11 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass, NgOptimizedImage, NgStyle } from '@angular/common';
 import { BookModel } from './models/book.model';
 
 @Component({
   selector: 'app-book-recommendations-book',
   imports: [NgStyle, NgClass, NgOptimizedImage],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './book.component.html',
 })
 export class BookRecommendationsBookComponent {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NavEntryModel } from './models/nav-entry.model';
 import { NavService } from './nav.service';
@@ -6,6 +6,7 @@ import { NavService } from './nav.service';
 @Component({
   selector: 'app-header-nav',
   imports: [FontAwesomeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './nav.component.html',
 })
 export class HeaderNavComponent implements OnInit {

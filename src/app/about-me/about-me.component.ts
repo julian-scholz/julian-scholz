@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { AboutMeDetailModel } from './about-me-detail/models/about-me-detail.model';
 import { AboutMeDetailComponent } from './about-me-detail/about-me-detail.component';
@@ -6,6 +6,7 @@ import { AboutMeDetailComponent } from './about-me-detail/about-me-detail.compon
 @Component({
   selector: 'app-about-me',
   imports: [NgStyle, AboutMeDetailComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './about-me.component.html',
 })
 export class AboutMeComponent {

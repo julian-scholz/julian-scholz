@@ -63,6 +63,11 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "testing": {
+              "aot": false,
+              "optimization": false,
+              "extractLicenses": false
             }
           },
           "defaultConfiguration": "production"
@@ -86,21 +91,11 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "polyfills": [],
             "tsConfig": "tsconfig.spec.json",
-            "inlineStyleLanguage": "css",
-            "assets": [
-              "src/assets",
-              "src/_headers",
-              "src/robots.txt",
-              "src/sitemap.xml"
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
-            "scripts": []
+            "buildTarget": ":build:testing",
+            "runner": "vitest"
           }
         },
         "lint": {
