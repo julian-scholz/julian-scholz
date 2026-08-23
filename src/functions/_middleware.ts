@@ -2,7 +2,7 @@ import * as crypto from 'node:crypto';
 
 export const onRequest: PagesFunction = async (context) => {
   const response = await context.next();
-  const nonce = crypto.randomBytes(8).toString('hex');
+  const nonce = crypto.randomBytes(16).toHex();
 
   if (response.headers.get('Content-Type')?.includes('text/html')) {
     let text = await response.text();
