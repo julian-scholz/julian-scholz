@@ -16,6 +16,7 @@ import { BookRecommendationsComponent } from './book-recommendations/book-recomm
 import { FavoritesComponent } from './favorites/favorites.component';
 import { VitaComponent } from './vita/vita.component';
 import { navigationEntries } from './app.routes';
+import { CursorGridComponent } from './lib/cursor-grid/cursor-grid.component';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,7 @@ import { navigationEntries } from './app.routes';
     BookRecommendationsComponent,
     FavoritesComponent,
     VitaComponent,
+    CursorGridComponent,
   ],
   providers: [
     {
