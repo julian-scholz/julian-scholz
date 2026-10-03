@@ -47,16 +47,21 @@
           "></fa-icon>
         </div>
         <div class="flex items-center">
-          <h3 data-vita-title class="
-            relative
-            after:absolute after:bottom-[0.15em] after:h-[1em] after:w-[0.5ch]
-            after:bg-vanilla after:opacity-0
-            motion-safe:data-revealed:after:animate-[vitaTitleCaret_1.6s_linear_0.3s_both]
-          "><span class="
-            inline-block
-            motion-safe:in-data-revealed:animate-[vitaTitleType_0.96s_steps(24,end)_0.3s_both]
-            motion-safe:in-data-title-reveal:[clip-path:inset(0_100%_0_0)]
-          ">{{ vitaEntry.title }}</span></h3>
+          <h3 data-vita-title [attr.aria-label]="vitaEntry.title"
+              [ngStyle]="{'--vita-title-char-count': vitaEntry.title.length}">
+            @for (titleChar of vitaEntry.title.split(''); track $index) {
+              <span aria-hidden="true" [ngStyle]="{'--vita-title-char-index': $index}" class="
+                relative
+                [--vita-title-char-delay:calc(0.2s+var(--vita-title-char-index)/var(--vita-title-char-count)*1s)]
+                after:absolute after:bottom-[0.15em] after:left-full
+                after:h-[1em] after:w-[0.5ch] after:bg-vanilla after:opacity-0
+                motion-safe:in-data-revealed:animate-[vitaTitleChar_0s_var(--vita-title-char-delay)_both]
+                motion-safe:in-data-revealed:after:animate-[vitaTitleCaret_calc(1s/var(--vita-title-char-count))_linear_var(--vita-title-char-delay)]
+                motion-safe:in-data-revealed:last:after:animate-[vitaTitleCaretEnd_0.8s_step-end_var(--vita-title-char-delay)]
+                motion-safe:in-data-title-reveal:opacity-0
+              ">{{ titleChar }}</span>
+            }
+          </h3>
           @if (vitaEntry.titleDescription) {
             <div
               class="
