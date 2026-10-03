@@ -4,7 +4,8 @@
   '--book-page-padding': '1rem'
 }"
          class="
-           relative z-1 origin-bottom-left
+           relative z-1 origin-bottom-left transition-[rotate,transform-origin]
+           duration-500 ease-[ease]
            motion-safe:opacity-0
            motion-safe:group-data-lit/shelf:animate-[shelfBookPlace_0.7s_ease-out_calc(0.4s+var(--book-index)*0.15s)_backwards]
            motion-safe:group-data-lit/shelf:opacity-100
@@ -56,6 +57,16 @@
         </div>
       </div>
       <div class="absolute top-0 left-0 z-10 size-full p-px">
+        @if (isBookCoverOpen()) {
+          <span aria-hidden="true"
+                animate.enter="motion-safe:animate-[shelfRibbonSwing_1.4s_ease-out]"
+                animate.leave="motion-safe:animate-[shelfRibbonRetract_0.8s_ease-in_forwards]"
+                class="
+                  absolute top-[calc(100%-0.75rem)] right-6 h-14 w-2 origin-top
+                  bg-(--book-backface-color) brightness-90
+                  [clip-path:polygon(0_0,100%_0,100%_100%,50%_85%,0_100%)]
+                "></span>
+        }
         <ul class="
           absolute top-0 left-0 z-0 ml-px size-full
           *:absolute *:size-full *:rounded-[2px_3px_3px_2px] *:border

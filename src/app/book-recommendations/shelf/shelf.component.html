@@ -1,9 +1,10 @@
 <div #shelfElement [attr.data-lit]="isShelfLit() || null" class="
   group/shelf relative mx-auto my-5 w-fit border-b-[0.75rem] border-solid
   border-b-dark-void-dark bg-transparent
+  [transition:--shelf-light-x_0.6s_ease-out]
   before:pointer-events-none before:absolute before:inset-x-10 before:top-1/3
   before:bottom-6 before:hidden
-  before:bg-[radial-gradient(ellipse_at_50%_100%,--theme(--color-vanilla/0.3),transparent_70%)]
+  before:bg-[radial-gradient(ellipse_at_var(--shelf-light-x)_100%,--theme(--color-vanilla/0.3),transparent_70%)]
   before:opacity-0 before:blur-xl before:transition-opacity before:duration-1000
   after:absolute after:inset-x-8 after:-bottom-3 after:h-2.5
   after:transform-[rotateX(-25deg)] after:bg-transparent
@@ -29,6 +30,9 @@
            relative top-3 mr-(--shelf-margin-right) ml-(--shelf-margin-left)
            flex items-end justify-center gap-(--shelf-book-gap)
            *:shrink-0
+           motion-safe:[&>:has(+:hover)>article]:rotate-[-1.5deg]
+           motion-safe:[&>:hover+*>article]:origin-bottom-right
+           motion-safe:[&>:hover+*>article]:rotate-[1.5deg]
          ">
       @for (bookDetailEntry of bookDetails(); track bookDetailEntry; let i = $index) {
         <app-book-recommendations-book [bookIndex]="i" [bookWidth]="bookWidth()"
@@ -47,5 +51,20 @@
     before:shadow-[0_0_0.5rem_0.125rem_--theme(--color-vanilla/0.6)]
     motion-safe:group-data-lit/shelf:animate-[shelfLightOn_1.4s_linear_both]
     dark:block
-  "></div>
+  ">
+    @for (dustParticle of dustParticles; track dustParticle) {
+      <span [ngStyle]="{
+        'left': dustParticle.left + '%',
+        'top': dustParticle.top + '%',
+        '--dust-size': dustParticle.size + 'px',
+        '--dust-duration': dustParticle.duration + 's',
+        '--dust-delay': dustParticle.delay + 's'
+      }"
+            class="
+              absolute size-(--dust-size) rounded-full bg-vanilla-light
+              opacity-0 shadow-[0_0_0.25rem_--theme(--color-vanilla/0.8)]
+              motion-safe:animate-[shelfDustFloat_var(--dust-duration)_ease-in-out_var(--dust-delay)_infinite]
+            "></span>
+    }
+  </div>
 </div>

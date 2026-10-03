@@ -122,6 +122,68 @@
       transform: none;
     }
   }
+  @keyframes shelfDustFloat {
+    0% {
+      opacity: 0;
+      translate: 0 0;
+    }
+    25% {
+      opacity: 0.9;
+    }
+    50% {
+      translate: 0.6rem -0.8rem;
+    }
+    75% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 0;
+      translate: -0.3rem -1.6rem;
+    }
+  }
+  @keyframes shelfRibbonSwing {
+    0% {
+      transform: scaleY(0);
+    }
+    35% {
+      transform: scaleY(1) rotate(12deg);
+    }
+    55% {
+      transform: rotate(-7deg);
+    }
+    72% {
+      transform: rotate(4deg);
+    }
+    86% {
+      transform: rotate(-1.5deg);
+    }
+    100% {
+      transform: none;
+    }
+  }
+  @keyframes shelfRibbonRetract {
+    0% {
+      transform: none;
+    }
+    20% {
+      transform: rotate(-6deg);
+    }
+    40% {
+      transform: rotate(4deg);
+    }
+    55% {
+      transform: scaleY(1) rotate(-2deg);
+    }
+    100% {
+      transform: scaleY(0);
+    }
+  }
+}
+
+@property --shelf-light-x {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 50%;
 }
 
 @utility divider {
