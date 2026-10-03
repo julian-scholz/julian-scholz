@@ -8,13 +8,13 @@ import {
   PLATFORM_ID,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { isPlatformBrowser, NgClass, NgStyle } from '@angular/common';
+import { isPlatformBrowser, NgClass } from '@angular/common';
 import { AboutMeDetailModel } from './models/about-me-detail.model';
 import { ScrollTrigger } from '../../lib/misc/gsap/gsap';
 
 @Component({
   selector: 'app-about-me-detail',
-  imports: [NgStyle, NgClass],
+  imports: [NgClass],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './about-me-detail.component.html',
 })
