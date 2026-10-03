@@ -1,10 +1,17 @@
-<div class="
-  relative mx-auto my-5 w-fit border-b-[0.75rem] border-solid
+<div #shelfElement [attr.data-lit]="isShelfLit() || null" class="
+  group/shelf relative mx-auto my-5 w-fit border-b-[0.75rem] border-solid
   border-b-dark-void-dark bg-transparent
+  before:pointer-events-none before:absolute before:inset-x-10 before:top-1/3
+  before:bottom-6 before:hidden
+  before:bg-[radial-gradient(ellipse_at_50%_100%,--theme(--color-vanilla/0.3),transparent_70%)]
+  before:opacity-0 before:blur-xl before:transition-opacity before:duration-1000
   after:absolute after:inset-x-8 after:-bottom-3 after:h-2.5
   after:transform-[rotateX(-25deg)] after:bg-transparent
   after:shadow-[0_0_1rem_0.125rem] after:shadow-dark-void
+  data-lit:before:opacity-100
+  motion-safe:data-lit:before:animate-[shelfLightOn_1.4s_linear_both]
   dark:border-b-dark-void-light/60
+  dark:before:block
   dark:after:shadow-transparent
 ">
   <div class="
@@ -30,4 +37,15 @@
       }
     </div>
   </div>
+  <div aria-hidden="true" class="
+    pointer-events-none absolute inset-x-8 top-[calc(100%+0.75rem)] hidden h-24
+    bg-[radial-gradient(ellipse_at_50%_0%,--theme(--color-vanilla/0.15),transparent_70%)]
+    opacity-0 transition-opacity duration-1000
+    group-data-lit/shelf:opacity-100
+    before:absolute before:inset-x-0 before:top-0 before:h-0.5
+    before:rounded-full before:bg-vanilla-light
+    before:shadow-[0_0_0.5rem_0.125rem_--theme(--color-vanilla/0.6)]
+    motion-safe:group-data-lit/shelf:animate-[shelfLightOn_1.4s_linear_both]
+    dark:block
+  "></div>
 </div>

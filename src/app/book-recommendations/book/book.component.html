@@ -2,7 +2,13 @@
   '--book-index': bookIndex(),
   '--book-backface-color': bookDetails().backfaceColor,
   '--book-page-padding': '1rem'
-}">
+}"
+         class="
+           relative z-1 origin-bottom-left
+           motion-safe:opacity-0
+           motion-safe:group-data-lit/shelf:animate-[shelfBookPlace_0.7s_ease-out_calc(0.4s+var(--book-index)*0.15s)_backwards]
+           motion-safe:group-data-lit/shelf:opacity-100
+         ">
   <ul>
     <li
       [ngClass]="{'before:shadow-[inset_0_0_0_transparent]!': isBookCoverOpen()}"

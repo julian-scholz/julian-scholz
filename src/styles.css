@@ -82,6 +82,46 @@
       transform: translateX(-50%);
     }
   }
+  @keyframes shelfLightOn {
+    0% {
+      opacity: 0;
+    }
+    8% {
+      opacity: 0.8;
+    }
+    12% {
+      opacity: 0.1;
+    }
+    20% {
+      opacity: 0.9;
+    }
+    26% {
+      opacity: 0.2;
+    }
+    40% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes shelfBookPlace {
+    from {
+      opacity: 0;
+      transform: translateY(-2rem) rotate(-4deg);
+    }
+    60% {
+      opacity: 1;
+      transform: translateY(0) rotate(0.75deg);
+    }
+    80% {
+      transform: rotate(-0.25deg);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 @utility divider {
