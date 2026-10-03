@@ -323,11 +323,11 @@
   }
 
   ::view-transition-new(root) {
-    @apply dark:animate-[themeModeToggleRevealDark_2.25s] dark:z-101;
+    @apply dark:animate-[themeModeToggleRevealDark_2.25s_both] dark:z-101;
   }
 
   ::view-transition-old(root) {
-    @apply animate-[themeModeToggleRevealLight_2.25s] dark:animate-none z-100 dark:z-auto;
+    @apply animate-[themeModeToggleRevealLight_2.25s_both] dark:animate-none z-100 dark:z-auto;
   }
 
   button:not(:disabled),
