@@ -1,96 +1,87 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
-import { NgStyle } from '@angular/common';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  PLATFORM_ID,
+  signal,
+  ChangeDetectionStrategy
+} from '@angular/core';
+import { DatePipe, isPlatformBrowser, NgClass, NgStyle } from '@angular/common';
 import { FavoritesOverlayEntryModel } from './models/favorites-overlay-entry.model';
 import tagListData from '../../../tag-list.json';
-import { gsap } from '../../lib/misc/gsap/gsap';
 
 @Component({
   selector: 'app-favorites-overlay',
-  imports: [NgStyle],
+  imports: [NgStyle, NgClass, DatePipe],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './favorites-overlay.component.html',
 })
 export class FavoritesOverlayComponent {
-  private readonly duration: number = 15000;
-  private readonly durationSpread: number = 5000;
+  private readonly platformId: object = inject(PLATFORM_ID);
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
-  private readonly minBorderRadiusValue: number = 18;
-  private readonly maxBorderRadiusValue: number = 82;
-  private readonly getRandomBorderRadius: () => number = gsap.utils.random(
-    this.minBorderRadiusValue,
-    this.maxBorderRadiusValue,
-    1,
-    true,
+  public readonly isVisible = input.required<boolean>();
+
+  protected readonly firstPageNumber: number = 101;
+  protected readonly pages: FavoritesOverlayEntryModel[] = tagListData;
+  private readonly securityPageIndex: number = this.pages.findIndex(
+    (page) => page.title === 'Security',
   );
 
-  protected borderRadius = signal<string>('');
-  protected readonly tagList = signal<FavoritesOverlayEntryModel[]>([
-    ...tagListData,
+  protected readonly currentPageIndex = signal<number>(0);
+  protected readonly now = signal<Date>(new Date());
+
+  private readonly pageViewId = signal<number>(0);
+  protected readonly pageViews = computed(() => [
+    {
+      id: this.pageViewId(),
+      pageNumber: this.firstPageNumber + this.currentPageIndex(),
+      page: this.pages[this.currentPageIndex()],
+    },
   ]);
 
   constructor() {
-    this.tagList.update((list) => {
-      list.forEach((entry) => {
-        entry.duration = this.getRandomDuration();
-      });
-      return list;
+    effect(() => {
+      if (this.isVisible()) {
+        this.pageViewId.update((id) => id + 1);
+      }
     });
 
-    this.processOverlayChanges(false);
-  }
-
-  protected getRandomDuration(): string {
-    const min = this.duration - this.durationSpread;
-    const max = this.duration + this.durationSpread;
-    return `${gsap.utils.random(min, max, 1)}ms`;
-  }
-
-  protected processOverlayChanges(withAnimation: boolean): void {
-    this.generateNewBorderRadius();
-
-    if (withAnimation) {
-      this.animateOverlayChanges();
-    } else {
-      this.shuffleTagList();
+    if (isPlatformBrowser(this.platformId)) {
+      const clockIntervalId = setInterval(() => this.now.set(new Date()), 30000);
+      this.destroyRef.onDestroy(() => clearInterval(clockIntervalId));
     }
   }
 
-  private generateNewBorderRadius(): void {
-    const fourRandomNumbers = Array.from({ length: 4 }, () =>
-      this.getRandomBorderRadius(),
+  protected showPage(index: number): void {
+    this.currentPageIndex.set(
+      (index + this.pages.length) % this.pages.length,
     );
-    this.borderRadius.set(
-      `${fourRandomNumbers[0]}% ${100 - fourRandomNumbers[0]}% ${fourRandomNumbers[1]}% ${100 - fourRandomNumbers[1]}% / ${fourRandomNumbers[2]}% ${fourRandomNumbers[3]}% ${100 - fourRandomNumbers[3]}% ${100 - fourRandomNumbers[2]}%`,
-    );
+    this.pageViewId.update((id) => id + 1);
   }
 
-  private shuffleTagList(): void {
-    const shuffledList = gsap.utils.shuffle([...this.tagList()]);
-    this.tagList.set(shuffledList);
+  protected showPreviousPage(): void {
+    this.showPage(this.currentPageIndex() - 1);
   }
 
-  private animateOverlayChanges(): void {
-    gsap.to('.favorites-overlay-tag-list-item', {
-      opacity: 0,
-      duration: 0.5,
-      stagger: {
-        from: 'random',
-        each: 0.1,
-      },
-      ease: 'power1.in',
-      onComplete: () => {
-        this.shuffleTagList();
+  protected showNextPage(): void {
+    this.showPage(this.currentPageIndex() + 1);
+  }
 
-        gsap.to('.favorites-overlay-tag-list-item', {
-          opacity: 1,
-          duration: 0.6,
-          stagger: {
-            from: 'random',
-            each: 0.1,
-          },
-          ease: 'power1.out',
-        });
-      },
-    });
+  protected showSecurityPage(): void {
+    this.showPage(this.securityPageIndex);
+  }
+
+  protected showRandomPage(): void {
+    const otherPageIndexes = this.pages
+      .map((_, index) => index)
+      .filter((index) => index !== this.currentPageIndex());
+
+    this.showPage(
+      otherPageIndexes[Math.floor(Math.random() * otherPageIndexes.length)],
+    );
   }
 }

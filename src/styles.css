@@ -23,6 +23,9 @@
   --font-sans:
     Geist Sans, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-mono:
+    Geist Mono, ui-monospace, SFMono-Regular, Menlo, Consolas,
+    'Liberation Mono', monospace;
 
   --ease-header-nav-function: linear(
     0 0%,
@@ -74,12 +77,12 @@
       filter: brightness(0.2);
     }
   }
-  @keyframes favoritesOverlayLoop {
-    0% {
-      transform: translateX(0);
+  @keyframes teletextLineIn {
+    from {
+      opacity: 0;
     }
-    100% {
-      transform: translateX(-50%);
+    to {
+      opacity: 1;
     }
   }
   @keyframes shelfLightOn {
@@ -300,6 +303,15 @@
     font-weight: 100 900;
     src: url("https://assets.julian-scholz.dev/fonts/geist/geist-sans/Geist-wght.woff2") format("woff2"),
     url("https://assets.julian-scholz.dev/fonts/geist/geist-sans/Geist-wght.ttf") format("truetype");
+    font-display: block;
+  }
+
+  @font-face {
+    font-family: "Geist Mono";
+    font-style: normal;
+    font-weight: 100 900;
+    src: url("https://assets.julian-scholz.dev/fonts/geist/geist-mono/GeistMono-wght.woff2") format("woff2"),
+    url("https://assets.julian-scholz.dev/fonts/geist/geist-mono/GeistMono-wght.ttf") format("truetype");
     font-display: block;
   }
 

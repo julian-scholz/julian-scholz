@@ -1,64 +1,74 @@
 [
   {
+    "title": "Sprachen",
     "tags": [
+      "TypeScript",
+      "JavaScript",
+      "Java",
+      "PHP",
       "HTML",
       "CSS",
-      "JavaScript",
-      "TypeScript",
-      "PHP",
-      "Java",
       "SQL"
     ]
   },
   {
+    "title": "Frameworks",
     "tags": [
-      "Fullstack",
-      "Node.js",
-      "Nx",
       "Angular",
+      "RxJS",
       "NestJS",
-      "SpringBoot",
-      "TailwindCSS",
-      "Bootstrap"
+      "Node.js",
+      "Spring Boot",
+      "Tailwind CSS",
+      "Bootstrap",
+      "GSAP"
     ]
   },
   {
+    "title": "DevOps",
     "tags": [
       "Git",
+      "GitHub",
+      "Bitbucket",
+      "Jenkins",
       "CI/CD",
-      "DevOps",
-      "DevSecOps",
-      "SDLC",
-      "SSDLC",
-      "Docker"
+      "Docker",
+      "Nx",
+      "Cloudflare"
     ]
   },
   {
+    "title": "Tools",
     "tags": [
       "FirstSpirit",
       "Liferay",
-      "Jenkins",
-      "BitBucket",
-      "GitHub",
-      "IntelliJ",
-      "VSCode"
+      "IntelliJ IDEA",
+      "WebStorm",
+      "VS Code",
+      "Vitest",
+      "ESLint"
     ]
   },
   {
+    "title": "Security",
     "tags": [
-      "Security",
-      "ApplicationSecurity",
-      "OWASPTop10",
-      "OAuth",
-      "OIDC"
+      "AppSec",
+      "OWASP Top 10",
+      "Secure SDLC",
+      "DevSecOps",
+      "Pentests",
+      "Secure Coding",
+      "OAuth 2.0 / OIDC",
+      "Hack The Box"
     ]
   },
   {
+    "title": "Datenbanken",
     "tags": [
       "MySQL",
       "MariaDB",
       "MongoDB",
-      "OracleDB"
+      "Oracle DB"
     ]
   }
 ]

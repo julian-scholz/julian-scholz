@@ -1,4 +1,4 @@
 export interface FavoritesOverlayEntryModel {
+  title: string;
   tags: string[];
-  duration?: string;
 }

@@ -26,6 +26,7 @@
            ">
         <div></div>
         <app-favorites-overlay
+          [isVisible]="showFavoritesOverlay()"
           class="
             top-(--favorites-child-top) w-96 opacity-(--favorites-child-opacity)
             transition-[opacity,top] duration-1500
