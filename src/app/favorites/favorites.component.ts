@@ -49,7 +49,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
 
   private readonly lightForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_light`;
   private readonly darkForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_dark`;
-  private readonly backgroundImagesCount: number = 22;
+  private readonly backgroundImagesCount: number = 18;
   protected selectedForegroundImage: string | undefined;
   protected notSelectedForegroundImage: string | undefined;
   private foregroundImageResizeObserver: ResizeObserver | undefined;
