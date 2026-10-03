@@ -5,23 +5,40 @@
       class="
         relative ms-3 border-s border-dark-void
         dark:border-snow
-        [&_mark]:bg-transparent
+        [&_mark]:mx-[-0.15em]
+        [&_mark]:rounded-[0.7em_0.3em_0.6em_0.25em/0.5em_0.8em_0.4em_0.7em]
+        [&_mark]:bg-transparent [&_mark]:box-decoration-clone
         [&_mark]:bg-position-[calc((1-var(--vita-entry-mark-highlighted))*110%)_0]!
-        [&_mark]:text-custom-light-dark
+        [&_mark]:px-[0.15em] [&_mark]:text-custom-light-dark
         [&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-light)]
         [&_mark]:[--vita-entry-mark-highlighted:0]
         [&_mark]:[background:linear-gradient(120deg,var(--vita-entry-mark-highlight-color,transparent)_50%,transparent_50%)_110%_0/200%_100%_no-repeat]
         [&_mark]:[transition:background-position_1s]
         dark:[&_mark]:[--vita-entry-mark-highlight-color:var(--vita-entry-mark-highlight-color-dark)]
       ">
+    <li aria-hidden="true" class="
+      pointer-events-none absolute -inset-s-px top-0 h-full w-px origin-top
+      scale-y-0 bg-vanilla shadow-[0_0_0.5rem_--theme(--color-vanilla/0.8)]
+      motion-safe:vita-line-progress
+    "></li>
     @for (vitaEntry of vitaEntries; track vitaEntry; let isLast = $last) {
+      @let isExpanded = expandedEntryIndexes().has($index);
       <li
         [ngStyle]="{'--vita-entry-margin-bottom': !isLast ? '2.5rem' : '0'}"
-        class="relative ms-6 mb-(--vita-entry-margin-bottom)">
+        class="
+          relative ms-6 mb-(--vita-entry-margin-bottom)
+          motion-safe:vita-entry-reveal
+        ">
         <div
+          data-vita-icon
           class="
             absolute -inset-s-9 top-1 flex size-6 items-center justify-center
             rounded-full bg-dark-void-dark ring-[0.3125rem] ring-dark-void
+            transition-shadow duration-500
+            before:absolute before:inset-0 before:rounded-full
+            data-ignited:ring-vanilla
+            motion-safe:vita-icon-pop
+            motion-safe:data-ignited:before:animate-[vitaIconIgnite_0.9s_ease-out]
             dark:bg-dark-void dark:ring-dark-void-light
           "
           aria-hidden="true">
@@ -30,16 +47,29 @@
           "></fa-icon>
         </div>
         <div class="flex items-center">
-          <h3>{{ vitaEntry.title }}</h3>
+          <h3 data-vita-title [attr.aria-label]="vitaEntry.title">{{ vitaEntry.title }}</h3>
           @if (vitaEntry.titleDescription) {
             <div
               class="
-                ms-4 mb-2 rounded-sm bg-dark-void px-2.5 py-0.5 text-sm
-                font-medium text-vanilla-light transition duration-300
-                ease-in-out select-none
+                group/badge ms-4 mb-2 inline-flex items-center gap-2 rounded-sm
+                bg-dark-void px-2.5 py-0.5 text-sm font-medium
+                text-vanilla-light transition duration-300 ease-in-out
+                select-none
                 hover:scale-[1.2] hover:bg-vanilla-light hover:text-dark-void
                 dark:bg-dark-void-light
               ">
+              <span class="relative flex size-2" aria-hidden="true">
+                <span class="
+                  absolute inline-flex size-full rounded-full bg-vanilla
+                  opacity-75
+                  group-hover/badge:bg-dark-void
+                  motion-safe:animate-ping
+                "></span>
+                <span class="
+                  relative inline-flex size-2 rounded-full bg-vanilla
+                  group-hover/badge:bg-dark-void
+                "></span>
+              </span>
               {{ vitaEntry.titleDescription | uppercase }}
             </div>
           }
@@ -57,8 +87,30 @@
           <fa-icon [icon]="faLocationDot" class="me-1 text-vanilla"></fa-icon>
           {{ vitaEntry.location }}
         </div>
-        <p class="mb-4 text-base font-normal"
-           [innerHTML]="vitaEntry.description"></p>
+        <div [id]="'vita-entry-description-' + $index"
+             [ngClass]="isExpanded ? 'h-auto' : '
+               h-[3lh] mask-[linear-gradient(to_bottom,black_30%,transparent)]
+             '"
+             class="
+               overflow-hidden text-base font-normal transition-[height]
+               duration-500 ease-in-out [interpolate-size:allow-keywords]
+               motion-reduce:transition-none
+             ">
+          <p [innerHTML]="vitaEntry.description"></p>
+        </div>
+        <button type="button" (click)="toggleEntryExpanded($index)"
+                [attr.aria-expanded]="isExpanded"
+                [attr.aria-controls]="'vita-entry-description-' + $index"
+                class="
+                  mt-2 mb-4 inline-flex items-center gap-1.5 border-b
+                  border-dotted border-current text-sm font-medium
+                  hover:border-solid hover:text-vanilla-extra-dark
+                  dark:hover:text-vanilla
+                ">
+          {{ isExpanded ? 'Weniger anzeigen' : 'Mehr lesen' }}
+          <fa-icon [icon]="faChevronDown" size="xs" [ngClass]="{'rotate-180': isExpanded}"
+                   class="inline-block transition-transform duration-300"></fa-icon>
+        </button>
       </li>
     }
   </ol>

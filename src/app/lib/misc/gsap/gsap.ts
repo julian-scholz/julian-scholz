@@ -4,4 +4,7 @@ export { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 export { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
+export { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
+
+gsap.registerPlugin(ScrollTrigger, ScrambleTextPlugin);

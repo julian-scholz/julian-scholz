@@ -7,11 +7,13 @@ import {
   PLATFORM_ID,
   Renderer2,
   RendererStyleFlags2,
+  signal,
   viewChild,
   DOCUMENT,
   ChangeDetectionStrategy
 } from '@angular/core';
 import {
+  faChevronDown,
   faComputer,
   faGraduationCap,
   faLocationDot,
@@ -23,6 +25,7 @@ import { VitaEntryModel } from './models/vita-entry.model';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   isPlatformBrowser,
+  NgClass,
   NgStyle,
   UpperCasePipe
 } from '@angular/common';
@@ -31,7 +34,7 @@ import { gsap } from '../lib/misc/gsap/gsap';
 
 @Component({
   selector: 'app-vita',
-  imports: [FaIconComponent, UpperCasePipe, NgStyle],
+  imports: [FaIconComponent, UpperCasePipe, NgStyle, NgClass],
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './vita.component.html',
 })
@@ -40,10 +43,15 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
   private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly renderer: Renderer2 = inject(Renderer2);
   private markerIntersectionObserver: IntersectionObserver | undefined;
+  private iconIntersectionObserver: IntersectionObserver | undefined;
+  private titleIntersectionObserver: IntersectionObserver | undefined;
+  private readonly titleScrambleChars: string = '01<>/\\{}[]#$%&*+=?';
   private readonly vitaEntriesElement =
     viewChild.required<ElementRef<HTMLDivElement>>('vitaEntriesElement');
 
   protected readonly faLocationDot: IconDefinition = faLocationDot;
+  protected readonly faChevronDown: IconDefinition = faChevronDown;
+  protected readonly expandedEntryIndexes = signal<ReadonlySet<number>>(new Set());
   protected readonly vitaEntries: VitaEntryModel[] = [
     {
       iconDefinition: faShield,
@@ -138,10 +146,109 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
         .forEach((markEntry: HTMLElement) =>
           this.markerIntersectionObserver?.observe(markEntry),
         );
+
+      this.initIconIgnition();
+      this.initTitleScrambling();
     }
   }
 
   ngOnDestroy(): void {
     this.markerIntersectionObserver?.disconnect();
+    this.iconIntersectionObserver?.disconnect();
+    this.titleIntersectionObserver?.disconnect();
+  }
+
+  protected toggleEntryExpanded(index: number): void {
+    this.expandedEntryIndexes.update((current) => {
+      const updated = new Set(current);
+      if (!updated.delete(index)) {
+        updated.add(index);
+      }
+      return updated;
+    });
+  }
+
+  private initIconIgnition(): void {
+    const angularWindow = this.angularDocument.defaultView!;
+
+    this.iconIntersectionObserver = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const viewportMiddle =
+            entry.rootBounds?.top ?? angularWindow.innerHeight / 2;
+          const iconMiddle =
+            entry.boundingClientRect.top + entry.boundingClientRect.height / 2;
+
+          if (iconMiddle <= viewportMiddle) {
+            this.renderer.setAttribute(entry.target, 'data-ignited', '');
+          } else {
+            this.renderer.removeAttribute(entry.target, 'data-ignited');
+          }
+        }
+      },
+      { rootMargin: '-50% 0px -50% 0px' },
+    );
+    this.vitaEntriesElement()
+      .nativeElement.querySelectorAll('[data-vita-icon]')
+      .forEach((iconElement) =>
+        this.iconIntersectionObserver?.observe(iconElement),
+      );
+  }
+
+  private initTitleScrambling(): void {
+    if (
+      this.angularDocument.defaultView!.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches
+    ) {
+      return;
+    }
+
+    const titles = new Map<Element, string>();
+    this.titleIntersectionObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const title = titles.get(entry.target);
+        const isAboveViewport = entry.boundingClientRect.bottom < 0;
+
+        if (title === undefined || (!entry.isIntersecting && !isAboveViewport)) {
+          continue;
+        }
+
+        this.titleIntersectionObserver?.unobserve(entry.target);
+        if (isAboveViewport) {
+          entry.target.textContent = title;
+        } else {
+          gsap.to(entry.target, {
+            duration: 1.4,
+            ease: 'none',
+            scrambleText: {
+              text: title,
+              chars: this.titleScrambleChars,
+              revealDelay: 0.6,
+              speed: 0.6,
+            },
+          });
+        }
+      }
+    });
+
+    this.vitaEntriesElement()
+      .nativeElement.querySelectorAll<HTMLElement>('[data-vita-title]')
+      .forEach((titleElement) => {
+        const title = titleElement.textContent ?? '';
+        titles.set(titleElement, title);
+        titleElement.textContent = this.scrambleText(title);
+        this.titleIntersectionObserver?.observe(titleElement);
+      });
+  }
+
+  private scrambleText(text: string): string {
+    return text.replace(
+      /\S/g,
+      () =>
+        this.titleScrambleChars[
+          Math.floor(Math.random() * this.titleScrambleChars.length)
+        ],
+    );
   }
 }

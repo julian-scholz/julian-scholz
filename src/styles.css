@@ -178,12 +178,75 @@
       transform: scaleY(0);
     }
   }
+  @keyframes vitaLineGrow {
+    from {
+      scale: 1 0;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+  @keyframes vitaEntryReveal {
+    from {
+      opacity: 0;
+      translate: 2rem 0;
+    }
+    to {
+      opacity: 1;
+      translate: none;
+    }
+  }
+  @keyframes vitaIconPop {
+    0% {
+      opacity: 0;
+      scale: 0.3;
+    }
+    70% {
+      opacity: 1;
+      scale: 1.15;
+    }
+    100% {
+      scale: none;
+    }
+  }
+  @keyframes vitaIconIgnite {
+    from {
+      box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-vanilla) 70%, transparent);
+    }
+    to {
+      box-shadow: 0 0 0 1rem transparent;
+    }
+  }
 }
 
 @property --shelf-light-x {
   syntax: '<percentage>';
   inherits: true;
   initial-value: 50%;
+}
+
+@utility vita-line-progress {
+  @supports (animation-timeline: view()) {
+    animation: vitaLineGrow linear both;
+    animation-timeline: view();
+    animation-range: cover 50vh cover calc(100% - 50vh);
+  }
+}
+
+@utility vita-entry-reveal {
+  @supports (animation-timeline: view()) {
+    animation: vitaEntryReveal linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 10rem;
+  }
+}
+
+@utility vita-icon-pop {
+  @supports (animation-timeline: view()) {
+    animation: vitaIconPop linear both;
+    animation-timeline: view();
+    animation-range: cover 0% cover 8rem;
+  }
 }
 
 @utility divider {
