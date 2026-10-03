@@ -1,8 +1,10 @@
 import {
+  afterNextRender,
   AfterViewInit,
   Component,
   ElementRef,
   inject,
+  Injector,
   OnDestroy,
   PLATFORM_ID,
   Renderer2,
@@ -30,7 +32,7 @@ import {
   UpperCasePipe
 } from '@angular/common';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { gsap } from '../lib/misc/gsap/gsap';
+import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
 
 @Component({
   selector: 'app-vita',
@@ -42,10 +44,10 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly renderer: Renderer2 = inject(Renderer2);
+  private readonly injector: Injector = inject(Injector);
   private markerIntersectionObserver: IntersectionObserver | undefined;
   private iconIntersectionObserver: IntersectionObserver | undefined;
   private titleIntersectionObserver: IntersectionObserver | undefined;
-  private readonly titleScrambleChars: string = '01<>/\\{}[]#$%&*+=?';
   private readonly vitaEntriesElement =
     viewChild.required<ElementRef<HTMLDivElement>>('vitaEntriesElement');
 
@@ -148,7 +150,7 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
         );
 
       this.initIconIgnition();
-      this.initTitleScrambling();
+      this.initTitleReveal();
     }
   }
 
@@ -166,6 +168,27 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
       }
       return updated;
     });
+
+    if (!this.isDescriptionHeightAnimated()) {
+      afterNextRender(() => ScrollTrigger.refresh(true), {
+        injector: this.injector,
+      });
+    }
+  }
+
+  protected refreshScrollTriggersAfterResize(event: TransitionEvent): void {
+    if (event.target === event.currentTarget && event.propertyName === 'height') {
+      ScrollTrigger.refresh(true);
+    }
+  }
+
+  private isDescriptionHeightAnimated(): boolean {
+    const angularWindow = this.angularDocument.defaultView!;
+
+    return (
+      angularWindow.CSS.supports('interpolate-size', 'allow-keywords') &&
+      !angularWindow.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
   }
 
   private initIconIgnition(): void {
@@ -195,60 +218,23 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
       );
   }
 
-  private initTitleScrambling(): void {
-    if (
-      this.angularDocument.defaultView!.matchMedia(
-        '(prefers-reduced-motion: reduce)',
-      ).matches
-    ) {
-      return;
-    }
+  private initTitleReveal(): void {
+    const vitaEntriesElement = this.vitaEntriesElement().nativeElement;
 
-    const titles = new Map<Element, string>();
     this.titleIntersectionObserver = new IntersectionObserver((entries) => {
       for (const entry of entries) {
-        const title = titles.get(entry.target);
-        const isAboveViewport = entry.boundingClientRect.bottom < 0;
-
-        if (title === undefined || (!entry.isIntersecting && !isAboveViewport)) {
-          continue;
-        }
-
-        this.titleIntersectionObserver?.unobserve(entry.target);
-        if (isAboveViewport) {
-          entry.target.textContent = title;
-        } else {
-          gsap.to(entry.target, {
-            duration: 1.4,
-            ease: 'none',
-            scrambleText: {
-              text: title,
-              chars: this.titleScrambleChars,
-              revealDelay: 0.6,
-              speed: 0.6,
-            },
-          });
+        if (entry.isIntersecting || entry.boundingClientRect.bottom < 0) {
+          this.titleIntersectionObserver?.unobserve(entry.target);
+          this.renderer.setAttribute(entry.target, 'data-revealed', '');
         }
       }
     });
 
-    this.vitaEntriesElement()
-      .nativeElement.querySelectorAll<HTMLElement>('[data-vita-title]')
-      .forEach((titleElement) => {
-        const title = titleElement.textContent ?? '';
-        titles.set(titleElement, title);
-        titleElement.textContent = this.scrambleText(title);
-        this.titleIntersectionObserver?.observe(titleElement);
-      });
-  }
-
-  private scrambleText(text: string): string {
-    return text.replace(
-      /\S/g,
-      () =>
-        this.titleScrambleChars[
-          Math.floor(Math.random() * this.titleScrambleChars.length)
-        ],
-    );
+    this.renderer.setAttribute(vitaEntriesElement, 'data-title-reveal', '');
+    vitaEntriesElement
+      .querySelectorAll('[data-vita-title]')
+      .forEach((titleElement) =>
+        this.titleIntersectionObserver?.observe(titleElement),
+      );
   }
 }

@@ -209,6 +209,36 @@
       scale: none;
     }
   }
+  @keyframes vitaTitleType {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+  @keyframes vitaTitleCaret {
+    0% {
+      left: 0%;
+      opacity: 1;
+      animation-timing-function: steps(24, end);
+    }
+    60%,
+    80% {
+      left: 100%;
+      opacity: 1;
+      animation-timing-function: step-end;
+    }
+    70%,
+    90%,
+    100% {
+      opacity: 0;
+      animation-timing-function: step-end;
+    }
+    100% {
+      left: 100%;
+    }
+  }
   @keyframes vitaIconIgnite {
     from {
       box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-vanilla) 70%, transparent);

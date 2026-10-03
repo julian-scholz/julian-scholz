@@ -47,7 +47,16 @@
           "></fa-icon>
         </div>
         <div class="flex items-center">
-          <h3 data-vita-title [attr.aria-label]="vitaEntry.title">{{ vitaEntry.title }}</h3>
+          <h3 data-vita-title class="
+            relative
+            after:absolute after:bottom-[0.15em] after:h-[1em] after:w-[0.5ch]
+            after:bg-vanilla after:opacity-0
+            motion-safe:data-revealed:after:animate-[vitaTitleCaret_1.6s_linear_0.3s_both]
+          "><span class="
+            inline-block
+            motion-safe:in-data-revealed:animate-[vitaTitleType_0.96s_steps(24,end)_0.3s_both]
+            motion-safe:in-data-title-reveal:[clip-path:inset(0_100%_0_0)]
+          ">{{ vitaEntry.title }}</span></h3>
           @if (vitaEntry.titleDescription) {
             <div
               class="
@@ -91,6 +100,7 @@
              [ngClass]="isExpanded ? 'h-auto' : '
                h-[3lh] mask-[linear-gradient(to_bottom,black_30%,transparent)]
              '"
+             (transitionend)="refreshScrollTriggersAfterResize($event)"
              class="
                overflow-hidden text-base font-normal transition-[height]
                duration-500 ease-in-out [interpolate-size:allow-keywords]
