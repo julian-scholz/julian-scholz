@@ -107,8 +107,9 @@
              '"
              (transitionend)="refreshScrollTriggersAfterResize($event)"
              class="
-               overflow-hidden text-base font-normal transition-[height]
-               duration-500 ease-in-out [interpolate-size:allow-keywords]
+               mx-[-0.15em] overflow-hidden px-[0.15em] text-base font-normal
+               transition-[height] duration-500 ease-in-out
+               [interpolate-size:allow-keywords]
                motion-reduce:transition-none
              ">
           <p [innerHTML]="vitaEntry.description"></p>
