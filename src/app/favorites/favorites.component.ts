@@ -54,7 +54,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
   protected notSelectedForegroundImage: string | undefined;
   private foregroundImageResizeObserver: ResizeObserver | undefined;
   protected selectedBackgroundImagePath: string | undefined;
-  protected readonly outlineOffset: number = 1;
+  protected readonly outlineOffset: number = 3;
   protected outlineWidth = signal<number>(0);
 
   private readonly showFavoritesOverlayThreshold: number = 0.6;
