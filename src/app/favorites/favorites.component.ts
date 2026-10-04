@@ -13,7 +13,7 @@ import {
   DOCUMENT,
   ChangeDetectionStrategy
 } from '@angular/core';
-import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
+import { gsap } from '../lib/misc/gsap/gsap';
 import {
   isPlatformBrowser,
   NgOptimizedImage,
@@ -24,7 +24,6 @@ import { FooterComponent } from '../footer/footer.component';
 import { ThemeModeToggleService } from '../lib/theme-mode-toggle/theme-mode-toggle.service';
 import { ThemeMode } from '../lib/theme-mode-toggle/utils/theme-mode-toggle.enum';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, fromEvent } from 'rxjs';
 import { environment } from '../../environment/environment';
 
 @Component({
@@ -122,14 +121,6 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollImage().nativeElement.getBoundingClientRect().height,
         this.scrollImage().nativeElement.getBoundingClientRect().width,
       );
-
-      fromEvent(this.angularDocument.defaultView!, 'resize')
-        .pipe(debounceTime(250), takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => ScrollTrigger.refresh(true));
-
-      fromEvent(this.angularDocument.defaultView!, 'orientationchange')
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe(() => ScrollTrigger.refresh(true));
 
       this.foregroundImageResizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {

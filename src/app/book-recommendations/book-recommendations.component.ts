@@ -1,9 +1,11 @@
 import {
+  afterNextRender,
   AfterViewInit,
   Component,
   DestroyRef,
   ElementRef,
   inject,
+  Injector,
   PLATFORM_ID,
   signal,
   viewChild,
@@ -15,7 +17,7 @@ import { BookModel } from './book/models/book.model';
 import { isPlatformBrowser } from '@angular/common';
 import { debounceTime, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { gsap } from '../lib/misc/gsap/gsap';
+import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
 import { environment } from '../../environment/environment';
 
 @Component({
@@ -28,6 +30,7 @@ export class BookRecommendationsComponent implements AfterViewInit {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  private readonly injector: Injector = inject(Injector);
 
   private readonly section = viewChild.required<ElementRef<HTMLElement>>(
     'bookRecommendationsSection',
@@ -159,6 +162,10 @@ export class BookRecommendationsComponent implements AfterViewInit {
 
     if (!this.isShelvesLengthEqual(this.shelveRows(), newShelveRows)) {
       this.shelveRows.set(newShelveRows);
+
+      afterNextRender(() => ScrollTrigger.refresh(true), {
+        injector: this.injector,
+      });
     }
   }
 
