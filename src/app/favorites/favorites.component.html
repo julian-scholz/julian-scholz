@@ -3,7 +3,7 @@
     <h2>Favoriten</h2>
     <div class="divider"></div>
   </div>
-  <div id="favorites-scroll-trigger" class="
+  <div #favoritesScrollTrigger id="favorites-scroll-trigger" class="
     relative overflow-hidden
     *:w-full
   ">
@@ -42,7 +42,13 @@
         />
       </div>
     </section>
-    <div id="favorites-image-section" class="relative h-lvh">
+    <div id="favorites-image-section"
+         [attr.data-tv-on]="showBackgroundImage() || null"
+         class="
+           relative h-lvh opacity-0
+           data-tv-on:opacity-100
+           motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
+         ">
       @if (selectedBackgroundImagePath) {
         <img [ngSrc]="selectedBackgroundImagePath"
              ngSrcset="2560w, 1920w" sizes="100vw" fill
@@ -73,7 +79,7 @@
                  max-w-full object-contain
                  outline-[calc(var(--favorites-outline-width)*1px)]
                  outline-offset-[calc(var(--favorites-outline-offset)*-1px)]
-                 outline-snow
+                 outline-snow will-change-transform
                  dark:outline-dark-void
                "
                alt="Retro-Fernseher mit ausgeschnittenem Bildschirm."

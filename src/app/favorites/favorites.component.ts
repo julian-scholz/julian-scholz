@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -37,7 +38,7 @@ import { environment } from '../../environment/environment';
   changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './favorites.component.html',
 })
-export class FavoritesComponent implements OnInit, OnDestroy {
+export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly themeModeToggleService: ThemeModeToggleService = inject(
@@ -61,8 +62,15 @@ export class FavoritesComponent implements OnInit, OnDestroy {
   private showFavoritesOverlayInitialisationDone = false;
   protected showFavoritesOverlay = signal<boolean>(false);
 
+  private readonly showBackgroundImageThreshold: number = 0.3;
+  private backgroundImageIntersectionObserver: IntersectionObserver | undefined;
+  protected showBackgroundImage = signal<boolean>(false);
+
   private readonly scrollImage =
     viewChild.required<ElementRef<HTMLImageElement>>('scrollImage');
+  private readonly favoritesScrollTrigger = viewChild.required<
+    ElementRef<HTMLDivElement>
+  >('favoritesScrollTrigger');
 
   private gsapTimeline: gsap.core.Timeline | undefined;
 
@@ -88,6 +96,24 @@ export class FavoritesComponent implements OnInit, OnDestroy {
         },
         error: (error) => console.error(error),
       });
+  }
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.backgroundImageIntersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.intersectionRatio >= this.showBackgroundImageThreshold) {
+            this.showBackgroundImage.set(true);
+          } else if (!entry.isIntersecting) {
+            this.showBackgroundImage.set(false);
+          }
+        },
+        { threshold: [0, this.showBackgroundImageThreshold] },
+      );
+      this.backgroundImageIntersectionObserver.observe(
+        this.favoritesScrollTrigger().nativeElement,
+      );
+    }
   }
 
   protected afterForegroundImageLoad(): void {
@@ -160,6 +186,7 @@ export class FavoritesComponent implements OnInit, OnDestroy {
     this.gsapTimeline?.kill();
 
     this.foregroundImageResizeObserver?.disconnect();
+    this.backgroundImageIntersectionObserver?.disconnect();
   }
 
   protected updateScrollImageSpacerWidth(
