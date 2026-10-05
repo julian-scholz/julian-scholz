@@ -126,15 +126,15 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollImage().nativeElement.getBoundingClientRect().width,
       );
 
-      this.foregroundImageResizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const { height, width } = entry.contentRect;
-          this.updateScrollImageSpacerWidth(height, width);
-        }
-      });
-      this.foregroundImageResizeObserver.observe(
-        this.scrollImage().nativeElement,
+      const scrollImage = this.scrollImage().nativeElement;
+      this.foregroundImageResizeObserver = new ResizeObserver(() =>
+        this.updateScrollImageSpacerWidth(
+          scrollImage.offsetHeight,
+          scrollImage.offsetWidth,
+        ),
       );
+      this.foregroundImageResizeObserver.observe(scrollImage);
+      this.foregroundImageResizeObserver.observe(scrollImage.parentElement!);
 
       const zoomEase = gsap.parseEase('power1.inOut');
       const finalZoomScale = this.getApparentZoomScale(1);
