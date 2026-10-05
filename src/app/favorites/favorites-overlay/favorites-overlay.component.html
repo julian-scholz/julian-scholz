@@ -37,16 +37,20 @@
   <nav aria-label="Videotext-Seiten" class="
     mt-4 grid grid-cols-2 gap-x-4 border-t border-snow/20 pt-2
     sm:grid-cols-3
+    short:mt-2 short:grid-cols-6 short:gap-x-1
   ">
     @for (page of pages; track page.title; let i = $index) {
       <button type="button" (click)="showPage(i)"
+              [attr.aria-label]="firstPageNumber + i + ' ' + page.title"
               [attr.aria-current]="i === currentPageIndex() ? 'page' : null"
               [ngClass]="{'bg-snow/10': i === currentPageIndex()}"
               class="
                 truncate px-1 text-left
                 hover:text-vanilla
+                short:text-center
               ">
-        <span class="text-vanilla">{{ firstPageNumber + i }}</span> {{ page.title }}
+        <span class="text-vanilla">{{ firstPageNumber + i }}</span>
+        <span class="short:hidden"> {{ page.title }}</span>
       </button>
     }
   </nav>

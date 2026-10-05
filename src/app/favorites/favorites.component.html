@@ -23,14 +23,16 @@
              flex h-full flex-col items-center gap-5
              *:relative *:flex *:max-w-full *:flex-auto *:items-center
              *:overflow-hidden
+             short:flex-row short:justify-center
            ">
-        <div></div>
+        <div class="short:hidden"></div>
         <app-favorites-overlay
           [isVisible]="showFavoritesOverlay()"
           class="
             top-(--favorites-child-top) w-96 opacity-(--favorites-child-opacity)
             transition-[opacity,top] duration-1500
             2xl:w-140
+            short:flex-none
           "
         />
         <app-footer
@@ -38,6 +40,7 @@
             top-(--favorites-child-top) shrink-0!
             opacity-(--favorites-child-opacity) transition-[opacity,top]
             delay-500 duration-1500
+            short:flex-none
           "
         />
       </div>
