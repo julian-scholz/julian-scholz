@@ -61,7 +61,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private showFavoritesOverlayInitialisationDone = false;
   protected showFavoritesOverlay = signal<boolean>(false);
 
-  private readonly showBackgroundImageThreshold: number = 0.3;
+  private readonly showBackgroundImageThreshold: number = 0.6;
   private backgroundImageIntersectionObserver: IntersectionObserver | undefined;
   protected showBackgroundImage = signal<boolean>(false);
 

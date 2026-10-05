@@ -48,6 +48,7 @@
            relative h-lvh opacity-0
            data-tv-on:opacity-100
            motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
+           motion-reduce:transition-opacity motion-reduce:duration-700
          ">
       @if (selectedBackgroundImagePath) {
         <img [ngSrc]="selectedBackgroundImagePath"
