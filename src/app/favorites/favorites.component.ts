@@ -73,6 +73,10 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private gsapTimeline: gsap.core.Timeline | undefined;
 
+  private readonly zoomScale: number = 2.7;
+  private readonly zoomPerspective: number = 500;
+  private readonly zoomDepth: number = 250;
+
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.selectedBackgroundImagePath = `${environment.assetsUrl}/images/favorites/bg/${gsap.utils.random(0, this.backgroundImagesCount - 1, 1)}`;
@@ -132,6 +136,9 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.scrollImage().nativeElement,
       );
 
+      const zoomEase = gsap.parseEase('power1.inOut');
+      const finalZoomScale = this.getApparentZoomScale(1);
+
       this.gsapTimeline = gsap
         .timeline({
           scrollTrigger: {
@@ -156,10 +163,11 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         })
         .to('#favorites-image-overlay', {
-          scale: 2.7,
-          z: 250,
+          scale: finalZoomScale,
           transformOrigin: 'center center',
-          ease: 'power1.inOut',
+          ease: (time: number) =>
+            (this.getApparentZoomScale(zoomEase(time)) - 1) /
+            (finalZoomScale - 1),
         })
         .to(
           '#favorites-image-section',
@@ -178,6 +186,13 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.foregroundImageResizeObserver?.disconnect();
     this.backgroundImageIntersectionObserver?.disconnect();
+  }
+
+  private getApparentZoomScale(progress: number): number {
+    return (
+      (1 + (this.zoomScale - 1) * progress) *
+      (this.zoomPerspective / (this.zoomPerspective - this.zoomDepth * progress))
+    );
   }
 
   protected updateScrollImageSpacerWidth(
