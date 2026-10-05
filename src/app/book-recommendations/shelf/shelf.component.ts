@@ -65,7 +65,7 @@ export class BookRecommendationsShelfComponent implements AfterViewInit, OnDestr
             this.shelfIntersectionObserver?.disconnect();
           }
         },
-        { threshold: 0.5 },
+        { threshold: 0.4 },
       );
       this.shelfIntersectionObserver.observe(shelfElement);
 
