@@ -348,13 +348,25 @@
     font-display: block;
   }
 
+  body {
+    @apply antialiased;
+  }
+
   /* Scrollbar */
   ::-webkit-scrollbar {
-    @apply bg-snow dark:bg-dark-void w-[10px];
+    @apply bg-snow w-[10px];
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-dark-void dark:bg-dark-void-light rounded-5xl;
+    @apply bg-dark-void rounded-5xl;
+  }
+
+  :where(.dark, .dark *)::-webkit-scrollbar {
+    @apply bg-dark-void;
+  }
+
+  :where(.dark, .dark *)::-webkit-scrollbar-thumb {
+    @apply bg-dark-void-light;
   }
 
   /* Thememode-Toggler */
@@ -367,12 +379,16 @@
     @apply mix-blend-normal;
   }
 
-  ::view-transition-new(root) {
-    @apply dark:animate-[themeModeToggleRevealDark_2.25s_both] dark:z-101;
+  ::view-transition-old(root) {
+    @apply animate-[themeModeToggleRevealLight_2.25s_both] z-100;
   }
 
-  ::view-transition-old(root) {
-    @apply animate-[themeModeToggleRevealLight_2.25s_both] dark:animate-none z-100 dark:z-auto;
+  .dark::view-transition-new(root) {
+    @apply animate-[themeModeToggleRevealDark_2.25s_both] z-101;
+  }
+
+  .dark::view-transition-old(root) {
+    @apply animate-none z-auto;
   }
 
   button:not(:disabled),

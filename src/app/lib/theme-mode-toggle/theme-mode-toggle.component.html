@@ -5,7 +5,7 @@
   <div class="relative inset-0 size-full">
     <label for="theme-mode-toggle-button">
       <input #themeModeCheckbox type="checkbox" id="theme-mode-toggle-button" class="
-        peer hidden
+        peer sr-only
       "
              (change)="toggleThemeMode()" aria-label="Theme wechseln">
       <span
@@ -14,6 +14,8 @@
           bg-vanilla-dark duration-700
           peer-checked:translate-x-7 peer-checked:bg-transparent
           peer-checked:shadow-[0.25rem_0_0_0] peer-checked:shadow-vanilla-light
+          peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2
+          peer-focus-visible:outline-vanilla
         "
         aria-hidden="true"></span>
       <span
