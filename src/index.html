@@ -1,9 +1,25 @@
 <!doctype html>
-<html lang="de" class="scroll-smooth" prefix="og: https://ogp.me/ns#">
+<html lang="de" class="
+  scroll-smooth scheme-light
+  dark:scheme-dark
+" prefix="og: https://ogp.me/ns#">
 <head>
   <title>julian scholz. | Entwickler. Aus Leidenschaft.</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script>
+    (() => {
+      let themeMode = null;
+      try {
+        themeMode = localStorage.getItem('themeMode');
+      } catch {}
+      const isDarkMode =
+        themeMode === 'dark' ||
+        (themeMode !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.classList.toggle('dark', isDarkMode);
+    })();
+  </script>
 
   <meta name="description"
         content="Website von Julian Scholz. Buchtipps, Vita und Favoriten. Eine Übersicht über Fähigkeiten, berufliche Stationen und Projekte.">

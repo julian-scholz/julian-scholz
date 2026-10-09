@@ -40,16 +40,12 @@ export class ThemeModeToggleComponent implements AfterViewInit {
     viewChild.required<ElementRef<HTMLInputElement>>('themeModeCheckbox');
 
   ngAfterViewInit(): void {
-    this.themeModeToggleService
-      .init(this.renderer, this.angularDocument)
-      .then((themeMode: ThemeMode) =>
-        this.renderer.setProperty(
-          this.themeModeCheckbox().nativeElement,
-          'checked',
-          themeMode === ThemeMode.DARK,
-        ),
-      )
-      .catch((error) => console.error(error));
+    const themeMode = this.themeModeToggleService.init(this.angularDocument);
+    this.renderer.setProperty(
+      this.themeModeCheckbox().nativeElement,
+      'checked',
+      themeMode === ThemeMode.DARK,
+    );
   }
 
   protected toggleThemeMode(): void {

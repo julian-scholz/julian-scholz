@@ -1,15 +1,13 @@
-import { inject, Injectable, PLATFORM_ID, Renderer2 } from '@angular/core';
+import { inject, Injectable, Renderer2 } from '@angular/core';
 import { ThemeMode } from './utils/theme-mode-toggle.enum';
 import { Observable, ReplaySubject } from 'rxjs';
 import {
   THEME_MODE_STORAGE_SERVICE,
   ThemeModeStorage,
 } from './theme-mode-storage.service';
-import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeModeToggleService {
-  private readonly platformId: object = inject(PLATFORM_ID);
   private currentMode: ThemeMode | undefined;
   private readonly modeChangedSubject = new ReplaySubject<ThemeMode>(1);
   private readonly modeStorage: ThemeModeStorage = inject(
@@ -22,60 +20,39 @@ export class ThemeModeToggleService {
     this.modeChanged$ = this.modeChangedSubject.asObservable();
   }
 
-  private updateCurrentMode(mode: ThemeMode): void {
+  private setCurrentMode(mode: ThemeMode): void {
     this.currentMode = mode;
     this.modeChangedSubject.next(mode);
-    this.modeStorage.save(mode);
   }
 
-  public init(
-    renderer: Renderer2,
-    angularDocument: Document,
-  ): Promise<ThemeMode> {
-    let initMode: ThemeMode | null = this.modeStorage.get();
-    if (!initMode) {
-      if (isPlatformBrowser(this.platformId)) {
-        const prefersDarkMode = angularDocument.defaultView!.matchMedia(
-          '(prefers-color-scheme: dark)',
-        ).matches;
-        initMode = prefersDarkMode ? ThemeMode.DARK : ThemeMode.LIGHT;
-      } else {
-        initMode = ThemeMode.LIGHT;
-      }
-    }
-    this.updateCurrentMode(initMode);
-    renderer.addClass(angularDocument.documentElement, initMode);
+  // The theme mode is decided and applied by the inline script in index.html
+  // before the first paint, so it only has to be adopted here
+  public init(angularDocument: Document): ThemeMode {
+    const initMode = angularDocument.documentElement.classList.contains(
+      ThemeMode.DARK,
+    )
+      ? ThemeMode.DARK
+      : ThemeMode.LIGHT;
+    this.setCurrentMode(initMode);
 
-    return Promise.resolve(initMode);
+    return initMode;
   }
 
+  // Only an explicit choice is saved, so the system preference applies until then
   private toggleThemeMode(
     renderer: Renderer2,
     documentElement: HTMLElement,
   ): void {
-    this.toggleElementClass(renderer, documentElement, ThemeMode.LIGHT);
-    this.toggleElementClass(renderer, documentElement, ThemeMode.DARK);
-    if (this.currentMode) {
-      if (this.currentMode === ThemeMode.LIGHT) {
-        this.updateCurrentMode(ThemeMode.DARK);
-      } else {
-        this.updateCurrentMode(ThemeMode.LIGHT);
-      }
-    } else {
-      console.error('currentMode is not set!');
-    }
-  }
+    const newMode =
+      this.currentMode === ThemeMode.DARK ? ThemeMode.LIGHT : ThemeMode.DARK;
 
-  private toggleElementClass(
-    renderer: Renderer2,
-    element: HTMLElement,
-    className: string,
-  ): void {
-    if (element.classList.contains(className)) {
-      renderer.removeClass(element, className);
+    if (newMode === ThemeMode.DARK) {
+      renderer.addClass(documentElement, ThemeMode.DARK);
     } else {
-      renderer.addClass(element, className);
+      renderer.removeClass(documentElement, ThemeMode.DARK);
     }
+    this.setCurrentMode(newMode);
+    this.modeStorage.save(newMode);
   }
 
   public initToggleThemeMode(
