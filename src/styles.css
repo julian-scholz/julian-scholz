@@ -369,26 +369,28 @@
     @apply bg-dark-void-light;
   }
 
-  /* Thememode-Toggler */
-  ::view-transition-group(root) {
-    @apply [animation-duration:2s];
-  }
-
+  /* Thememode-Toggler, with reduced motion the default crossfade is kept */
   ::view-transition-new(root),
   ::view-transition-old(root) {
     @apply mix-blend-normal;
   }
 
-  ::view-transition-old(root) {
-    @apply animate-[themeModeToggleRevealLight_2.25s_both] z-100;
-  }
+  @variant motion-safe {
+    ::view-transition-group(root) {
+      @apply [animation-duration:2s];
+    }
 
-  .dark::view-transition-new(root) {
-    @apply animate-[themeModeToggleRevealDark_2.25s_both] z-101;
-  }
+    ::view-transition-old(root) {
+      @apply animate-[themeModeToggleRevealLight_2.25s_both] z-100;
+    }
 
-  .dark::view-transition-old(root) {
-    @apply animate-none z-auto;
+    .dark::view-transition-new(root) {
+      @apply animate-[themeModeToggleRevealDark_2.25s_both] z-101;
+    }
+
+    .dark::view-transition-old(root) {
+      @apply animate-none z-auto;
+    }
   }
 
   button:not(:disabled),

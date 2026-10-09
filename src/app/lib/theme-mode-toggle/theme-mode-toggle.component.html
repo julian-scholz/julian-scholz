@@ -4,10 +4,8 @@
 ">
   <div class="relative inset-0 size-full">
     <label for="theme-mode-toggle-button">
-      <input #themeModeCheckbox type="checkbox" id="theme-mode-toggle-button" class="
-        peer sr-only
-      "
-             (change)="toggleThemeMode()" aria-label="Theme wechseln">
+      <input type="checkbox" id="theme-mode-toggle-button" class="peer sr-only"
+             [checked]="isDarkMode()" (change)="toggleThemeMode()" aria-label="Theme wechseln">
       <span
         class="
           absolute m-1 size-6 translate-x-0 cursor-pointer rounded-3xl

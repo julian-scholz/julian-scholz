@@ -1,57 +1,28 @@
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
+  computed,
   inject,
-  Renderer2,
-  viewChild,
-  DOCUMENT,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { ThemeModeToggleService } from './theme-mode-toggle.service';
 import { ThemeMode } from './utils/theme-mode-toggle.enum';
-import {
-  THEME_MODE_STORAGE_SERVICE,
-  ThemeModeLocalStorageService,
-} from './theme-mode-storage.service';
-
 
 @Component({
   selector: 'app-theme-mode-toggle',
-  providers: [
-    {
-      provide: THEME_MODE_STORAGE_SERVICE,
-      useClass: ThemeModeLocalStorageService,
-    },
-  ],
   templateUrl: './theme-mode-toggle.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
-export class ThemeModeToggleComponent implements AfterViewInit {
-  private readonly renderer: Renderer2 = inject(Renderer2);
-  private readonly angularDocument: Document = inject(DOCUMENT);
-
+export class ThemeModeToggleComponent {
   private readonly themeModeToggleService: ThemeModeToggleService = inject(
     ThemeModeToggleService,
   );
 
-  private readonly themeModeCheckbox =
-    viewChild.required<ElementRef<HTMLInputElement>>('themeModeCheckbox');
-
-  ngAfterViewInit(): void {
-    const themeMode = this.themeModeToggleService.init(this.angularDocument);
-    this.renderer.setProperty(
-      this.themeModeCheckbox().nativeElement,
-      'checked',
-      themeMode === ThemeMode.DARK,
-    );
-  }
+  protected readonly isDarkMode = computed(
+    () => this.themeModeToggleService.currentMode() === ThemeMode.DARK,
+  );
 
   protected toggleThemeMode(): void {
-    this.themeModeToggleService.initToggleThemeMode(
-      this.renderer,
-      this.angularDocument,
-    );
+    this.themeModeToggleService.toggleThemeMode();
   }
 }

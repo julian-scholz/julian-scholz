@@ -3,12 +3,15 @@ import {
   ChangeDetectorRef,
   Component,
   DestroyRef,
+  effect,
   ElementRef,
   inject,
+  Injector,
   OnDestroy,
   PLATFORM_ID,
   Renderer2,
   signal,
+  untracked,
   viewChild,
   DOCUMENT,
   ChangeDetectionStrategy
@@ -35,11 +38,12 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   private readonly changeDetectorRef: ChangeDetectorRef =
     inject(ChangeDetectorRef);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  private readonly injector: Injector = inject(Injector);
   private readonly themeModeToggleService: ThemeModeToggleService = inject(
     ThemeModeToggleService,
   );
+  private readonly themeMode = this.themeModeToggleService.currentMode;
 
-  private themeMode: ThemeMode | undefined;
   private windowWidth: number | undefined;
 
   private readonly canvas =
@@ -69,17 +73,15 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         this.angularDocument.documentElement,
       );
 
-      this.themeModeToggleService.modeChanged$
-        .pipe(takeUntilDestroyed(this.destroyRef))
-        .subscribe({
-          next: (themeMode) => {
-            this.themeMode = themeMode;
-            if (this.gsapAnimations.length > 0) {
-              this.initComponent(documentStyles);
-            }
-          },
-          error: (error) => console.error(error),
-        });
+      effect(
+        () => {
+          this.themeMode();
+          if (this.gsapAnimations.length > 0) {
+            untracked(() => this.initComponent(documentStyles));
+          }
+        },
+        { injector: this.injector },
+      );
 
       fromEvent(this.angularDocument.defaultView!, 'resize')
         .pipe(debounceTime(250), takeUntilDestroyed(this.destroyRef))
@@ -115,10 +117,6 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   }
 
   private initComponent(documentStyles: CSSStyleDeclaration) {
-    if (!this.themeMode) {
-      return;
-    }
-
     this.windowWidth = this.angularDocument.defaultView!.innerWidth;
 
     const getFontSize = (): number => {
@@ -149,7 +147,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         this.canvas().nativeElement.offsetWidth * this.dpi;
 
     this.textContext.fillStyle =
-      this.themeMode !== ThemeMode.DARK
+      this.themeMode() !== ThemeMode.DARK
         ? documentStyles.getPropertyValue('--color-snow')
         : documentStyles.getPropertyValue('--color-dark-void');
     this.textContext.textAlign = 'center';
@@ -168,7 +166,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         saturation: gsap.utils.random(0, 100, 1),
         lightness: gsap.utils.random(
           0,
-          this.themeMode !== ThemeMode.DARK ? 100 : 70,
+          this.themeMode() !== ThemeMode.DARK ? 100 : 70,
           1,
         ),
         spread: gsap.utils.random(75, 359, 1),
@@ -222,7 +220,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
       this.origin.y,
       this.ringCanvas.width / 2,
     );
-    if (this.themeMode !== ThemeMode.DARK) {
+    if (this.themeMode() !== ThemeMode.DARK) {
       gradient.addColorStop(0, lightGradientColorStops[0]);
       gradient.addColorStop(0.5, lightGradientColorStops[1]);
     } else {
@@ -241,7 +239,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     this.ringContext.lineCap = 'round';
 
     for (const ring of this.rings) {
-      this.ringContext.strokeStyle = `hsl(${this.themeMode !== ThemeMode.DARK ? '45' : '55'}, ${ring.saturation}%, ${ring.lightness}%)`;
+      this.ringContext.strokeStyle = `hsl(${this.themeMode() !== ThemeMode.DARK ? '45' : '55'}, ${ring.saturation}%, ${ring.lightness}%)`;
       this.ringContext.save();
       this.ringContext.translate(this.origin.x, this.origin.y);
       this.ringContext.rotate((ring.angle * Math.PI) / 180);
@@ -261,10 +259,6 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   }
 
   private startRingAnimations(documentStyles: CSSStyleDeclaration) {
-    if (!this.themeMode) {
-      return;
-    }
-
     const lightGradientColorStops: [string, string] = [
       documentStyles.getPropertyValue('--color-vanilla-extra-dark'),
       documentStyles.getPropertyValue('--color-dark-void-dark'),

@@ -1,72 +1,82 @@
-import { inject, Injectable, Renderer2 } from '@angular/core';
-import { ThemeMode } from './utils/theme-mode-toggle.enum';
-import { Observable, ReplaySubject } from 'rxjs';
 import {
-  THEME_MODE_STORAGE_SERVICE,
-  ThemeModeStorage,
-} from './theme-mode-storage.service';
+  afterNextRender,
+  DOCUMENT,
+  inject,
+  Injectable,
+  Injector,
+  signal,
+} from '@angular/core';
+import { ThemeMode } from './utils/theme-mode-toggle.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeModeToggleService {
-  private currentMode: ThemeMode | undefined;
-  private readonly modeChangedSubject = new ReplaySubject<ThemeMode>(1);
-  private readonly modeStorage: ThemeModeStorage = inject(
-    THEME_MODE_STORAGE_SERVICE,
-  );
+  private readonly angularDocument: Document = inject(DOCUMENT);
+  private readonly injector: Injector = inject(Injector);
 
-  public modeChanged$: Observable<ThemeMode>;
-
-  constructor() {
-    this.modeChanged$ = this.modeChangedSubject.asObservable();
-  }
-
-  private setCurrentMode(mode: ThemeMode): void {
-    this.currentMode = mode;
-    this.modeChangedSubject.next(mode);
-  }
+  // Also read by the inline script in index.html
+  private readonly LOCAL_STORAGE_KEY = 'themeMode';
+  private readonly viewTransitionDelay: number = 700;
 
   // The theme mode is decided and applied by the inline script in index.html
   // before the first paint, so it only has to be adopted here
-  public init(angularDocument: Document): ThemeMode {
-    const initMode = angularDocument.documentElement.classList.contains(
-      ThemeMode.DARK,
-    )
+  private readonly mode = signal<ThemeMode>(
+    this.angularDocument.documentElement.classList.contains(ThemeMode.DARK)
       ? ThemeMode.DARK
-      : ThemeMode.LIGHT;
-    this.setCurrentMode(initMode);
+      : ThemeMode.LIGHT,
+  );
 
-    return initMode;
-  }
+  public readonly currentMode = this.mode.asReadonly();
 
-  // Only an explicit choice is saved, so the system preference applies until then
-  private toggleThemeMode(
-    renderer: Renderer2,
-    documentElement: HTMLElement,
-  ): void {
-    const newMode =
-      this.currentMode === ThemeMode.DARK ? ThemeMode.LIGHT : ThemeMode.DARK;
+  public toggleThemeMode(): void {
+    const nextMode =
+      this.mode() === ThemeMode.DARK ? ThemeMode.LIGHT : ThemeMode.DARK;
+    const prefersReducedMotion = this.angularDocument.defaultView?.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    ).matches;
 
-    if (newMode === ThemeMode.DARK) {
-      renderer.addClass(documentElement, ThemeMode.DARK);
+    if (this.angularDocument.startViewTransition !== undefined) {
+      setTimeout(
+        () =>
+          this.angularDocument.startViewTransition(() => {
+            this.applyThemeMode(nextMode);
+            return this.waitForNextRender();
+          }),
+        prefersReducedMotion ? 0 : this.viewTransitionDelay,
+      );
     } else {
-      renderer.removeClass(documentElement, ThemeMode.DARK);
+      this.applyThemeMode(nextMode);
     }
-    this.setCurrentMode(newMode);
-    this.modeStorage.save(newMode);
+
+    this.saveThemeMode(nextMode);
   }
 
-  public initToggleThemeMode(
-    renderer: Renderer2,
-    angularDocument: Document,
-  ): void {
-    if (angularDocument.startViewTransition !== undefined) {
-      setTimeout(() => {
-        angularDocument.startViewTransition(() =>
-          this.toggleThemeMode(renderer, angularDocument.documentElement),
-        );
-      }, 700);
-    } else {
-      this.toggleThemeMode(renderer, angularDocument.documentElement);
+  private applyThemeMode(mode: ThemeMode): void {
+    this.angularDocument.documentElement.classList.toggle(
+      ThemeMode.DARK,
+      mode === ThemeMode.DARK,
+    );
+    this.mode.set(mode);
+  }
+
+  // Lets the view transition take its new snapshot only after Angular has
+  // rendered the new theme mode, the same way the Angular router does it
+  private waitForNextRender(): Promise<void> {
+    return new Promise((resolve) =>
+      afterNextRender(
+        { read: () => setTimeout(resolve) },
+        { injector: this.injector },
+      ),
+    );
+  }
+
+  private saveThemeMode(mode: ThemeMode): void {
+    try {
+      this.angularDocument.defaultView?.localStorage.setItem(
+        this.LOCAL_STORAGE_KEY,
+        mode,
+      );
+    } catch {
+      // Without storage the choice only lasts until the next page load
     }
   }
 }
