@@ -39,7 +39,8 @@ export default [
     },
     rules: {
       ...eslintPluginBetterTailwindcss.configs["recommended-warn"].rules,
-      "better-tailwindcss/enforce-consistent-line-wrapping": ["warn", {lineBreakStyle: "unix"}]
+      "better-tailwindcss/enforce-consistent-line-wrapping": ["warn", {lineBreakStyle: "unix"}],
+      "better-tailwindcss/no-unknown-classes": ["warn", {ignore: ["^modal-body$", "^book-cover$"]}]
     },
     settings: {
       "better-tailwindcss": {

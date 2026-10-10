@@ -54,6 +54,8 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
 
   private gsapAnimations: gsap.core.Tween[] = [];
   private gsapTickerCallback: gsap.Callback | undefined;
+  private canvasIntersectionObserver: IntersectionObserver | undefined;
+  private isCanvasVisible = true;
 
   protected readonly font: string = 'Geist Sans';
   protected readonly fontWeight: number = 900;
@@ -94,6 +96,16 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
 
         this.startRingAnimations(documentStyles);
 
+        this.canvasIntersectionObserver = new IntersectionObserver(
+          ([entry]) => {
+            this.isCanvasVisible = entry.isIntersecting;
+            this.gsapAnimations.forEach((animation) =>
+              animation.paused(!this.isCanvasVisible),
+            );
+          },
+        );
+        this.canvasIntersectionObserver.observe(this.canvas().nativeElement);
+
         this.showCanvas.set(true);
       }, 500);
     }
@@ -104,6 +116,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
       gsap.ticker.remove(this.gsapTickerCallback);
     }
     this.resetGsapAnimations();
+    this.canvasIntersectionObserver?.disconnect();
   }
 
   private resetGsapAnimations() {
@@ -192,6 +205,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         ease: 'none',
         duration: () => gsap.utils.random(5, 20, 0.2),
         delay: () => gsap.utils.random(-5, -1, 0.1),
+        paused: !this.isCanvasVisible,
       }),
     );
   }
@@ -265,11 +279,13 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     ];
 
     gsap.ticker.fps(24);
-    this.gsapTickerCallback = gsap.ticker.add(() =>
-      this.initRingAnimations(
-        lightGradientColorStops,
-        darkGradientFirstColorStops,
-      ),
-    );
+    this.gsapTickerCallback = gsap.ticker.add(() => {
+      if (this.isCanvasVisible) {
+        this.initRingAnimations(
+          lightGradientColorStops,
+          darkGradientFirstColorStops,
+        );
+      }
+    });
   }
 }

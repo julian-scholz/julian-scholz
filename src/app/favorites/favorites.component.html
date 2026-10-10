@@ -72,7 +72,6 @@
             <img [ngSrc]="path"
                  ngSrcset="2560w, 1920w" sizes="100vw" fill
                  [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
-                 [priority]="$index === 0"
                  [attr.data-active]="$index === activeBackgroundImageIndex() || null"
                  [alt]="$index === activeBackgroundImageIndex() ? 'Landschaft mit weitem Blick in die Ferne.' : ''"
                  class="
@@ -94,7 +93,7 @@
       <div data-favorites-tv class="z-(--favorites-wrapper-z-index)">
         <img [ngSrc]="lightForegroundImagePath"
              ngSrcset="2560w, 1920w" sizes="100vw" fill
-             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
+             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
              class="
                will-change-transform
                dark:opacity-0
@@ -102,7 +101,7 @@
              alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
         <img [ngSrc]="darkForegroundImagePath"
              ngSrcset="2560w, 1920w" sizes="100vw" fill
-             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
+             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
              class="
                opacity-0 will-change-transform
                dark:opacity-100

@@ -34,7 +34,8 @@
           group-hover/item:shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]
         "
         [alt]="bookDetails().details.title + ': ' + bookDetails().details.subtitle"
-        (click)="toggleCoverOpen()" (keyup)="toggleCoverOpen()" tabindex="0"/>
+        (click)="toggleCoverOpen()" (keydown.enter)="toggleCoverOpen()"
+        (keydown.space)="$event.preventDefault(); toggleCoverOpen()" tabindex="0"/>
       <div [ngClass]="{'ml-px! transform-[perspective(1500px)_rotateY(-300deg)]! sm:transform-[perspective(1500px)_rotateY(-330deg)]!': isBookCoverOpen()}"
            class="
              absolute top-0 -left-full z-[calc(20+var(--book-index))] size-full
@@ -45,14 +46,16 @@
              transition-all duration-500 ease-[ease] backface-hidden
              group-hover/item:transform-[perspective(1500px)_rotateY(-202deg)]
            "
-           (click)="toggleCoverOpen()" (keyup)="toggleCoverOpen()" tabindex="0">
+           (click)="toggleCoverOpen()" (keydown.enter)="toggleCoverOpen()"
+           (keydown.space)="$event.preventDefault(); toggleCoverOpen()" tabindex="0">
         <div class="
           flex h-full items-center justify-center overflow-hidden
           p-[calc(2*var(--book-page-padding))] text-center
           sm:p-(--book-page-padding)
         ">
           <div class="book-cover">
-            <a [href]="bookDetails().url" target="_blank" (click)="$event.stopPropagation()">Zum Buch von {{ bookDetails().details.author }}</a>
+            <a [href]="bookDetails().url" target="_blank" (click)="$event.stopPropagation()"
+               (keydown.enter)="$event.stopPropagation()">Zum Buch von {{ bookDetails().details.author }}</a>
           </div>
         </div>
       </div>
