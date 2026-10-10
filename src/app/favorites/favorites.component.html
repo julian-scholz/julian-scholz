@@ -12,6 +12,7 @@
     <section [ngStyle]="{
       '--favorites-grid-wrapper-z-index': showFavoritesOverlay() ? '30' : '10',
     }"
+             (focusin)="zoomInForFocusedOverlay()"
              class="
                absolute inset-x-0 z-(--favorites-grid-wrapper-z-index) h-svh
                px-5

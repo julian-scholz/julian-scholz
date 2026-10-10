@@ -33,6 +33,8 @@
           transition-all duration-500 ease-[ease] backface-hidden
           group-hover/item:transform-[perspective(1500px)_rotateY(-22deg)]
           group-hover/item:shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]
+          focus-visible:outline-2 focus-visible:outline-offset-2
+          focus-visible:outline-vanilla
         "
         [alt]="bookDetails().details.title + ': ' + bookDetails().details.subtitle"
         (click)="toggleCoverOpen()" (keydown.enter)="toggleCoverOpen()"
@@ -46,6 +48,9 @@
              shadow-[-10px_0_10px_--theme(--color-dark-void-dark/0.2),inset_40px_0_60px_--theme(--color-dark-void-dark/0.15),0_0_0_1px_--theme(--color-snow/0.15)]
              transition-all duration-500 ease-[ease] backface-hidden
              group-hover/item:transform-[perspective(1500px)_rotateY(-202deg)]
+             group-has-[img:focus-visible]/item:outline-2
+             group-has-[img:focus-visible]/item:outline-offset-2
+             group-has-[img:focus-visible]/item:outline-vanilla
            "
            (click)="toggleCoverOpen()">
         <div class="

@@ -151,6 +151,15 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
+  // Teletext and footer are only visible once zoomed in, so keyboard focus
+  // on them has to bring the zoom along
+  protected zoomInForFocusedOverlay(): void {
+    const scrollTrigger = this.gsapTimeline?.scrollTrigger;
+    if (scrollTrigger && !this.showFavoritesOverlay()) {
+      scrollTrigger.scroll(scrollTrigger.end);
+    }
+  }
+
   private switchBackgroundImage(): void {
     const previousIndex = this.activeBackgroundImageIndex();
     this.activeBackgroundImageIndex.set(1 - previousIndex);

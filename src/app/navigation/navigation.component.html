@@ -9,6 +9,7 @@
   <nav [ngStyle]="{'--header-nav-expanded': navbarExpanded()}"
        class="
          flex h-12 overflow-hidden rounded-5xl bg-dark-void pl-0 text-sm
+         has-focus-visible:[--header-nav-expanded:1]!
          dark:bg-dark-void-light
        "
   >

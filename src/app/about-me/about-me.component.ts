@@ -42,7 +42,6 @@ export class AboutMeComponent {
         this.detailList.push({
           text: `${word} `,
           italic: splitTextIndex === 0,
-          language: splitTextIndex === 0 ? 'en' : null,
           start: wordSum,
           end: wordSum + word.length,
           endOfLine:

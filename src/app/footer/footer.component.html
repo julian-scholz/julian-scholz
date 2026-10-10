@@ -7,7 +7,9 @@
       flex justify-center space-x-6
       md:not-short:order-2 md:not-short:ml-12
     ">
-      <a href="mailto:mail@julian-scholz.dev" class="animate-bounce" aria-label="Mail">
+      <a href="mailto:mail@julian-scholz.dev" class="
+        motion-safe:animate-bounce
+      " aria-label="Mail">
         <fa-icon [icon]="faEnvelope" size="xl" class="text-custom-light-dark"></fa-icon>
       </a>
       @for (footerLink of sortedFooterLinkEntries; track footerLink) {

@@ -18,7 +18,8 @@
       "
     >
       <h2 class="sr-only">{{ secondSplitText }} {{ thirdSplitText }} {{ fourthSplitText }}</h2>
-      <div class="text-center">
+      <p class="sr-only" lang="en">{{ firstSplitText }}</p>
+      <div class="text-center" aria-hidden="true">
         @for (detailListEntry of detailList; track detailListEntry) {
           <app-about-me-detail
             [scrollTrigger]="scrollTrigger"
