@@ -1,0 +1,7 @@
+<a [href]="targetUrl" [attr.hreflang]="targetLanguage" [attr.lang]="targetLanguage"
+   (click)="keepCurrentSection($event)"
+   class="
+     grid h-12 place-items-center px-2 font-medium text-snow
+     hover:text-vanilla
+     max-[374px]:px-1
+   ">{{ targetLanguage | uppercase }}<span class="sr-only">, {{ description }}</span></a>

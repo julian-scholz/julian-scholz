@@ -7,7 +7,11 @@ import {
   signal
 } from '@angular/core';
 import { DatePipe, isPlatformBrowser, NgClass, NgStyle } from '@angular/common';
-import { FavoritesOverlayEntryModel } from './models/favorites-overlay-entry.model';
+import {
+  FavoritesOverlayEntryModel,
+  FavoritesOverlayPageId,
+  FavoritesOverlayTagListEntryModel
+} from './models/favorites-overlay-entry.model';
 import tagListData from '../../../tag-list.json';
 
 @Component({
@@ -20,9 +24,21 @@ export class FavoritesOverlayComponent {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
   protected readonly firstPageNumber: number = 101;
-  protected readonly pages: FavoritesOverlayEntryModel[] = tagListData;
-  private readonly securityPageIndex: number = this.pages.findIndex(
-    (page) => page.title === 'Security',
+  protected readonly dateFormat: string = $localize`:@@teletextDateFormat:dd.MM. HH:mm`;
+  private readonly tagList = tagListData as FavoritesOverlayTagListEntryModel[];
+  private readonly pageTitles: Record<FavoritesOverlayPageId, string> = {
+    languages: $localize`:@@teletextLanguagesTitle:Sprachen`,
+    frameworks: $localize`:@@teletextFrameworksTitle:Frameworks`,
+    devOps: $localize`:@@teletextDevOpsTitle:DevOps`,
+    tools: $localize`:@@teletextToolsTitle:Tools`,
+    security: $localize`:@@teletextSecurityTitle:Security`,
+    databases: $localize`:@@teletextDatabasesTitle:Datenbanken`,
+  };
+  protected readonly pages: FavoritesOverlayEntryModel[] = this.tagList.map(
+    ({ id, tags }) => ({ title: this.pageTitles[id], tags }),
+  );
+  private readonly securityPageIndex: number = this.tagList.findIndex(
+    ({ id }) => id === 'security',
   );
 
   protected readonly currentPageIndex = signal<number>(0);

@@ -5,17 +5,17 @@ type RouteId = 'bookRecommendations' | 'vita' | 'favorites';
 export const navigationEntries: Record<RouteId, NavigationEntryModel> = {
   bookRecommendations: {
     id: 'book-recommendations',
-    title: 'Buchtipps',
+    title: $localize`:@@bookRecommendationsNavigationTitle:Buchtipps`,
     index: 0,
   },
   vita: {
     id: 'vita',
-    title: 'Vita',
+    title: $localize`:@@vitaNavigationTitle:Vita`,
     index: 1,
   },
   favorites: {
     id: 'favorites',
-    title: 'Favoriten',
+    title: $localize`:@@favoritesNavigationTitle:Favoriten`,
     index: 2,
   },
 } as const;

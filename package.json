@@ -5,6 +5,8 @@
     "ng": "ng",
     "prepare": "husky",
     "start": "ng serve",
+    "start:en": "ng serve --configuration en",
+    "extract-i18n": "ng extract-i18n",
     "build": "ng build && npm run build:functions",
     "build:functions": "tsc --project src/functions/tsconfig.json",
     "postbuild": "node postbuild.js",
@@ -39,6 +41,7 @@
     "@angular/build": "^22.2.1",
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.1",
+    "@angular/localize": "^22.2.2",
     "@cloudflare/workers-types": "^5.20261003.1",
     "@types/node": "^24.19.1",
     "@typescript-eslint/eslint-plugin": "^8.71.0",
@@ -59,6 +62,6 @@
     "esbuild@0.28.2": true,
     "lmdb@3.5.6": true,
     "@parcel/watcher@2.6.0": true,
-    "workerd@1.20261001.1": true
+    "workerd@1.20261006.1": true
   }
 }

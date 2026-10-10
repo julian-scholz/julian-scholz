@@ -1,6 +1,6 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
 import { ModalContainerComponent } from './utils/modal-container/modal-container.component';
-import { ModalTemplate } from './utils/modal-container/utils/modal-template.enum';
+import { ModalTemplate } from './utils/modal-container/utils/modal-template.model';
 
 @Injectable({ providedIn: 'root' })
 export class ModalService {

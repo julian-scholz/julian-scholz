@@ -16,6 +16,7 @@ import { FavoritesComponent } from './favorites/favorites.component';
 import { VitaComponent } from './vita/vita.component';
 import { navigationEntries } from './app.routes';
 import { CursorGridComponent } from './lib/cursor-grid/cursor-grid.component';
+import { SeoService } from './lib/seo/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -50,6 +51,10 @@ export class AppComponent implements AfterViewInit {
   });
 
   protected readonly navigationEntries = navigationEntries;
+
+  constructor() {
+    inject(SeoService).applyMetadata();
+  }
 
   ngAfterViewInit(): void {
     this.modalService.setViewContainerRef(this.modalContainer());

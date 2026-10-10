@@ -60,7 +60,7 @@
         ">
           <div class="book-cover">
             <a [href]="bookDetails().url" target="_blank" (click)="$event.stopPropagation()"
-               [attr.tabindex]="isBookCoverOpen() ? null : -1">Zum Buch von {{ bookDetails().details.author }}</a>
+               [attr.tabindex]="isBookCoverOpen() ? null : -1" i18n="@@bookLink">Zum Buch von {{ bookDetails().details.author }}</a>
           </div>
         </div>
       </div>

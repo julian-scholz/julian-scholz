@@ -3,48 +3,29 @@ const path = require('path');
 
 const prefix = '[postbuild]';
 
-const tagListPath = path.join(__dirname, 'src', 'tag-list.json');
-const tagList = JSON.parse(fs.readFileSync(tagListPath, 'utf-8'));
-if (!tagList || !tagList.length || !(tagList.length > 0)) {
-  console.error(`${prefix} No tag list found.`);
-  process.exit(1);
-}
+const browserPath = path.join(__dirname, 'dist', 'julian-scholz', 'browser');
+// The german source locale is built into the root, every other locale into its own directory
+const localeDirectories = ['', 'en'];
+// The assets are copied into every locale, these only matter at the root of the site
+const rootOnlyFiles = ['_headers', 'robots.txt', 'sitemap.xml'];
 
-const indexCsrPath = path.join(__dirname, 'dist', 'julian-scholz', 'browser', 'index.csr.html');
-if (fs.existsSync(indexCsrPath)) {
-  try {
-    fs.rmSync(indexCsrPath);
-    console.log(`${prefix} Deleted index.csr.html.`);
-  } catch (err) {
-    console.error(`${prefix}`, err);
-    process.exit(1);
-  }
-}
-
-const indexPath = path.join(__dirname, 'dist', 'julian-scholz', 'browser', 'index.html');
-fs.readFile(indexPath, 'utf8', (err, data) => {
-  if (err) {
-    console.error(`${prefix}`, err);
-    process.exit(1);
-  }
-
-  const indexResult = data
-    .replace(
-      'content="DUMMY_KEYWORDS_VALUE"',
-      `content="${tagList.flatMap(item => item.tags).join(', ')}"`
-    ).replace(/"knowsAbout":\s*([^,]*)/, `"knowsAbout": ${JSON.stringify(tagList.flatMap(item => item.tags))}`);
-
-  fs.writeFile(indexPath, indexResult, 'utf8', (err) => {
-    if (err) {
-      console.error(`${prefix}`, err);
-      process.exit(1);
-    } else {
-      console.log(`${prefix} Edited index.html.`);
+for (const localeDirectory of localeDirectories) {
+  const filesToDelete = ['index.csr.html', ...(localeDirectory ? rootOnlyFiles : [])];
+  for (const fileToDelete of filesToDelete) {
+    const fileToDeletePath = path.join(browserPath, localeDirectory, fileToDelete);
+    if (fs.existsSync(fileToDeletePath)) {
+      try {
+        fs.rmSync(fileToDeletePath);
+        console.log(`${prefix} Deleted ${path.join(localeDirectory, fileToDelete)}.`);
+      } catch (err) {
+        console.error(`${prefix}`, err);
+        process.exit(1);
+      }
     }
-  });
-});
+  }
+}
 
-const sitemapPath = path.join(__dirname, 'dist', 'julian-scholz', 'browser', 'sitemap.xml');
+const sitemapPath = path.join(browserPath, 'sitemap.xml');
 fs.readFile(sitemapPath, 'utf8', (err, data) => {
   if (err) {
     console.error(`${prefix}`, err);
@@ -53,7 +34,7 @@ fs.readFile(sitemapPath, 'utf8', (err, data) => {
 
   const dateToday = new Date();
   const correctDateToday = new Date(dateToday.getTime() - (dateToday.getTimezoneOffset() * 60 * 1000));
-  const sitemapResult = data.replace(
+  const sitemapResult = data.replaceAll(
     '<lastmod></lastmod>',
     `<lastmod>${correctDateToday.toISOString().split('T')[0]}</lastmod>`
   );

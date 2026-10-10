@@ -15,9 +15,9 @@ export class AboutMeComponent {
 
   protected readonly firstSplitText: string =
     '"Innovation distinguishes between a leader and a follower." (Steve Jobs)';
-  protected readonly secondSplitText: string = 'Entwickler.';
-  protected readonly thirdSplitText: string = 'Aus Leidenschaft.';
-  protected readonly fourthSplitText: string = 'Mit Sicherheit.';
+  protected readonly secondSplitText: string = $localize`:@@aboutMeSecondLine:Entwickler.`;
+  protected readonly thirdSplitText: string = $localize`:@@aboutMeThirdLine:Aus Leidenschaft.`;
+  protected readonly fourthSplitText: string = $localize`:@@aboutMeFourthLine:Mit Sicherheit.`;
 
   protected readonly splitTexts: string[] = [
     this.firstSplitText,

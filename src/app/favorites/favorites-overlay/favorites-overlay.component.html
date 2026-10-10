@@ -6,9 +6,9 @@
   2xl:text-base
 ">
   <div class="flex justify-between gap-4">
-    <span class="text-vanilla">P{{ pageViews()[0].pageNumber }}</span>
-    <span>JULIAN-TEXT</span>
-    <span class="text-snow/60">{{ now() | date: 'dd.MM. HH:mm' }}</span>
+    <span i18n="@@teletextPageCode" class="text-vanilla">P{{ pageViews()[0].pageNumber }}</span>
+    <span i18n="@@teletextBrand">JULIAN-TEXT</span>
+    <span class="text-snow/60">{{ now() | date: dateFormat }}</span>
   </div>
 
   @for (pageView of pageViews(); track pageView.id) {
@@ -18,7 +18,7 @@
         motion-safe:animate-[teletextLineIn_0s_both]
       ">
         <h3 class="mb-0 text-[length:inherit] font-bold uppercase">{{ pageView.page.title }}</h3>
-        <span>S. {{ pageView.pageNumber }}</span>
+        <span i18n="@@teletextPageNumber">S. {{ pageView.pageNumber }}</span>
       </div>
       <ul class="mt-2 grid min-h-24 grid-cols-2 content-start gap-x-4">
         @for (tag of pageView.page.tags; track tag) {
@@ -34,7 +34,7 @@
     </div>
   }
 
-  <nav aria-label="Videotext-Seiten" class="
+  <nav i18n-aria-label="@@teletextPagesLabel" aria-label="Videotext-Seiten" class="
     mt-4 grid grid-cols-2 gap-x-4 border-t border-snow/20 pt-2
     sm:grid-cols-3
     short:mt-2 short:grid-cols-6 short:gap-x-1
@@ -56,19 +56,19 @@
   </nav>
 
   <div class="mt-3 grid grid-cols-4 gap-2 text-xs">
-    <button type="button" (click)="showPreviousPage()" class="
+    <button type="button" (click)="showPreviousPage()" i18n="@@teletextPrevious" class="
       border-t-4 border-[#e5534b] pt-1
       hover:text-vanilla
     ">◀ Zurück</button>
-    <button type="button" (click)="showNextPage()" class="
+    <button type="button" (click)="showNextPage()" i18n="@@teletextNext" class="
       border-t-4 border-[#57ab5a] pt-1
       hover:text-vanilla
     ">Weiter ▶</button>
-    <button type="button" (click)="showSecurityPage()" class="
+    <button type="button" (click)="showSecurityPage()" i18n="@@teletextSecurityTitle" class="
       border-t-4 border-vanilla pt-1
       hover:text-vanilla
     ">Security</button>
-    <button type="button" (click)="showRandomPage()" class="
+    <button type="button" (click)="showRandomPage()" i18n="@@teletextRandom" class="
       border-t-4 border-[#539bf5] pt-1
       hover:text-vanilla
     ">Zufall</button>

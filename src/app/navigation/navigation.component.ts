@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faJs } from '@fortawesome/free-brands-svg-icons';
 import { isPlatformBrowser, NgStyle, ViewportScroller } from '@angular/common';
 import { ThemeModeToggleComponent } from '../lib/theme-mode-toggle/theme-mode-toggle.component';
+import { LanguageSwitchComponent } from '../lib/language-switch/language-switch.component';
 import { navigationEntries } from '../app.routes';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { NavigationEntryComponent } from './navigation-entry/navigation-entry.component';
@@ -23,6 +24,7 @@ import { NavigationEntryModel } from './navigation-entry/models/navigation-entry
     NgStyle,
     ThemeModeToggleComponent,
     NavigationEntryComponent,
+    LanguageSwitchComponent,
   ],
   templateUrl: './navigation.component.html',
 })

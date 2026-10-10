@@ -13,6 +13,18 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      "i18n": {
+        "sourceLocale": {
+          "code": "de",
+          "subPath": ""
+        },
+        "locales": {
+          "en": {
+            "translation": "src/locale/messages.en.json",
+            "subPath": "en"
+          }
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular/build:application",
@@ -20,7 +32,10 @@
             "outputPath": "dist/julian-scholz",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": [],
+            "polyfills": [
+              "@angular/localize/init"
+            ],
+            "i18nMissingTranslation": "error",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "css",
             "assets": [
@@ -42,7 +57,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "600kb",
+                  "maximumWarning": "650kb",
                   "maximumError": "1mb"
                 },
                 {
@@ -52,6 +67,7 @@
                 }
               ],
               "outputHashing": "all",
+              "localize": true,
               "sourceMap": {
                 "scripts": true,
                 "styles": false,
@@ -63,6 +79,11 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "en": {
+              "localize": [
+                "en"
+              ]
             },
             "testing": {
               "aot": false,
@@ -80,6 +101,9 @@
             },
             "development": {
               "buildTarget": "julian-scholz:build:development"
+            },
+            "en": {
+              "buildTarget": "julian-scholz:build:development,en"
             }
           },
           "defaultConfiguration": "development"
@@ -87,7 +111,9 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "julian-scholz:build"
+            "buildTarget": "julian-scholz:build",
+            "format": "json",
+            "outputPath": "src/locale"
           }
         },
         "test": {

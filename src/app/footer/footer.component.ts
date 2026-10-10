@@ -5,7 +5,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { ModalService } from '../modals/modal.service';
-import { ModalTemplate } from '../modals/utils/modal-container/utils/modal-template.enum';
 
 @Component({
   selector: 'app-footer',
@@ -27,14 +26,14 @@ export class FooterComponent implements OnInit {
   }
 
   protected openInspirationsModal(): void {
-    this.modalService.openModal(ModalTemplate.INSPIRATIONS);
+    this.modalService.openModal('inspirations');
   }
 
   protected openLegalNoticeModal(): void {
-    this.modalService.openModal(ModalTemplate.LEGAL_NOTICE);
+    this.modalService.openModal('legalNotice');
   }
 
   protected openPrivacyPolicyModal(): void {
-    this.modalService.openModal(ModalTemplate.PRIVACY_POLICY);
+    this.modalService.openModal('privacyPolicy');
   }
 }

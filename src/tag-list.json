@@ -1,6 +1,6 @@
 [
   {
-    "title": "Sprachen",
+    "id": "languages",
     "tags": [
       "TypeScript",
       "JavaScript",
@@ -13,7 +13,7 @@
     ]
   },
   {
-    "title": "Frameworks",
+    "id": "frameworks",
     "tags": [
       "Angular",
       "RxJS",
@@ -26,7 +26,7 @@
     ]
   },
   {
-    "title": "DevOps",
+    "id": "devOps",
     "tags": [
       "Git",
       "GitHub",
@@ -39,7 +39,7 @@
     ]
   },
   {
-    "title": "Tools",
+    "id": "tools",
     "tags": [
       "FirstSpirit",
       "Liferay",
@@ -51,7 +51,7 @@
     ]
   },
   {
-    "title": "Security",
+    "id": "security",
     "tags": [
       "AppSec",
       "OWASP Top 10",
@@ -64,7 +64,7 @@
     ]
   },
   {
-    "title": "Datenbanken",
+    "id": "databases",
     "tags": [
       "MySQL",
       "MariaDB",

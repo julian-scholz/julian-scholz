@@ -9,7 +9,7 @@
     ">
       <a href="mailto:mail@julian-scholz.dev" class="
         motion-safe:animate-bounce
-      " aria-label="Mail">
+      " i18n-aria-label="@@footerMailLabel" aria-label="Mail">
         <fa-icon [icon]="faEnvelope" size="xl" class="text-custom-light-dark"></fa-icon>
       </a>
       @for (footerLink of sortedFooterLinkEntries; track footerLink) {
@@ -25,11 +25,11 @@
       mt-6 flex flex-col text-center text-xs/5
       md:not-short:order-1 md:not-short:mt-0
     ">
-      <button (click)="openInspirationsModal()">&copy; {{ currentYear }} Julian Scholz, Alle Rechte vorbehalten.
+      <button i18n="@@footerCopyright" (click)="openInspirationsModal()">&copy; {{ currentYear }} Julian Scholz, Alle Rechte vorbehalten.
       </button>
       <div class="flex justify-evenly">
-        <button (click)="openLegalNoticeModal()">Impressum</button>
-        <button (click)="openPrivacyPolicyModal()">Datenschutzerklärung</button>
+        <button i18n="@@legalNoticeTitle" (click)="openLegalNoticeModal()">Impressum</button>
+        <button i18n="@@privacyPolicyTitle" (click)="openPrivacyPolicyModal()">Datenschutzerklärung</button>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <section>
-  <h2>Vita</h2>
+  <h2 i18n="@@vitaHeading">Vita</h2>
   <div class="divider"></div>
   <ol #vitaEntriesElement
       class="
@@ -123,7 +123,11 @@
                   hover:border-solid hover:text-vanilla-extra-dark
                   dark:hover:text-vanilla
                 ">
-          {{ isExpanded ? 'Weniger anzeigen' : 'Mehr lesen' }}
+          @if (isExpanded) {
+            <ng-container i18n="@@vitaShowLess">Weniger anzeigen</ng-container>
+          } @else {
+            <ng-container i18n="@@vitaReadMore">Mehr lesen</ng-container>
+          }
           <fa-icon [icon]="faChevronDown" size="xs" [ngClass]="{'rotate-180': isExpanded}"
                    class="inline-block transition-transform duration-300"></fa-icon>
         </button>

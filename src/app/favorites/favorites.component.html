@@ -1,6 +1,6 @@
 <section class="max-w-[unset] px-0 pb-0">
   <div class="container mx-auto px-8">
-    <h2>Favoriten</h2>
+    <h2 i18n="@@favoritesHeading">Favoriten</h2>
     <div class="divider"></div>
   </div>
   <div #favoritesScrollTrigger id="favorites-scroll-trigger"
@@ -74,7 +74,7 @@
                  ngSrcset="2560w, 1920w" sizes="100vw" fill
                  [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
                  [attr.data-active]="$index === activeBackgroundImageIndex() || null"
-                 [alt]="$index === activeBackgroundImageIndex() ? 'Landschaft mit weitem Blick in die Ferne.' : ''"
+                 [alt]="$index === activeBackgroundImageIndex() ? backgroundImageAlt : ''"
                  class="
                    object-cover opacity-0
                    data-active:opacity-100
@@ -99,6 +99,7 @@
                will-change-transform
                dark:opacity-0
              "
+             i18n-alt="@@favoritesTvAlt"
              alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
         <img [ngSrc]="darkForegroundImagePath"
              ngSrcset="2560w, 1920w" sizes="100vw" fill

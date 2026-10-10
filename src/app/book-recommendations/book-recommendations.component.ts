@@ -52,8 +52,7 @@ export class BookRecommendationsComponent implements AfterViewInit {
         title: "A Hacker's Mind",
         subtitle:
           "How the Powerful Bend Society's Rules, and How to Bend them Back",
-        summary:
-          'Bruce Schneier zeigt eindrucksvoll, welche mitunter gefährlichen Abhängigkeiten in den letzten Jahrzehnten zwischen der Computerwelt und unseren sozialen, wirtschaftlichen und politischen Systemen entstanden sind.',
+        summary: $localize`:@@bookHackersMindSummary:Bruce Schneier zeigt eindrucksvoll, welche mitunter gefährlichen Abhängigkeiten in den letzten Jahrzehnten zwischen der Computerwelt und unseren sozialen, wirtschaftlichen und politischen Systemen entstanden sind.`,
       },
     },
     {
@@ -68,8 +67,7 @@ export class BookRecommendationsComponent implements AfterViewInit {
         title: 'Web Application Security',
         subtitle:
           'Exploitation and Countermeasures for Modern Web Applications',
-        summary:
-          'Andrew Hoffman gliedert Anwendungssicherheit in drei Säulen und zeigt aktuelle Angriffe und Gegenmaßnahmen im Rahmen eines sicheren Entwicklungsprozesses.',
+        summary: $localize`:@@bookWebApplicationSecuritySummary:Andrew Hoffman gliedert Anwendungssicherheit in drei Säulen und zeigt aktuelle Angriffe und Gegenmaßnahmen im Rahmen eines sicheren Entwicklungsprozesses.`,
       },
     },
     {
@@ -83,8 +81,7 @@ export class BookRecommendationsComponent implements AfterViewInit {
         author: 'Kim Zetter',
         title: 'Countdown to Zero Day',
         subtitle: "Stuxnet and the Launch of the World's First Digital Weapon",
-        summary:
-          'Mit Spannung erzählt Kim Zetter die Geschichte eines Virus, der Irans Nuklearprogramm sabotierte und eröffnet den Blick auf eine neue Ära der digitalen Kriegsführung, in der digitale Angriffe ungeahnte Zerstörung anrichten können.',
+        summary: $localize`:@@bookCountdownToZeroDaySummary:Mit Spannung erzählt Kim Zetter die Geschichte eines Virus, der Irans Nuklearprogramm sabotierte und eröffnet den Blick auf eine neue Ära der digitalen Kriegsführung, in der digitale Angriffe ungeahnte Zerstörung anrichten können.`,
       },
     },
     {
@@ -98,8 +95,7 @@ export class BookRecommendationsComponent implements AfterViewInit {
         author: 'Ferdinand Malcher, Danny Koppenhagen & Johannes Hoppe',
         title: 'Angular: Das große Praxisbuch',
         subtitle: 'Grundlagen, fortgeschrittene Themen und Best Practices',
-        summary:
-          'Die Autoren haben es mit diesem Buch geschafft, sowohl Einsteiger- als auch fortgeschrittenere Theorien klar und verständlich zu erklären. Die theoretischen Aspekte werden durch sehr gute Beispiele veranschaulicht.',
+        summary: $localize`:@@bookAngularSummary:Die Autoren haben es mit diesem Buch geschafft, sowohl Einsteiger- als auch fortgeschrittenere Theorien klar und verständlich zu erklären. Die theoretischen Aspekte werden durch sehr gute Beispiele veranschaulicht.`,
       },
     },
   ];

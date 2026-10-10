@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://julian-scholz.dev</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://julian-scholz.dev"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://julian-scholz.dev/en/"/>
+    <lastmod></lastmod>
+  </url>
+  <url>
+    <loc>https://julian-scholz.dev/en/</loc>
+    <xhtml:link rel="alternate" hreflang="de" href="https://julian-scholz.dev"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://julian-scholz.dev/en/"/>
     <lastmod></lastmod>
   </url>
 </urlset>

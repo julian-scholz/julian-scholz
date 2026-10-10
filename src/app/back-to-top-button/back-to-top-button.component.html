@@ -39,7 +39,7 @@
       absolute flex size-12 items-center justify-center rounded-full
       bg-transparent
     "
-    (click)="navigateToTop()" aria-label="Zurück zum Seitenanfang"
+    (click)="navigateToTop()" i18n-aria-label="@@backToTopLabel" aria-label="Zurück zum Seitenanfang"
     [attr.tabindex]="isVisible() ? null : -1">
     <fa-icon [icon]="faCaretUp" size="2xl" class="text-vanilla"></fa-icon>
   </button>
