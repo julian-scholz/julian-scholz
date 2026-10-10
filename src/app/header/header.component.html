@@ -2,8 +2,8 @@
   <h1 class="sr-only">Willkommen auf meiner Website!</h1>
   <div
     class="
-      flex min-h-svh flex-wrap content-center text-[clamp(2rem,6vw+5rem,12rem)]
-      select-none
+      flex min-h-svh flex-wrap content-center
+      text-[clamp(2rem,min(6vw+5rem,(100vw-0.5rem)/3.72),12rem)] select-none
     "
     [style.font-weight]="fontWeight">
     <span [ngStyle]="{'--header-first-line-left': showCanvas() ? '0' : '-100%'}"

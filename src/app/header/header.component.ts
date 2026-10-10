@@ -133,12 +133,11 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   private initComponent(documentStyles: CSSStyleDeclaration) {
     this.windowWidth = this.angularDocument.defaultView!.innerWidth;
 
-    const getFontSize = (): number => {
-      const rem = 16;
-      const vw = this.angularDocument.defaultView!.innerWidth / 100;
-      const px = gsap.utils.clamp(2 * rem, 12 * rem, 6 * vw + 5 * rem);
-      return Math.round(px);
-    };
+    const fontSize = parseFloat(
+      this.angularDocument.defaultView!.getComputedStyle(
+        this.canvas().nativeElement,
+      ).fontSize,
+    );
 
     this.context =
       this.context || this.canvas().nativeElement.getContext('2d')!;
@@ -166,7 +165,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         : documentStyles.getPropertyValue('--color-dark-void');
     this.textContext.textAlign = 'center';
     this.textContext.textBaseline = 'middle';
-    this.textContext.font = `${this.fontWeight} ${getFontSize() * this.dpi}px ${this.font}`;
+    this.textContext.font = `${this.fontWeight} ${fontSize * this.dpi}px ${this.font}`;
     this.textContext.fillText(
       this.secondLine,
       this.textCanvas.width / 2,
