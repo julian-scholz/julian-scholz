@@ -60,9 +60,11 @@
       ">
         <div id="favorites-image-section"
              [attr.data-tv-on]="showBackgroundImage() || null"
+             [attr.data-tv-off]="showBackgroundImage() === false || null"
              class="
                absolute top-1/2 left-1/2 h-lvh w-screen -translate-1/2 opacity-0
                data-tv-on:opacity-100
+               motion-safe:data-tv-off:animate-[favoritesTvOff_0.6s_ease-in_both]
                motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
                motion-reduce:transition-opacity motion-reduce:duration-700
              ">

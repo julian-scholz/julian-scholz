@@ -63,7 +63,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly showBackgroundImageThreshold: number = 0.6;
   private backgroundImageIntersectionObserver: IntersectionObserver | undefined;
-  protected showBackgroundImage = signal<boolean>(false);
+  protected showBackgroundImage = signal<boolean | undefined>(undefined);
 
   private readonly favoritesScrollTrigger = viewChild.required<
     ElementRef<HTMLDivElement>
@@ -88,11 +88,11 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
         ([entry]) => {
           if (entry.intersectionRatio >= this.showBackgroundImageThreshold) {
             this.showBackgroundImage.set(true);
-          } else if (!entry.isIntersecting) {
+          } else if (this.showBackgroundImage()) {
             this.showBackgroundImage.set(false);
           }
         },
-        { threshold: [0, this.showBackgroundImageThreshold] },
+        { threshold: this.showBackgroundImageThreshold },
       );
       this.backgroundImageIntersectionObserver.observe(
         this.favoritesScrollTrigger().nativeElement,
