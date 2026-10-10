@@ -1,8 +1,7 @@
 import {
   Component,
   computed,
-  inject,
-  ChangeDetectionStrategy
+  inject
 } from '@angular/core';
 import { ThemeModeToggleService } from './theme-mode-toggle.service';
 import { ThemeMode } from './utils/theme-mode-toggle.enum';
@@ -10,7 +9,6 @@ import { ThemeMode } from './utils/theme-mode-toggle.enum';
 @Component({
   selector: 'app-theme-mode-toggle',
   templateUrl: './theme-mode-toggle.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [],
 })
 export class ThemeModeToggleComponent {

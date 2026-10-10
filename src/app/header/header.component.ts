@@ -12,8 +12,7 @@ import {
   signal,
   untracked,
   viewChild,
-  DOCUMENT,
-  ChangeDetectionStrategy
+  DOCUMENT
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HeaderNavComponent } from './nav/nav.component';
@@ -27,7 +26,6 @@ import { gsap } from '../lib/misc/gsap/gsap';
 @Component({
   selector: 'app-header',
   imports: [CommonModule, HeaderNavComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements AfterViewInit, OnDestroy {

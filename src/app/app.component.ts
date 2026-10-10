@@ -3,8 +3,7 @@ import {
   Component,
   inject,
   viewChild,
-  ViewContainerRef,
-  ChangeDetectionStrategy
+  ViewContainerRef
 } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { NavigationComponent } from './navigation/navigation.component';
@@ -42,7 +41,6 @@ import { CursorGridComponent } from './lib/cursor-grid/cursor-grid.component';
       },
     },
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './app.component.html',
 })
 export class AppComponent implements AfterViewInit {

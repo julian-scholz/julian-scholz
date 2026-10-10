@@ -4,8 +4,7 @@ import {
   DestroyRef,
   inject,
   PLATFORM_ID,
-  signal,
-  ChangeDetectionStrategy
+  signal
 } from '@angular/core';
 import { DatePipe, isPlatformBrowser, NgClass, NgStyle } from '@angular/common';
 import { FavoritesOverlayEntryModel } from './models/favorites-overlay-entry.model';
@@ -14,7 +13,6 @@ import tagListData from '../../../tag-list.json';
 @Component({
   selector: 'app-favorites-overlay',
   imports: [NgStyle, NgClass, DatePipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './favorites-overlay.component.html',
 })
 export class FavoritesOverlayComponent {

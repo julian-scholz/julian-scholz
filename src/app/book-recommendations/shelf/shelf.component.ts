@@ -9,8 +9,7 @@ import {
   Renderer2,
   RendererStyleFlags2,
   signal,
-  viewChild,
-  ChangeDetectionStrategy
+  viewChild
 } from '@angular/core';
 import { isPlatformBrowser, NgStyle } from '@angular/common';
 import { BookRecommendationsBookComponent } from '../book/book.component';
@@ -19,7 +18,6 @@ import { BookModel } from '../book/models/book.model';
 @Component({
   selector: 'app-book-recommendations-shelf',
   imports: [NgStyle, BookRecommendationsBookComponent],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './shelf.component.html',
 })
 export class BookRecommendationsShelfComponent implements AfterViewInit, OnDestroy {

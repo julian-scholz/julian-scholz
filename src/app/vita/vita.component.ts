@@ -11,8 +11,7 @@ import {
   RendererStyleFlags2,
   signal,
   viewChild,
-  DOCUMENT,
-  ChangeDetectionStrategy
+  DOCUMENT
 } from '@angular/core';
 import {
   faChevronDown,
@@ -37,7 +36,6 @@ import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
 @Component({
   selector: 'app-vita',
   imports: [FaIconComponent, UpperCasePipe, NgStyle, NgClass],
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './vita.component.html',
 })
 export class VitaComponent implements AfterViewInit, OnDestroy {

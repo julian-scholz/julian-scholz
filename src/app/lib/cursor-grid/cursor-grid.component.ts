@@ -8,14 +8,12 @@ import {
   Renderer2,
   RendererStyleFlags2,
   viewChild,
-  DOCUMENT,
-  ChangeDetectionStrategy
+  DOCUMENT
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-cursor-grid',
-  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './cursor-grid.component.html',
 })
 export class CursorGridComponent implements AfterViewInit, OnDestroy {
