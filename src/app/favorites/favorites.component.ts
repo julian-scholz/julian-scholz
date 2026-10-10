@@ -39,8 +39,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   protected readonly lightForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_light`;
   protected readonly darkForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_dark`;
-  private readonly foregroundImageWidth: number = 2560;
-  private readonly foregroundImageHeight: number = 2990;
+  private readonly foregroundImageAspectRatio: number = 256 / 299;
   private readonly foregroundImageScreen = {
     top: 0.3,
     right: 0.25,
@@ -48,8 +47,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
     left: 0.09,
   };
   protected readonly foregroundImageStyles: Record<string, number> = {
-    '--favorites-tv-aspect-ratio':
-      this.foregroundImageWidth / this.foregroundImageHeight,
+    '--favorites-tv-aspect-ratio': this.foregroundImageAspectRatio,
     '--favorites-tv-screen-top': this.foregroundImageScreen.top,
     '--favorites-tv-screen-right': this.foregroundImageScreen.right,
     '--favorites-tv-screen-bottom': this.foregroundImageScreen.bottom,
@@ -61,6 +59,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly showFavoritesOverlayThreshold: number = 0.6;
   private showFavoritesOverlayInitialisationDone = false;
   protected showFavoritesOverlay = signal<boolean>(false);
+  protected channelSwitchId = signal<number>(0);
 
   private readonly showBackgroundImageThreshold: number = 0.6;
   private backgroundImageIntersectionObserver: IntersectionObserver | undefined;
@@ -113,8 +112,6 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
     const zoomEase = gsap.parseEase('power1.inOut');
     const finalZoomScale = this.getApparentZoomScale(1);
     const finalBackgroundCounterScale = this.getBackgroundCounterScale(1);
-    const tvZoomEase = (time: number): number =>
-      (this.getApparentZoomScale(zoomEase(time)) - 1) / (finalZoomScale - 1);
 
     this.gsapTimeline = gsap
       .timeline({
@@ -126,9 +123,12 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
           scrub: true,
           onUpdate: (self) => {
             if (typeof self?.progress === 'number') {
-              this.showFavoritesOverlay.set(
-                self.progress >= this.showFavoritesOverlayThreshold,
-              );
+              const showFavoritesOverlay =
+                self.progress >= this.showFavoritesOverlayThreshold;
+              if (showFavoritesOverlay !== this.showFavoritesOverlay()) {
+                this.showFavoritesOverlay.set(showFavoritesOverlay);
+                this.channelSwitchId.update((id) => id + 1);
+              }
 
               if (!this.showFavoritesOverlayInitialisationDone) {
                 self.update(true, false, false);
@@ -142,13 +142,10 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
       .to('[data-favorites-tv]', {
         scale: finalZoomScale,
         transformOrigin: 'center center',
-        ease: tvZoomEase,
+        ease: (time: number) =>
+          (this.getApparentZoomScale(zoomEase(time)) - 1) /
+          (finalZoomScale - 1),
       })
-      .to(
-        '#favorites-overlay-section',
-        { '--favorites-tv-scale': finalZoomScale, ease: tvZoomEase },
-        '<',
-      )
       .to(
         '#favorites-image-section',
         {

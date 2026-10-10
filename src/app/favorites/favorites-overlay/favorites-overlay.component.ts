@@ -2,9 +2,7 @@ import {
   Component,
   computed,
   DestroyRef,
-  effect,
   inject,
-  input,
   PLATFORM_ID,
   signal,
   ChangeDetectionStrategy
@@ -22,8 +20,6 @@ import tagListData from '../../../tag-list.json';
 export class FavoritesOverlayComponent {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
-
-  public readonly isVisible = input.required<boolean>();
 
   protected readonly firstPageNumber: number = 101;
   protected readonly pages: FavoritesOverlayEntryModel[] = tagListData;
@@ -44,12 +40,6 @@ export class FavoritesOverlayComponent {
   ]);
 
   constructor() {
-    effect(() => {
-      if (this.isVisible()) {
-        this.pageViewId.update((id) => id + 1);
-      }
-    });
-
     if (isPlatformBrowser(this.platformId)) {
       const clockIntervalId = setInterval(() => this.now.set(new Date()), 30000);
       this.destroyRef.onDestroy(() => clearInterval(clockIntervalId));

@@ -9,42 +9,37 @@
          relative overflow-hidden
          *:w-full
        ">
-    <section id="favorites-overlay-section"
-             [ngStyle]="{
+    <section [ngStyle]="{
       '--favorites-grid-wrapper-z-index': showFavoritesOverlay() ? '30' : '10',
     }"
-             [attr.data-behind-tv]="!showFavoritesOverlay() || null"
              class="
                absolute inset-x-0 z-(--favorites-grid-wrapper-z-index) h-svh
                px-5
-               data-behind-tv:favorites-tv-screen-viewport-clip
                landscape:h-lvh
              ">
-      <div [ngStyle]="{
-      '--favorites-child-opacity': showFavoritesOverlay() ? '1' : '0',
-      '--favorites-child-top': showFavoritesOverlay() ? '0' : '100%'
-    }"
-           class="
-             flex h-full flex-col items-center gap-5
-             *:relative *:flex *:max-w-full *:flex-auto *:items-center
-             *:overflow-hidden
-             short:flex-row short:justify-center
-           ">
+      <div class="
+        flex h-full flex-col items-center gap-5
+        *:relative *:flex *:max-w-full *:flex-auto *:items-center
+        *:overflow-hidden
+        short:flex-row short:justify-center
+      ">
         <div class="short:hidden"></div>
         <app-favorites-overlay
-          [isVisible]="showFavoritesOverlay()"
+          [attr.data-channel-on]="showFavoritesOverlay() || null"
           class="
-            top-(--favorites-child-top) w-96 opacity-(--favorites-child-opacity)
-            transition-[opacity,top] duration-1500
+            w-96 opacity-0
+            data-channel-on:opacity-100 data-channel-on:transition-opacity
+            data-channel-on:delay-300 data-channel-on:duration-0
             2xl:w-140
             short:flex-none
           "
         />
         <app-footer
+          [attr.data-channel-on]="showFavoritesOverlay() || null"
           class="
-            top-(--favorites-child-top) shrink-0!
-            opacity-(--favorites-child-opacity) transition-[opacity,top]
-            delay-500 duration-1500
+            shrink-0! opacity-0
+            data-channel-on:opacity-100 data-channel-on:transition-opacity
+            data-channel-on:delay-300 data-channel-on:duration-0
             short:flex-none
           "
         />
@@ -60,7 +55,9 @@
            *:aspect-(--favorites-tv-aspect-ratio)
            *:w-[min(100%,calc(100lvh*var(--favorites-tv-aspect-ratio)))]
          ">
-      <div data-favorites-tv class="z-0 favorites-tv-screen-clip">
+      <div data-favorites-tv class="
+        z-0 bg-dark-void-dark favorites-tv-screen-clip
+      ">
         <div id="favorites-image-section"
              [attr.data-tv-on]="showBackgroundImage() || null"
              class="
@@ -75,6 +72,15 @@
                  [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
                  class="object-cover" alt="Landschaft mit weitem Blick in die Ferne.">
           }
+          @if (channelSwitchId()) {
+            @for (id of [channelSwitchId()]; track id) {
+              <div class="
+                favorites-tv-static absolute inset-0
+                motion-reduce:hidden
+              "></div>
+            }
+          }
+          <div class="absolute inset-0 favorites-tv-crt"></div>
         </div>
       </div>
       <div data-favorites-tv class="z-(--favorites-wrapper-z-index)">

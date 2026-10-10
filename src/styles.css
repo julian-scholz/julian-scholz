@@ -110,6 +110,41 @@
       filter: none;
     }
   }
+  @keyframes favoritesTvStatic {
+    0% {
+      opacity: 1;
+      background-position: 0 0;
+    }
+    15% {
+      background-position: -70px 40px;
+    }
+    30% {
+      background-position: 30px -80px;
+    }
+    45% {
+      background-position: -100px -30px;
+    }
+    60% {
+      opacity: 0.7;
+      background-position: 60px 70px;
+    }
+    80% {
+      opacity: 0.35;
+      background-position: -40px 110px;
+    }
+    100% {
+      opacity: 0;
+      background-position: 0 0;
+    }
+  }
+  @keyframes favoritesTvStaticRoll {
+    from {
+      top: -25%;
+    }
+    to {
+      top: 100%;
+    }
+  }
   @keyframes teletextLineIn {
     from {
       opacity: 0;
@@ -286,12 +321,6 @@
   initial-value: 50%;
 }
 
-@property --favorites-tv-scale {
-  syntax: '<number>';
-  inherits: false;
-  initial-value: 1;
-}
-
 /* The transparent screen of the tv, relative to the tv itself */
 @utility favorites-tv-screen-clip {
   clip-path: inset(
@@ -302,33 +331,33 @@
   );
 }
 
-/* The same screen for an element spanning the viewport behind the scaled tv */
-@utility favorites-tv-screen-viewport-clip {
-  --favorites-tv-width: min(
-    100vw,
-    calc(100lvh * var(--favorites-tv-aspect-ratio))
-  );
-  --favorites-tv-height: calc(
-    var(--favorites-tv-width) / var(--favorites-tv-aspect-ratio)
-  );
-  clip-path: inset(
-    calc(
-        50lvh - (0.5 - var(--favorites-tv-screen-top)) *
-          var(--favorites-tv-height) * var(--favorites-tv-scale)
-      )
-      calc(
-        50% - (0.5 - var(--favorites-tv-screen-right)) *
-          var(--favorites-tv-width) * var(--favorites-tv-scale)
-      )
-      calc(
-        100% - 50lvh - (0.5 - var(--favorites-tv-screen-bottom)) *
-          var(--favorites-tv-height) * var(--favorites-tv-scale)
-      )
-      calc(
-        50% - (0.5 - var(--favorites-tv-screen-left)) *
-          var(--favorites-tv-width) * var(--favorites-tv-scale)
-      )
-  );
+/* Scanlines and darkened edges of a tube tv */
+@utility favorites-tv-crt {
+  background-image:
+    radial-gradient(
+      ellipse at center,
+      transparent 45%,
+      color-mix(in oklab, var(--color-dark-void-dark) 45%, transparent) 100%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 1.5px,
+      color-mix(in oklab, var(--color-dark-void-dark) 12%, transparent) 2.5px 3px,
+      transparent 3.5px
+    );
+}
+
+/* Short burst of static with a rolling bar, like a channel switch */
+@utility favorites-tv-static {
+  @apply pointer-events-none overflow-hidden bg-dark-void-dark;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='1.8 0 0 0 -.4 1.8 0 0 0 -.4 1.8 0 0 0 -.4 0 0 0 0 1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: favoritesTvStatic 0.45s steps(1) both;
+
+  &::after {
+    @apply absolute inset-x-0 h-1/4 bg-dark-void-dark/70;
+    content: '';
+    animation: favoritesTvStaticRoll 0.45s linear both;
+  }
 }
 
 @utility vita-line-progress {
