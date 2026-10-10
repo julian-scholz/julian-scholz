@@ -54,7 +54,8 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
     '--favorites-tv-screen-left': this.foregroundImageScreen.left,
   };
   private readonly backgroundImagesCount: number = 18;
-  protected selectedBackgroundImagePath: string | undefined;
+  protected backgroundImagePaths = signal<string[]>([]);
+  protected activeBackgroundImageIndex = signal<number>(0);
 
   private readonly showFavoritesOverlayThreshold: number = 0.6;
   private showFavoritesOverlayInitialisationDone = false;
@@ -78,7 +79,11 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.selectedBackgroundImagePath = `${environment.assetsUrl}/images/favorites/bg/${gsap.utils.random(0, this.backgroundImagesCount - 1, 1)}`;
+      const activePath = this.getRandomBackgroundImagePath([]);
+      this.backgroundImagePaths.set([
+        activePath,
+        this.getRandomBackgroundImagePath([activePath]),
+      ]);
     }
   }
 
@@ -128,6 +133,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
               if (showFavoritesOverlay !== this.showFavoritesOverlay()) {
                 this.showFavoritesOverlay.set(showFavoritesOverlay);
                 this.channelSwitchId.update((id) => id + 1);
+                this.switchBackgroundImage();
               }
 
               if (!this.showFavoritesOverlayInitialisationDone) {
@@ -157,6 +163,27 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         '<',
       );
+  }
+
+  private switchBackgroundImage(): void {
+    const previousIndex = this.activeBackgroundImageIndex();
+    this.activeBackgroundImageIndex.set(1 - previousIndex);
+    this.backgroundImagePaths.update((paths) =>
+      paths.map((path, index) =>
+        index === previousIndex
+          ? this.getRandomBackgroundImagePath(paths)
+          : path,
+      ),
+    );
+  }
+
+  private getRandomBackgroundImagePath(excludedPaths: string[]): string {
+    const paths = Array.from(
+      { length: this.backgroundImagesCount },
+      (_, index) => `${environment.assetsUrl}/images/favorites/bg/${index}`,
+    ).filter((path) => !excludedPaths.includes(path));
+
+    return gsap.utils.random(paths);
   }
 
   private getApparentZoomScale(progress: number): number {

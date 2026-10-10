@@ -68,11 +68,17 @@
                motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
                motion-reduce:transition-opacity motion-reduce:duration-700
              ">
-          @if (selectedBackgroundImagePath) {
-            <img [ngSrc]="selectedBackgroundImagePath"
+          @for (path of backgroundImagePaths(); track $index) {
+            <img [ngSrc]="path"
                  ngSrcset="2560w, 1920w" sizes="100vw" fill
-                 [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
-                 class="object-cover" alt="Landschaft mit weitem Blick in die Ferne.">
+                 [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
+                 [priority]="$index === 0"
+                 [attr.data-active]="$index === activeBackgroundImageIndex() || null"
+                 [alt]="$index === activeBackgroundImageIndex() ? 'Landschaft mit weitem Blick in die Ferne.' : ''"
+                 class="
+                   object-cover opacity-0
+                   data-active:opacity-100
+                 ">
           }
           @if (channelSwitchId()) {
             @for (id of [channelSwitchId()]; track id) {
