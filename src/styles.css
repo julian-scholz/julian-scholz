@@ -225,7 +225,7 @@
   @keyframes vitaEntryReveal {
     from {
       opacity: 0;
-      translate: 2rem 0;
+      translate: 1.5rem 0;
     }
     to {
       opacity: 1;
