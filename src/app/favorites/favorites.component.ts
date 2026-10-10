@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
@@ -34,8 +33,6 @@ import { environment } from '../../environment/environment';
 })
 export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
-  private readonly changeDetectorRef: ChangeDetectorRef =
-    inject(ChangeDetectorRef);
 
   protected readonly lightForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_light`;
   protected readonly darkForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_dark`;
@@ -58,7 +55,6 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   protected activeBackgroundImageIndex = signal<number>(0);
 
   private readonly showFavoritesOverlayThreshold: number = 0.6;
-  private showFavoritesOverlayInitialisationDone = false;
   protected showFavoritesOverlay = signal<boolean>(false);
   protected channelSwitchId = signal<number>(0);
 
@@ -127,20 +123,12 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
           pin: true,
           scrub: true,
           onUpdate: (self) => {
-            if (typeof self?.progress === 'number') {
-              const showFavoritesOverlay =
-                self.progress >= this.showFavoritesOverlayThreshold;
-              if (showFavoritesOverlay !== this.showFavoritesOverlay()) {
-                this.showFavoritesOverlay.set(showFavoritesOverlay);
-                this.channelSwitchId.update((id) => id + 1);
-                this.switchBackgroundImage();
-              }
-
-              if (!this.showFavoritesOverlayInitialisationDone) {
-                self.update(true, false, false);
-                this.showFavoritesOverlayInitialisationDone = true;
-                this.changeDetectorRef.detectChanges();
-              }
+            const showFavoritesOverlay =
+              self.progress >= this.showFavoritesOverlayThreshold;
+            if (showFavoritesOverlay !== this.showFavoritesOverlay()) {
+              this.showFavoritesOverlay.set(showFavoritesOverlay);
+              this.channelSwitchId.update((id) => id + 1);
+              this.switchBackgroundImage();
             }
           },
         },
