@@ -1,6 +1,5 @@
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   DestroyRef,
   effect,
@@ -35,8 +34,6 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly renderer: Renderer2 = inject(Renderer2);
-  private readonly changeDetectorRef: ChangeDetectorRef =
-    inject(ChangeDetectorRef);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
   private readonly injector: Injector = inject(Injector);
   private readonly themeModeToggleService: ThemeModeToggleService = inject(
@@ -276,7 +273,5 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         darkGradientFirstColorStops,
       ),
     );
-
-    this.changeDetectorRef.detectChanges();
   }
 }
