@@ -23,7 +23,8 @@
       <img
         [ngSrc]="bookDetails().cover.imagePath" [width]="bookWidth()" [height]="bookDetails().cover.height"
         disableOptimizedSrcset
-        [loaderParams]="{imageFormat: 'webp'}" priority
+        [loaderParams]="{imageFormat: 'webp'}"
+        role="button" [attr.aria-expanded]="isBookCoverOpen()"
         [ngClass]="{'transform-[perspective(1500px)_rotateY(-150deg)]! shadow-[3px_1px_7px_--theme(--color-dark-void-dark/0.5)]!': isBookCoverOpen()}"
         class="
           relative z-[calc(21+var(--book-index))] origin-[0_70%] cursor-pointer
@@ -46,8 +47,7 @@
              transition-all duration-500 ease-[ease] backface-hidden
              group-hover/item:transform-[perspective(1500px)_rotateY(-202deg)]
            "
-           (click)="toggleCoverOpen()" (keydown.enter)="toggleCoverOpen()"
-           (keydown.space)="$event.preventDefault(); toggleCoverOpen()" tabindex="0">
+           (click)="toggleCoverOpen()">
         <div class="
           flex h-full items-center justify-center overflow-hidden
           p-[calc(2*var(--book-page-padding))] text-center
@@ -55,7 +55,7 @@
         ">
           <div class="book-cover">
             <a [href]="bookDetails().url" target="_blank" (click)="$event.stopPropagation()"
-               (keydown.enter)="$event.stopPropagation()">Zum Buch von {{ bookDetails().details.author }}</a>
+               [attr.tabindex]="isBookCoverOpen() ? null : -1">Zum Buch von {{ bookDetails().details.author }}</a>
           </div>
         </div>
       </div>

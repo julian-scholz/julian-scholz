@@ -1,5 +1,9 @@
 @if (shownTemplate) {
-  <div class="relative z-61" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+  <dialog #dialog aria-labelledby="modal-title" (close)="removeModal()"
+          class="
+            size-full max-h-none max-w-none bg-transparent text-inherit
+            backdrop:bg-transparent
+          ">
     <div class="
       fixed inset-0 z-60 bg-dark-void/80
       dark:bg-dark-void-light/80
@@ -43,7 +47,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </dialog>
 }
 
 <ng-template #legalNotice>

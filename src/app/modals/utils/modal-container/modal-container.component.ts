@@ -1,4 +1,10 @@
-import { Component, ViewContainerRef } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  ElementRef,
+  viewChild,
+  ViewContainerRef
+} from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
@@ -11,9 +17,16 @@ import { ModalTemplate } from './utils/modal-template.enum';
   templateUrl: './modal-container.component.html',
 })
 export class ModalContainerComponent {
+  private readonly dialog =
+    viewChild<ElementRef<HTMLDialogElement>>('dialog');
+
   protected readonly faClose: IconDefinition = faClose;
   protected shownTemplate: ModalTemplate | undefined;
   protected parentViewContainerRef: ViewContainerRef | undefined;
+
+  constructor() {
+    afterNextRender(() => this.dialog()?.nativeElement.showModal());
+  }
 
   protected get templateModel(): typeof ModalTemplate {
     return ModalTemplate;
@@ -28,6 +41,10 @@ export class ModalContainerComponent {
   }
 
   protected closeModal(): void {
+    this.dialog()?.nativeElement.close();
+  }
+
+  protected removeModal(): void {
     this.parentViewContainerRef?.clear();
   }
 }

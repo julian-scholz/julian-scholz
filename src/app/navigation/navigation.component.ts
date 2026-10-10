@@ -38,11 +38,9 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
 
   private gsapScrollTrigger: ScrollTrigger | undefined;
 
-  get sortedRouteEntries(): NavigationEntryModel[] {
-    return Object.entries(this.navigationEntries)
-      .sort((a, b) => a[1].index - b[1].index)
-      .map(([, route]) => route);
-  }
+  protected readonly sortedRouteEntries: NavigationEntryModel[] = Object.values(
+    this.navigationEntries,
+  ).sort((a, b) => a.index - b.index);
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {

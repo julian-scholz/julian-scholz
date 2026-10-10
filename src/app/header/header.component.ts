@@ -56,6 +56,8 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   private gsapTickerCallback: gsap.Callback | undefined;
   private canvasIntersectionObserver: IntersectionObserver | undefined;
   private isCanvasVisible = true;
+  private prefersReducedMotion = false;
+  private isRingRedrawPending = false;
 
   protected readonly font: string = 'Geist Sans';
   protected readonly fontWeight: number = 900;
@@ -70,10 +72,14 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         this.angularDocument.documentElement,
       );
 
+      this.prefersReducedMotion = this.angularDocument.defaultView!.matchMedia(
+        '(prefers-reduced-motion: reduce)',
+      ).matches;
+
       effect(
         () => {
           this.themeMode();
-          if (this.gsapAnimations.length > 0) {
+          if (this.rings) {
             untracked(() => this.initComponent(documentStyles));
           }
         },
@@ -178,7 +184,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
           1,
         ),
         spread: gsap.utils.random(75, 359, 1),
-        angle: 0,
+        angle: this.prefersReducedMotion ? gsap.utils.random(0, 359, 1) : 0,
       });
     }
 
@@ -198,16 +204,19 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     this.context.globalCompositeOperation = 'source-in';
 
     this.resetGsapAnimations();
-    this.gsapAnimations = this.rings.map((ring) =>
-      gsap.to(ring, {
-        angle: 360,
-        repeat: -1,
-        ease: 'none',
-        duration: () => gsap.utils.random(5, 20, 0.2),
-        delay: () => gsap.utils.random(-5, -1, 0.1),
-        paused: !this.isCanvasVisible,
-      }),
-    );
+    this.isRingRedrawPending = true;
+    if (!this.prefersReducedMotion) {
+      this.gsapAnimations = this.rings.map((ring) =>
+        gsap.to(ring, {
+          angle: 360,
+          repeat: -1,
+          ease: 'none',
+          duration: () => gsap.utils.random(5, 20, 0.2),
+          delay: () => gsap.utils.random(-5, -1, 0.1),
+          paused: !this.isCanvasVisible,
+        }),
+      );
+    }
   }
 
   private initRingAnimations(
@@ -280,11 +289,15 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
 
     gsap.ticker.fps(24);
     this.gsapTickerCallback = gsap.ticker.add(() => {
-      if (this.isCanvasVisible) {
+      if (
+        this.isCanvasVisible &&
+        (!this.prefersReducedMotion || this.isRingRedrawPending)
+      ) {
         this.initRingAnimations(
           lightGradientColorStops,
           darkGradientFirstColorStops,
         );
+        this.isRingRedrawPending = false;
       }
     });
   }
