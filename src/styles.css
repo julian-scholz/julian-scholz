@@ -351,8 +351,6 @@
 @utility favorites-tv-static {
   @apply pointer-events-none overflow-hidden bg-dark-void-dark;
   background-image: url("/assets/images/tv-static.png");
-  background-size: 128px;
-  image-rendering: pixelated;
   animation: favoritesTvStatic 0.45s steps(1) both;
 
   &::after {
