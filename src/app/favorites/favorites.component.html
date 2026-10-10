@@ -3,16 +3,21 @@
     <h2>Favoriten</h2>
     <div class="divider"></div>
   </div>
-  <div #favoritesScrollTrigger id="favorites-scroll-trigger" class="
-    relative overflow-hidden
-    *:w-full
-  ">
-    <section [ngStyle]="{
+  <div #favoritesScrollTrigger id="favorites-scroll-trigger"
+       [ngStyle]="foregroundImageStyles"
+       class="
+         relative overflow-hidden
+         *:w-full
+       ">
+    <section id="favorites-overlay-section"
+             [ngStyle]="{
       '--favorites-grid-wrapper-z-index': showFavoritesOverlay() ? '30' : '10',
     }"
+             [attr.data-behind-tv]="!showFavoritesOverlay() || null"
              class="
                absolute inset-x-0 z-(--favorites-grid-wrapper-z-index) h-svh
                px-5
+               data-behind-tv:favorites-tv-screen-viewport-clip
                landscape:h-lvh
              ">
       <div [ngStyle]="{
@@ -45,55 +50,47 @@
         />
       </div>
     </section>
-    <div id="favorites-image-section"
-         [attr.data-tv-on]="showBackgroundImage() || null"
-         class="
-           relative h-lvh opacity-0
-           data-tv-on:opacity-100
-           motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
-           motion-reduce:transition-opacity motion-reduce:duration-700
-         ">
-      @if (selectedBackgroundImagePath) {
-        <img [ngSrc]="selectedBackgroundImagePath"
-             ngSrcset="2560w, 1920w" sizes="100vw" fill
-             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
-             class="object-cover" alt="Landschaft mit weitem Blick in die Ferne.">
-      }
-    </div>
+    <div class="h-lvh"></div>
     <div [ngStyle]="{
-      '--favorites-wrapper-z-index': showFavoritesOverlay() ? '10' : '20',
-      '--favorites-outline-width': outlineWidth(),
-      '--favorites-outline-offset': outlineOffset
+      '--favorites-wrapper-z-index': showFavoritesOverlay() ? '10' : '20'
     }"
          class="
-           absolute top-0 z-(--favorites-wrapper-z-index) flex h-lvh flex-col
+           absolute top-0 grid h-lvh place-items-center
+           *:relative *:col-start-1 *:row-start-1
+           *:aspect-(--favorites-tv-aspect-ratio)
+           *:w-[min(100%,calc(100lvh*var(--favorites-tv-aspect-ratio)))]
          ">
-      <div [ngStyle]="{
-        '--favorites-img-z-index': showFavoritesOverlay() ? '20': '30'
-      }"
-           class="
-             relative size-full max-h-full max-w-full
-             *:z-(--favorites-img-z-index) *:m-auto *:size-auto! *:max-h-full
-             *:max-w-full *:object-contain
-             *:outline-[calc(var(--favorites-outline-width)*1px)]
-             *:outline-offset-[calc(var(--favorites-outline-offset)*-1px)]
-             *:outline-snow *:will-change-transform
-             dark:*:outline-dark-void
-           ">
-        <img #scrollImage
-             [ngSrc]="lightForegroundImagePath"
+      <div data-favorites-tv class="z-0 favorites-tv-screen-clip">
+        <div id="favorites-image-section"
+             [attr.data-tv-on]="showBackgroundImage() || null"
+             class="
+               absolute top-1/2 left-1/2 h-lvh w-screen -translate-1/2 opacity-0
+               data-tv-on:opacity-100
+               motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
+               motion-reduce:transition-opacity motion-reduce:duration-700
+             ">
+          @if (selectedBackgroundImagePath) {
+            <img [ngSrc]="selectedBackgroundImagePath"
+                 ngSrcset="2560w, 1920w" sizes="100vw" fill
+                 [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
+                 class="object-cover" alt="Landschaft mit weitem Blick in die Ferne.">
+          }
+        </div>
+      </div>
+      <div data-favorites-tv class="z-(--favorites-wrapper-z-index)">
+        <img [ngSrc]="lightForegroundImagePath"
              ngSrcset="2560w, 1920w" sizes="100vw" fill
              [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
-             data-favorites-tv
-             class="dark:opacity-0"
-             alt="Retro-Fernseher mit ausgeschnittenem Bildschirm."
-             (load)="afterForegroundImageLoad()">
+             class="
+               will-change-transform
+               dark:opacity-0
+             "
+             alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
         <img [ngSrc]="darkForegroundImagePath"
              ngSrcset="2560w, 1920w" sizes="100vw" fill
              [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" priority
-             data-favorites-tv
              class="
-               opacity-0
+               opacity-0 will-change-transform
                dark:opacity-100
              "
              alt="">

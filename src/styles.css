@@ -286,6 +286,51 @@
   initial-value: 50%;
 }
 
+@property --favorites-tv-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+
+/* The transparent screen of the tv, relative to the tv itself */
+@utility favorites-tv-screen-clip {
+  clip-path: inset(
+    calc(var(--favorites-tv-screen-top) * 100%)
+      calc(var(--favorites-tv-screen-right) * 100%)
+      calc(var(--favorites-tv-screen-bottom) * 100%)
+      calc(var(--favorites-tv-screen-left) * 100%)
+  );
+}
+
+/* The same screen for an element spanning the viewport behind the scaled tv */
+@utility favorites-tv-screen-viewport-clip {
+  --favorites-tv-width: min(
+    100vw,
+    calc(100lvh * var(--favorites-tv-aspect-ratio))
+  );
+  --favorites-tv-height: calc(
+    var(--favorites-tv-width) / var(--favorites-tv-aspect-ratio)
+  );
+  clip-path: inset(
+    calc(
+        50lvh - (0.5 - var(--favorites-tv-screen-top)) *
+          var(--favorites-tv-height) * var(--favorites-tv-scale)
+      )
+      calc(
+        50% - (0.5 - var(--favorites-tv-screen-right)) *
+          var(--favorites-tv-width) * var(--favorites-tv-scale)
+      )
+      calc(
+        100% - 50lvh - (0.5 - var(--favorites-tv-screen-bottom)) *
+          var(--favorites-tv-height) * var(--favorites-tv-scale)
+      )
+      calc(
+        50% - (0.5 - var(--favorites-tv-screen-left)) *
+          var(--favorites-tv-width) * var(--favorites-tv-scale)
+      )
+  );
+}
+
 @utility vita-line-progress {
   @supports (animation-timeline: view()) {
     animation: vitaLineGrow linear both;

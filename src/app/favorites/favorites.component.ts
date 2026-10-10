@@ -9,7 +9,6 @@ import {
   PLATFORM_ID,
   signal,
   viewChild,
-  DOCUMENT,
   ChangeDetectionStrategy
 } from '@angular/core';
 import { gsap } from '../lib/misc/gsap/gsap';
@@ -35,17 +34,29 @@ import { environment } from '../../environment/environment';
 })
 export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
-  private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly changeDetectorRef: ChangeDetectorRef =
     inject(ChangeDetectorRef);
 
   protected readonly lightForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_light`;
   protected readonly darkForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_dark`;
+  private readonly foregroundImageWidth: number = 2560;
+  private readonly foregroundImageHeight: number = 2990;
+  private readonly foregroundImageScreen = {
+    top: 0.3,
+    right: 0.25,
+    bottom: 0.21,
+    left: 0.09,
+  };
+  protected readonly foregroundImageStyles: Record<string, number> = {
+    '--favorites-tv-aspect-ratio':
+      this.foregroundImageWidth / this.foregroundImageHeight,
+    '--favorites-tv-screen-top': this.foregroundImageScreen.top,
+    '--favorites-tv-screen-right': this.foregroundImageScreen.right,
+    '--favorites-tv-screen-bottom': this.foregroundImageScreen.bottom,
+    '--favorites-tv-screen-left': this.foregroundImageScreen.left,
+  };
   private readonly backgroundImagesCount: number = 18;
-  private foregroundImageResizeObserver: ResizeObserver | undefined;
   protected selectedBackgroundImagePath: string | undefined;
-  protected readonly outlineOffset: number = 3;
-  protected outlineWidth = signal<number>(0);
 
   private readonly showFavoritesOverlayThreshold: number = 0.6;
   private showFavoritesOverlayInitialisationDone = false;
@@ -55,8 +66,6 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private backgroundImageIntersectionObserver: IntersectionObserver | undefined;
   protected showBackgroundImage = signal<boolean>(false);
 
-  private readonly scrollImage =
-    viewChild.required<ElementRef<HTMLImageElement>>('scrollImage');
   private readonly favoritesScrollTrigger = viewChild.required<
     ElementRef<HTMLDivElement>
   >('favoritesScrollTrigger');
@@ -66,6 +75,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly zoomScale: number = 2.7;
   private readonly zoomPerspective: number = 500;
   private readonly zoomDepth: number = 250;
+  private readonly backgroundZoomScale: number = 1.4;
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -88,76 +98,68 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.backgroundImageIntersectionObserver.observe(
         this.favoritesScrollTrigger().nativeElement,
       );
-    }
-  }
 
-  protected afterForegroundImageLoad(): void {
-    if (!this.gsapTimeline) {
-      this.updateScrollImageSpacerWidth(
-        this.scrollImage().nativeElement.getBoundingClientRect().height,
-        this.scrollImage().nativeElement.getBoundingClientRect().width,
-      );
-
-      const scrollImage = this.scrollImage().nativeElement;
-      this.foregroundImageResizeObserver = new ResizeObserver(() =>
-        this.updateScrollImageSpacerWidth(
-          scrollImage.offsetHeight,
-          scrollImage.offsetWidth,
-        ),
-      );
-      this.foregroundImageResizeObserver.observe(scrollImage);
-      this.foregroundImageResizeObserver.observe(scrollImage.parentElement!);
-
-      const zoomEase = gsap.parseEase('power1.inOut');
-      const finalZoomScale = this.getApparentZoomScale(1);
-
-      this.gsapTimeline = gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '#favorites-scroll-trigger',
-            start: 'top top',
-            end: '+=200%',
-            pin: true,
-            scrub: true,
-            onUpdate: (self) => {
-              if (typeof self?.progress === 'number') {
-                this.showFavoritesOverlay.set(
-                  self.progress >= this.showFavoritesOverlayThreshold,
-                );
-
-                if (!this.showFavoritesOverlayInitialisationDone) {
-                  self.update(true, false, false);
-                  this.showFavoritesOverlayInitialisationDone = true;
-                  this.changeDetectorRef.detectChanges();
-                }
-              }
-            },
-          },
-        })
-        .to('[data-favorites-tv]', {
-          scale: finalZoomScale,
-          transformOrigin: 'center center',
-          ease: (time: number) =>
-            (this.getApparentZoomScale(zoomEase(time)) - 1) /
-            (finalZoomScale - 1),
-        })
-        .to(
-          '#favorites-image-section',
-          {
-            scale: 1.4,
-            transformOrigin: 'center center',
-            ease: 'power1.inOut',
-          },
-          '<',
-        );
+      this.initZoom();
     }
   }
 
   ngOnDestroy(): void {
     this.gsapTimeline?.kill();
 
-    this.foregroundImageResizeObserver?.disconnect();
     this.backgroundImageIntersectionObserver?.disconnect();
+  }
+
+  private initZoom(): void {
+    const zoomEase = gsap.parseEase('power1.inOut');
+    const finalZoomScale = this.getApparentZoomScale(1);
+    const finalBackgroundCounterScale = this.getBackgroundCounterScale(1);
+    const tvZoomEase = (time: number): number =>
+      (this.getApparentZoomScale(zoomEase(time)) - 1) / (finalZoomScale - 1);
+
+    this.gsapTimeline = gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: '#favorites-scroll-trigger',
+          start: 'top top',
+          end: '+=200%',
+          pin: true,
+          scrub: true,
+          onUpdate: (self) => {
+            if (typeof self?.progress === 'number') {
+              this.showFavoritesOverlay.set(
+                self.progress >= this.showFavoritesOverlayThreshold,
+              );
+
+              if (!this.showFavoritesOverlayInitialisationDone) {
+                self.update(true, false, false);
+                this.showFavoritesOverlayInitialisationDone = true;
+                this.changeDetectorRef.detectChanges();
+              }
+            }
+          },
+        },
+      })
+      .to('[data-favorites-tv]', {
+        scale: finalZoomScale,
+        transformOrigin: 'center center',
+        ease: tvZoomEase,
+      })
+      .to(
+        '#favorites-overlay-section',
+        { '--favorites-tv-scale': finalZoomScale, ease: tvZoomEase },
+        '<',
+      )
+      .to(
+        '#favorites-image-section',
+        {
+          scale: finalBackgroundCounterScale,
+          transformOrigin: 'center center',
+          ease: (time: number) =>
+            (this.getBackgroundCounterScale(zoomEase(time)) - 1) /
+            (finalBackgroundCounterScale - 1),
+        },
+        '<',
+      );
   }
 
   private getApparentZoomScale(progress: number): number {
@@ -167,26 +169,12 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  protected updateScrollImageSpacerWidth(
-    scrollImageHeight: number,
-    scrollImageWidth: number,
-  ): void {
-    let xSpacerWidth =
-      (this.angularDocument.defaultView!.innerWidth - scrollImageWidth) / 2;
-    if (xSpacerWidth <= 0) {
-      xSpacerWidth = 0;
-    } else {
-      xSpacerWidth += this.outlineOffset;
-    }
-    let ySpacerHeight =
-      (this.angularDocument.defaultView!.innerHeight - scrollImageHeight) / 2;
-    if (ySpacerHeight <= 0) {
-      ySpacerHeight = 0;
-    } else {
-      ySpacerHeight += this.outlineOffset;
-    }
-    this.outlineWidth.set(
-      Math.round(Math.max(xSpacerWidth, ySpacerHeight) + 100),
+  // The background image sits inside the scaled tv, so it is scaled against
+  // it to end up at its own, much smaller zoom
+  private getBackgroundCounterScale(progress: number): number {
+    return (
+      (1 + (this.backgroundZoomScale - 1) * progress) /
+      this.getApparentZoomScale(progress)
     );
   }
 }
