@@ -78,6 +78,16 @@
       filter: brightness(0.2);
     }
   }
+  @keyframes themeModeToggleHideOld {
+    0%,
+    70% {
+      opacity: 1;
+    }
+    70.01%,
+    100% {
+      opacity: 0;
+    }
+  }
   @keyframes favoritesTvOn {
     0% {
       opacity: 1;
@@ -470,30 +480,24 @@
     @apply mix-blend-normal;
   }
 
-  /* Backs areas the live new view has not painted yet while scrolling */
-  ::view-transition-new(root) {
-    @apply bg-snow;
-  }
-
-  .dark::view-transition-new(root) {
-    @apply bg-dark-void;
-  }
-
   @variant motion-safe {
     ::view-transition-group(root) {
       @apply [animation-duration:2s];
     }
 
+    /* The old view is only visible while its animations show it, towards
+       light it has left the screen at about 50% */
     ::view-transition-old(root) {
-      @apply animate-[themeModeToggleRevealLight_2.25s_both] z-100;
+      @apply animate-[themeModeToggleRevealLight_2.25s_both,themeModeToggleHideOld_2.25s_both] z-100 opacity-0;
     }
 
     .dark::view-transition-new(root) {
       @apply animate-[themeModeToggleRevealDark_2.25s_both] z-101;
     }
 
+    /* The dark circle covers the whole old view from about 55% on */
     .dark::view-transition-old(root) {
-      @apply animate-none z-auto;
+      @apply animate-[themeModeToggleHideOld_2.25s_both] z-auto;
     }
   }
 
