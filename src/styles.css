@@ -375,6 +375,15 @@
     @apply mix-blend-normal;
   }
 
+  /* Backs areas the live new view has not painted yet while scrolling */
+  ::view-transition-new(root) {
+    @apply bg-snow;
+  }
+
+  .dark::view-transition-new(root) {
+    @apply bg-dark-void;
+  }
+
   @variant motion-safe {
     ::view-transition-group(root) {
       @apply [animation-duration:2s];
