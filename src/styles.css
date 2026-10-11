@@ -2,6 +2,8 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant short (@media (max-height: 500px));
+/* Viewports narrower than the favorites tv, where it no longer reaches the bottom */
+@custom-variant tv-floating (@media (max-aspect-ratio: 256/299));
 
 @theme {
   --color-*: initial;

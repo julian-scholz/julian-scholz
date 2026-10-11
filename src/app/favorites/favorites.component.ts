@@ -18,6 +18,7 @@ import {
 import { FavoritesOverlayComponent } from './favorites-overlay/favorites-overlay.component';
 import { FooterComponent } from '../footer/footer.component';
 import { environment } from '../../environment/environment';
+import { ShelfComponent } from '../lib/shelf/shelf.component';
 
 @Component({
   selector: 'app-favorites',
@@ -26,6 +27,7 @@ import { environment } from '../../environment/environment';
     NgStyle,
     FavoritesOverlayComponent,
     FooterComponent,
+    ShelfComponent,
   ],
   templateUrl: './favorites.component.html',
 })
