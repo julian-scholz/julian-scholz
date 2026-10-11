@@ -90,29 +90,17 @@
         </div>
       </div>
       <div data-favorites-tv class="z-(--favorites-wrapper-z-index)">
-        <img [ngSrc]="lightForegroundImagePath"
-             ngSrcset="2560w, 1920w" sizes="100vw" fill
-             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
-             class="
-               will-change-transform
-               dark:opacity-0
-             "
-             i18n-alt="@@favoritesTvAlt"
-             alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
-        <img [ngSrc]="darkForegroundImagePath"
-             ngSrcset="2560w, 1920w" sizes="100vw" fill
-             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
-             class="
-               opacity-0 will-change-transform
-               dark:opacity-100
-             "
-             alt="">
         <app-shelf aria-hidden="true" class="
           absolute inset-x-0 bottom-[calc(-0.6%-0.75rem)] hidden
           [--shelf-surface-depth:max(1.5rem,5vw/var(--favorites-tv-aspect-ratio))]
-          [--shelf-surface-mask:url(/assets/images/tv-feet-mask.png)]
           tv-floating:block
         " />
+        <img [ngSrc]="foregroundImagePath"
+             ngSrcset="2560w, 1920w" sizes="100vw" fill
+             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
+             class="will-change-transform"
+             i18n-alt="@@favoritesTvAlt"
+             alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
       </div>
     </div>
   </div>

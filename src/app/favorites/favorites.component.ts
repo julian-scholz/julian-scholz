@@ -34,8 +34,7 @@ import { ShelfComponent } from '../lib/shelf/shelf.component';
 export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
 
-  protected readonly lightForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_light`;
-  protected readonly darkForegroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv_dark`;
+  protected readonly foregroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv`;
   private readonly foregroundImageAspectRatio: number = 256 / 299;
   private readonly foregroundImageScreen = {
     top: 0.3,
