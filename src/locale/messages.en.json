@@ -65,6 +65,7 @@
     "privacyPolicyTitle": "Privacy Policy",
     "inspirationsTitle": "Inspiration & Credits",
     "inspirationsAdobeStock": "The graphics used were licensed through {$START_LINK}Adobe Stock{$CLOSE_LINK}.",
+    "inspirationsOpenSource": "This website uses open source software. The license notices of the packages used are available at {$START_LINK}https://julian-scholz.dev/licenses.txt{$CLOSE_LINK}.",
     "modalCloseLabel": "Close dialog"
   }
 }

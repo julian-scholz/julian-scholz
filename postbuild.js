@@ -25,6 +25,15 @@ for (const localeDirectory of localeDirectories) {
   }
 }
 
+const licensesSourcePath = path.join(__dirname, 'dist', 'julian-scholz', '3rdpartylicenses.txt');
+try {
+  fs.copyFileSync(licensesSourcePath, path.join(browserPath, 'licenses.txt'));
+  console.log(`${prefix} Copied 3rdpartylicenses.txt to licenses.txt.`);
+} catch (err) {
+  console.error(`${prefix}`, err);
+  process.exit(1);
+}
+
 const sitemapPath = path.join(browserPath, 'sitemap.xml');
 fs.readFile(sitemapPath, 'utf8', (err, data) => {
   if (err) {

@@ -47,6 +47,7 @@
     "themeModeToggleLabel": "Theme wechseln",
     "modalCloseLabel": "Modal schließen",
     "inspirationsAdobeStock": "Die verwendeten Grafiken wurden mit {$START_LINK}Adobe Stock{$CLOSE_LINK} lizensiert. ",
+    "inspirationsOpenSource": "Diese Website verwendet Open-Source-Software. Die Lizenzhinweise der verwendeten Pakete stehen unter {$START_LINK}https://julian-scholz.dev/licenses.txt{$CLOSE_LINK}.",
     "inspirationsTitle": "Impulse & Credits",
     "vitaHeading": "Vita",
     "vitaShowLess": "Weniger anzeigen",
