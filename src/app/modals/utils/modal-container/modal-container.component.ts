@@ -7,10 +7,10 @@ import {
   viewChild,
   ViewContainerRef
 } from '@angular/core';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { NgTemplateOutlet } from '@angular/common';
+import { IconComponent } from '../../../lib/icon/icon.component';
 import { ModalTemplate } from './utils/modal-template.model';
 import { LegalNoticeDeComponent } from '../../contents/legal-notice.de.component';
 import { LegalNoticeEnComponent } from '../../contents/legal-notice.en.component';
@@ -20,7 +20,7 @@ import { PrivacyPolicyEnComponent } from '../../contents/privacy-policy.en.compo
 @Component({
   selector: 'app-modal-container',
   imports: [
-    FaIconComponent,
+    IconComponent,
     NgTemplateOutlet,
     LegalNoticeDeComponent,
     LegalNoticeEnComponent,

@@ -8,7 +8,6 @@ import {
   signal,
   DOCUMENT
 } from '@angular/core';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -18,10 +17,11 @@ import {
 } from '@angular/common';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IconComponent } from '../lib/icon/icon.component';
 
 @Component({
   selector: 'app-back-to-top-button',
-  imports: [FaIconComponent, NgStyle],
+  imports: [IconComponent, NgStyle],
   templateUrl: './back-to-top-button.component.html',
 })
 export class BackToTopButtonComponent implements AfterViewInit {

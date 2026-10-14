@@ -25,10 +25,8 @@
     "@angular/platform-browser-dynamic": "^22.2.1",
     "@angular/platform-server": "^22.2.1",
     "@angular/ssr": "^22.2.1",
-    "@fortawesome/angular-fontawesome": "^5.1.0",
-    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/fontawesome-common-types": "^7.3.1",
     "@fortawesome/free-brands-svg-icons": "^7.3.1",
-    "@fortawesome/free-regular-svg-icons": "^7.3.1",
     "@fortawesome/free-solid-svg-icons": "^7.3.1",
     "@tailwindcss/postcss": "^4.3.3",
     "gsap": "^3.15.0",
@@ -62,6 +60,6 @@
     "esbuild@0.28.2": true,
     "lmdb@3.5.6": true,
     "@parcel/watcher@2.6.0": true,
-    "workerd@1.20261006.1": true
+    "workerd@1.20261012.1": true
   }
 }

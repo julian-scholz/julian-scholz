@@ -24,14 +24,13 @@
     >
       <button class="grid w-12 place-items-center pl-(--header-nav-logo-gap)" (click)="navigateToTop()"
               i18n-aria-label="@@backToTopLabel" aria-label="Zurück zum Seitenanfang">
-        <fa-icon [icon]="faJs" size="xl"
-                 class="
-                   rotate-[calc(var(--header-nav-intent,0)*360deg)] text-vanilla
-                   transition-transform duration-500
-                   hover:[--header-nav-intent:1]
-                   focus-visible:[--header-nav-intent:1]
-                 ">
-        </fa-icon>
+        <app-icon [icon]="faJs" size="xl"
+                  class="
+                    rotate-[calc(var(--header-nav-intent,0)*360deg)]
+                    text-vanilla transition-transform duration-500
+                    hover:[--header-nav-intent:1]
+                    focus-visible:[--header-nav-intent:1]
+                  " />
       </button>
       <ul class="m-0 flex list-none items-center px-(--header-nav-ul-gap) py-0">
         @for (navigationEntry of sortedRouteEntries; track navigationEntry; let i = $index; let isLast = $last) {

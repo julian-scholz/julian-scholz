@@ -10,14 +10,14 @@
       <a href="mailto:mail@julian-scholz.dev" class="
         motion-safe:animate-bounce
       " i18n-aria-label="@@footerMailLabel" aria-label="Mail">
-        <fa-icon [icon]="faEnvelope" size="xl" class="text-custom-light-dark"></fa-icon>
+        <app-icon [icon]="faEnvelope" size="xl" class="text-custom-light-dark" />
       </a>
       @for (footerLink of sortedFooterLinkEntries; track footerLink) {
         <a
           [href]="footerLink.url" target="_blank" [attr.aria-label]="footerLink.name">
-          <fa-icon [icon]="footerLink.iconDefinition" size="xl" class="
+          <app-icon [icon]="footerLink.iconDefinition" size="xl" class="
             text-custom-light-dark
-          "></fa-icon>
+          " />
         </a>
       }
     </div>

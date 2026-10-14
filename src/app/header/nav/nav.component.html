@@ -32,7 +32,7 @@
             xl:hover:after:duration-250 xl:hover:after:ease-linear
           "
           [href]="navEntry.url" target="_blank" [attr.aria-label]="navEntry.name">
-          <fa-icon [icon]="navEntry.iconDefinition" class="text-dark-void"></fa-icon>
+          <app-icon [icon]="navEntry.iconDefinition" class="text-dark-void" />
         </a>
       </li>
     }

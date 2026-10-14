@@ -1,11 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NavEntryModel } from './models/nav-entry.model';
 import { NavService } from './nav.service';
+import { IconComponent } from '../../lib/icon/icon.component';
 
 @Component({
   selector: 'app-header-nav',
-  imports: [FontAwesomeModule],
+  imports: [IconComponent],
   templateUrl: './nav.component.html',
 })
 export class HeaderNavComponent implements OnInit {

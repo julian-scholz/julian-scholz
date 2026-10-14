@@ -23,7 +23,6 @@ import {
   faTerminal,
 } from '@fortawesome/free-solid-svg-icons';
 import { VitaEntryModel } from './models/vita-entry.model';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import {
   isPlatformBrowser,
   NgClass,
@@ -32,10 +31,11 @@ import {
 } from '@angular/common';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
+import { IconComponent } from '../lib/icon/icon.component';
 
 @Component({
   selector: 'app-vita',
-  imports: [FaIconComponent, UpperCasePipe, NgStyle, NgClass],
+  imports: [IconComponent, UpperCasePipe, NgStyle, NgClass],
   templateUrl: './vita.component.html',
 })
 export class VitaComponent implements AfterViewInit, OnDestroy {

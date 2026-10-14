@@ -42,9 +42,9 @@
             dark:bg-dark-void dark:ring-dark-void-light
           "
           aria-hidden="true">
-          <fa-icon [icon]="vitaEntry.iconDefinition" size="sm" class="
+          <app-icon [icon]="vitaEntry.iconDefinition" size="sm" class="
             text-vanilla
-          "></fa-icon>
+          " />
         </div>
         <div class="flex items-center">
           <h3 data-vita-title [attr.aria-label]="vitaEntry.title"
@@ -98,7 +98,7 @@
             dark:bg-dark-void-light
           "
           aria-hidden="true">
-          <fa-icon [icon]="faLocationDot" class="me-1 text-vanilla"></fa-icon>
+          <app-icon [icon]="faLocationDot" class="me-1 text-vanilla" />
           {{ vitaEntry.location }}
         </div>
         <div [id]="'vita-entry-description-' + $index"
@@ -128,8 +128,8 @@
           } @else {
             <ng-container i18n="@@vitaReadMore">Mehr lesen</ng-container>
           }
-          <fa-icon [icon]="faChevronDown" size="xs" [ngClass]="{'rotate-180': isExpanded}"
-                   class="inline-block transition-transform duration-300"></fa-icon>
+          <app-icon [icon]="faChevronDown" size="xs" [ngClass]="{'rotate-180': isExpanded}"
+                    class="inline-block transition-transform duration-300" />
         </button>
       </li>
     }

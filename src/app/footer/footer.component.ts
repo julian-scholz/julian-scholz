@@ -1,14 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { NavService } from '../header/nav/nav.service';
 import { NavEntryModel } from '../header/nav/models/nav-entry.model';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { ModalService } from '../modals/modal.service';
+import { IconComponent } from '../lib/icon/icon.component';
 
 @Component({
   selector: 'app-footer',
-  imports: [FaIconComponent],
+  imports: [IconComponent],
   templateUrl: './footer.component.html',
 })
 export class FooterComponent implements OnInit {
