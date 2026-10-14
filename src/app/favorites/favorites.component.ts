@@ -89,8 +89,9 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
         ([entry]) => {
           if (entry.intersectionRatio >= this.showBackgroundImageThreshold) {
             this.showBackgroundImage.set(true);
-          } else if (!entry.isIntersecting) {
+          } else if (!entry.isIntersecting && this.showBackgroundImage()) {
             this.showBackgroundImage.set(false);
+            this.switchBackgroundImage();
           }
         },
         { threshold: [0, this.showBackgroundImageThreshold] },
@@ -128,7 +129,6 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
             if (showFavoritesOverlay !== this.showFavoritesOverlay()) {
               this.showFavoritesOverlay.set(showFavoritesOverlay);
               this.channelSwitchId.update((id) => id + 1);
-              this.switchBackgroundImage();
             }
           },
         },
