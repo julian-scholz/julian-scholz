@@ -1,0 +1,77 @@
+import { FavoritesOverlayTagListEntryModel } from './app/favorites/favorites-overlay/models/favorites-overlay-entry.model';
+
+export const tagList: FavoritesOverlayTagListEntryModel[] = [
+  {
+    id: 'languages',
+    tags: [
+      'TypeScript',
+      'JavaScript',
+      'Java',
+      'PHP',
+      'Python',
+      'HTML',
+      'CSS',
+      'SQL',
+    ],
+  },
+  {
+    id: 'frameworks',
+    tags: [
+      'Angular',
+      'RxJS',
+      'NestJS',
+      'Node.js',
+      'Spring Boot',
+      'Tailwind CSS',
+      'Bootstrap',
+      'GSAP',
+    ],
+  },
+  {
+    id: 'devOps',
+    tags: [
+      'Git',
+      'GitHub',
+      'Bitbucket',
+      'Jenkins',
+      'CI/CD',
+      'Docker',
+      'Nx',
+      'Cloudflare',
+    ],
+  },
+  {
+    id: 'tools',
+    tags: [
+      'FirstSpirit',
+      'Liferay',
+      'IntelliJ IDEA',
+      'WebStorm',
+      'VS Code',
+      'Vitest',
+      'ESLint',
+    ],
+  },
+  {
+    id: 'security',
+    tags: [
+      'AppSec',
+      'OWASP Top 10',
+      'Secure SDLC',
+      'DevSecOps',
+      'Pentests',
+      'Secure Coding',
+      'OAuth 2.0 / OIDC',
+      'Hack The Box',
+    ],
+  },
+  {
+    id: 'databases',
+    tags: [
+      'MySQL',
+      'MariaDB',
+      'MongoDB',
+      'Oracle DB',
+    ],
+  },
+];

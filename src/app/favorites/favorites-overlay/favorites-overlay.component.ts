@@ -10,10 +10,9 @@ import {
 import { DatePipe, isPlatformBrowser, NgClass, NgStyle } from '@angular/common';
 import {
   FavoritesOverlayEntryModel,
-  FavoritesOverlayPageId,
-  FavoritesOverlayTagListEntryModel
+  FavoritesOverlayPageId
 } from './models/favorites-overlay-entry.model';
-import tagListData from '../../../tag-list.json';
+import { tagList } from '../../../tag-list';
 
 @Component({
   selector: 'app-favorites-overlay',
@@ -31,7 +30,6 @@ export class FavoritesOverlayComponent {
 
   protected readonly firstPageNumber: number = 101;
   protected readonly dateFormat: string = $localize`:@@teletextDateFormat:dd.MM. HH:mm`;
-  private readonly tagList = tagListData as FavoritesOverlayTagListEntryModel[];
   private readonly pageTitles: Record<FavoritesOverlayPageId, string> = {
     languages: $localize`:@@teletextLanguagesTitle:Sprachen`,
     frameworks: $localize`:@@teletextFrameworksTitle:Frameworks`,
@@ -40,10 +38,10 @@ export class FavoritesOverlayComponent {
     security: $localize`:@@teletextSecurityTitle:Security`,
     databases: $localize`:@@teletextDatabasesTitle:Datenbanken`,
   };
-  protected readonly pages: FavoritesOverlayEntryModel[] = this.tagList.map(
+  protected readonly pages: FavoritesOverlayEntryModel[] = tagList.map(
     ({ id, tags }) => ({ title: this.pageTitles[id], tags }),
   );
-  private readonly securityPageIndex: number = this.tagList.findIndex(
+  private readonly securityPageIndex: number = tagList.findIndex(
     ({ id }) => id === 'security',
   );
 

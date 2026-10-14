@@ -1,6 +1,6 @@
 import { DOCUMENT, inject, Injectable, LOCALE_ID } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import tagListData from '../../../tag-list.json';
+import { tagList } from '../../../tag-list';
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -13,7 +13,7 @@ export class SeoService {
   private readonly pageUrl: string = this.isEnglish
     ? `${this.siteUrl}/en/`
     : this.siteUrl;
-  private readonly tags: string[] = tagListData.flatMap(({ tags }) => tags);
+  private readonly tags: string[] = tagList.flatMap(({ tags }) => tags);
 
   // Runs while prerendering, so the metadata ends up in the static html of
   // every language
