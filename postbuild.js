@@ -7,7 +7,7 @@ const browserPath = path.join(__dirname, 'dist', 'julian-scholz', 'browser');
 // The german source locale is built into the root, every other locale into its own directory
 const localeDirectories = ['', 'en'];
 // The assets are copied into every locale, these only matter at the root of the site
-const rootOnlyFiles = ['_headers', 'robots.txt', 'sitemap.xml'];
+const rootOnlyFiles = ['_headers', '404.html', 'robots.txt', 'sitemap.xml'];
 
 for (const localeDirectory of localeDirectories) {
   const filesToDelete = ['index.csr.html', ...(localeDirectory ? rootOnlyFiles : [])];

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Kein Signal | julian scholz.</title>
+  <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicons/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicons/favicon-32.png">
+  <style>
+    @font-face {
+      font-family: "Geist Mono";
+      font-style: normal;
+      font-weight: 100 900;
+      font-display: swap;
+      src: url("https://assets.julian-scholz.dev/fonts/geist/geist-mono/GeistMono-wght.woff2") format("woff2");
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      display: grid;
+      grid-template-rows: 67fr 8fr 25fr;
+      background: #131313;
+      color: #fbfbfb;
+      font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow: hidden;
+    }
+
+    /* SMPTE colour bars */
+    [data-bars] {
+      display: grid;
+      grid-auto-columns: 1fr;
+      grid-auto-flow: column;
+    }
+
+    [data-bars="bottom"] {
+      grid-template-columns: 5fr 5fr 5fr 5fr 1.67fr 1.67fr 1.66fr 4fr;
+    }
+
+    main {
+      position: fixed;
+      inset: 50% auto auto 50%;
+      width: min(26rem, calc(100% - 2rem));
+      transform: translate(-50%, -50%);
+      padding: 1.5rem 1.75rem;
+      background: #131313;
+      border: 0.25rem solid #fbfbfb;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 12vw, 4rem);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    p {
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+      letter-spacing: 0.12em;
+      line-height: 1.6;
+    }
+
+    p + p {
+      margin-top: 0.25rem;
+      color: #ffcd70;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    a {
+      padding: 0.375rem 0.75rem;
+      background: #ffcd70;
+      color: #131313;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+
+    a:hover {
+      background: #fbfbfb;
+    }
+
+    a:focus-visible {
+      outline: 0.2rem solid #fbfbfb;
+      outline-offset: 0.2rem;
+    }
+
+    /* Scanlines and darkened edges of a tube tv, as on the favorites tv */
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at center, transparent 55%, rgb(10 9 11 / 45%) 100%),
+        repeating-linear-gradient(transparent 0 1.5px, rgb(10 9 11 / 12%) 2.5px 3px, transparent 3.5px);
+    }
+  </style>
+</head>
+<body>
+<div data-bars aria-hidden="true">
+  <div style="background: #bfbfbf"></div>
+  <div style="background: #bfbf00"></div>
+  <div style="background: #00bfbf"></div>
+  <div style="background: #00bf00"></div>
+  <div style="background: #bf00bf"></div>
+  <div style="background: #bf0000"></div>
+  <div style="background: #0000bf"></div>
+</div>
+<div data-bars aria-hidden="true">
+  <div style="background: #0000bf"></div>
+  <div style="background: #131313"></div>
+  <div style="background: #bf00bf"></div>
+  <div style="background: #131313"></div>
+  <div style="background: #00bfbf"></div>
+  <div style="background: #131313"></div>
+  <div style="background: #bfbfbf"></div>
+</div>
+<div data-bars="bottom" aria-hidden="true">
+  <div style="background: #00214c"></div>
+  <div style="background: #fbfbfb"></div>
+  <div style="background: #32006a"></div>
+  <div style="background: #131313"></div>
+  <div style="background: #090909"></div>
+  <div style="background: #131313"></div>
+  <div style="background: #1d1d1d"></div>
+  <div style="background: #131313"></div>
+</div>
+<main>
+  <h1>404</h1>
+  <p>Kein Signal auf diesem Kanal.</p>
+  <p lang="en">No signal on this channel.</p>
+  <nav aria-label="Startseite / Homepage">
+    <a href="/">Zur Startseite</a>
+    <a href="/en/" lang="en">To the homepage</a>
+  </nav>
+</main>
+</body>
+</html>
