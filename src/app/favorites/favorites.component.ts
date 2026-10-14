@@ -49,7 +49,7 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
     '--favorites-tv-screen-bottom': this.foregroundImageScreen.bottom,
     '--favorites-tv-screen-left': this.foregroundImageScreen.left,
   };
-  private readonly backgroundImagesCount: number = 18;
+  private readonly backgroundImagesCount: number = 24;
   protected readonly backgroundImageAlt: string = $localize`:@@favoritesBackgroundImageAlt:Landschaft mit weitem Blick in die Ferne.`;
   protected backgroundImagePaths = signal<string[]>([]);
   protected activeBackgroundImageIndex = signal<number>(0);
