@@ -6,7 +6,7 @@
   2xl:text-base
 ">
   <div class="flex justify-between gap-4">
-    <span i18n="@@teletextPageCode" class="text-vanilla">P{{ pageViews()[0].pageNumber }}</span>
+    <span i18n="@@teletextPageCode" class="text-vanilla">P{{ displayedPageNumber() }}</span>
     <span i18n="@@teletextBrand">JULIAN-TEXT</span>
     <span class="text-snow/60">{{ now() | date: dateFormat }}</span>
   </div>

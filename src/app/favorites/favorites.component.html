@@ -26,6 +26,7 @@
       ">
         <div class="short:hidden"></div>
         <app-favorites-overlay
+          [isChannelOn]="showFavoritesOverlay()"
           [attr.data-channel-on]="showFavoritesOverlay() || null"
           class="
             w-96 opacity-0

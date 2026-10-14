@@ -3,6 +3,7 @@ import {
   computed,
   DestroyRef,
   inject,
+  input,
   PLATFORM_ID,
   signal
 } from '@angular/core';
@@ -18,10 +19,15 @@ import tagListData from '../../../tag-list.json';
   selector: 'app-favorites-overlay',
   imports: [NgStyle, NgClass, DatePipe],
   templateUrl: './favorites-overlay.component.html',
+  host: {
+    '(document:keydown)': 'enterPageNumberDigit($event)',
+  },
 })
 export class FavoritesOverlayComponent {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
+
+  public readonly isChannelOn = input<boolean>(false);
 
   protected readonly firstPageNumber: number = 101;
   protected readonly dateFormat: string = $localize`:@@teletextDateFormat:dd.MM. HH:mm`;
@@ -53,11 +59,61 @@ export class FavoritesOverlayComponent {
     },
   ]);
 
+  private readonly pageNumberLength: number = 3;
+  private readonly pageNumberInputTimeout: number = 2000;
+  private pageNumberInputTimeoutId: ReturnType<typeof setTimeout> | undefined;
+  private readonly enteredPageNumber = signal<string>('');
+  protected readonly displayedPageNumber = computed(() =>
+    this.enteredPageNumber()
+      ? this.enteredPageNumber().padEnd(this.pageNumberLength, '-')
+      : String(this.pageViews()[0].pageNumber),
+  );
+
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       const clockIntervalId = setInterval(() => this.now.set(new Date()), 30000);
-      this.destroyRef.onDestroy(() => clearInterval(clockIntervalId));
+      this.destroyRef.onDestroy(() => {
+        clearInterval(clockIntervalId);
+        clearTimeout(this.pageNumberInputTimeoutId);
+      });
     }
+  }
+
+  protected enterPageNumberDigit(event: KeyboardEvent): void {
+    const target = event.target as HTMLElement;
+    if (
+      !this.isChannelOn() ||
+      !/^\d$/.test(event.key) ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey ||
+      target.isContentEditable ||
+      target.closest('input, textarea, select, dialog')
+    ) {
+      return;
+    }
+
+    const previousInput =
+      this.enteredPageNumber().length < this.pageNumberLength
+        ? this.enteredPageNumber()
+        : '';
+    const enteredPageNumber = previousInput + event.key;
+    this.enteredPageNumber.set(enteredPageNumber);
+    clearTimeout(this.pageNumberInputTimeoutId);
+
+    if (enteredPageNumber.length === this.pageNumberLength) {
+      const pageIndex = Number(enteredPageNumber) - this.firstPageNumber;
+      if (pageIndex >= 0 && pageIndex < this.pages.length) {
+        this.enteredPageNumber.set('');
+        this.showPage(pageIndex);
+        return;
+      }
+    }
+
+    this.pageNumberInputTimeoutId = setTimeout(
+      () => this.enteredPageNumber.set(''),
+      this.pageNumberInputTimeout,
+    );
   }
 
   protected showPage(index: number): void {
