@@ -162,6 +162,11 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  protected zapChannel(): void {
+    this.channelSwitchId.update((id) => id + 1);
+    this.switchBackgroundImage();
+  }
+
   private switchBackgroundImage(): void {
     const previousIndex = this.activeBackgroundImageIndex();
     this.activeBackgroundImageIndex.set(1 - previousIndex);

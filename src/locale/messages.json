@@ -31,6 +31,7 @@
     "teletextDatabasesTitle": "Datenbanken",
     "favoritesHeading": "Favoriten",
     "favoritesTvAlt": "Retro-Fernseher mit ausgeschnittenem Bildschirm.",
+    "favoritesTvKnobLabel": "Programm wechseln",
     "favoritesBackgroundImageAlt": "Landschaft mit weitem Blick in die Ferne.",
     "footerMailLabel": "Mail",
     "footerCopyright": "© {$INTERPOLATION} Julian Scholz, Alle Rechte vorbehalten. ",

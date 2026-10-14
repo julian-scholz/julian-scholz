@@ -101,6 +101,19 @@
              class="will-change-transform"
              i18n-alt="@@favoritesTvAlt"
              alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
+        <button type="button" (click)="zapChannel()"
+                [disabled]="!showBackgroundImage()"
+                i18n-aria-label="@@favoritesTvKnobLabel"
+                aria-label="Programm wechseln"
+                i18n-title="@@favoritesTvKnobLabel"
+                title="Programm wechseln"
+                class="
+                  absolute top-[36.8%] left-[86.3%] aspect-square w-[9.8%]
+                  -translate-1/2 cursor-pointer rounded-full
+                  focus-visible:outline-4 focus-visible:outline-offset-4
+                  focus-visible:outline-vanilla
+                  disabled:cursor-default
+                "></button>
       </div>
     </div>
   </div>

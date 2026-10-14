@@ -43,6 +43,7 @@
     "vitaSchoolDescription": "Even at school I discovered my passion for computer science, which grew out of an <mark>elective computer science course</mark> in middle school and was strengthened further by an <mark>internship in automation engineering</mark>. Besides regular school life, I also worked as an administrator in the school's self-study centre, which gave me my first valuable practical experience back then. In my final years, I took <mark>advanced courses in mathematics and social sciences</mark>. In particular, the combination of my interest in numbers and logic and my understanding of economic relationships led me to decide on studying business information systems while I was still at school.",
     "favoritesHeading": "Favorites",
     "favoritesTvAlt": "Retro television with a cut-out screen.",
+    "favoritesTvKnobLabel": "Switch channel",
     "favoritesBackgroundImageAlt": "Landscape with a wide view into the distance.",
     "teletextPagesLabel": "Teletext pages",
     "teletextPageNumber": "p. {$INTERPOLATION}",
