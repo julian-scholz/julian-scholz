@@ -138,7 +138,7 @@ export class FavoritesComponent {
     this.scrollTrigger = ScrollTrigger.create({
       trigger: this.zoomTrack().nativeElement,
       start: 'top top',
-      end: () => `+=${this.getZoomDistance()}`,
+      end: 'bottom bottom',
       onRefresh: () => this.animateZoom(),
       onUpdate: (self) =>
         this.setChannelOn(self.progress >= this.channelOnProgress),
@@ -162,8 +162,8 @@ export class FavoritesComponent {
     );
     const options: KeyframeAnimationOptions = {
       timeline: new ViewTimeline({ subject: this.zoomTrack().nativeElement }),
-      rangeStart: 'contain 0px',
-      rangeEnd: `contain ${this.getZoomDistance()}px`,
+      rangeStart: 'contain 0%',
+      rangeEnd: 'contain 100%',
       fill: 'both',
     };
 
@@ -183,16 +183,6 @@ export class FavoritesComponent {
         options,
       ),
     ];
-  }
-
-  // Scrolling distance during which the frame sticks, so the remaining track
-  // height. Measured from the start instead of the end of the view, it stays
-  // the same when a mobile address bar shows or hides
-  private getZoomDistance(): number {
-    return (
-      this.zoomTrack().nativeElement.offsetHeight -
-      this.zoomFrame().nativeElement.offsetHeight
-    );
   }
 
   // On portrait screens the tv leaves room for the footer, so it can be
