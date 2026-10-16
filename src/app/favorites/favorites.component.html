@@ -54,11 +54,8 @@
       <div #tvLayer class="bg-dark-void-dark favorites-tv-screen-clip">
         <div #backgroundLayer [attr.data-tv-on]="isTvOn() || null" class="
           absolute top-1/2 left-1/2 h-lvh w-screen -translate-1/2 opacity-0
-          after:pointer-events-none after:absolute after:inset-0 after:bg-snow
-          after:opacity-0
           data-tv-on:opacity-100
           motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
-          motion-safe:data-tv-on:after:animate-[favoritesTvOnFlash_1.2s_ease-out_both]
           motion-reduce:transition-opacity motion-reduce:duration-700
         ">
           @for (path of backgroundImageSlots(); track $index) {
