@@ -6,7 +6,7 @@
   <div #scrollTrigger [style]="tvStyles"
        [attr.data-channel-on]="isChannelOn() || null"
        class="
-         group/favorites relative overflow-hidden
+         group/favorites relative overflow-hidden will-change-transform
          *:w-full
        ">
     <section (focusin)="zoomInForFocusedOverlay($event)" class="
