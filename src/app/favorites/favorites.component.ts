@@ -54,6 +54,9 @@ export class FavoritesComponent {
   // zoom after which the channel with teletext and footer comes on
   private readonly tvOnVisibility: number = 0.6;
   private readonly channelOnProgress: number = 0.6;
+  // The tv stays hidden until its image is there, otherwise its black screen
+  // shows on its own first
+  protected readonly isTvImageLoaded = signal<boolean>(false);
   protected readonly isTvOn = signal<boolean>(false);
   protected readonly isChannelOn = signal<boolean>(false);
   protected readonly channelSwitchId = signal<number>(0);

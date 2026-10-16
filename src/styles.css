@@ -344,8 +344,10 @@
   );
 }
 
-/* Scanlines and darkened edges of a tube tv */
+/* Scanlines and darkened edges of a tube tv. The lines are finer on narrow
+   screens, where the regular ones look coarse */
 @utility favorites-tv-crt {
+  --favorites-tv-crt-line: 1px;
   background-image:
     radial-gradient(
       ellipse at center,
@@ -354,16 +356,28 @@
     ),
     repeating-linear-gradient(
       to bottom,
-      transparent 0 1.5px,
-      color-mix(in oklab, var(--color-dark-void-dark) 12%, transparent) 2.5px 3px,
-      transparent 3.5px
+      transparent 0 calc(1.5 * var(--favorites-tv-crt-line)),
+      color-mix(in oklab, var(--color-dark-void-dark) 12%, transparent)
+        calc(2.5 * var(--favorites-tv-crt-line))
+        calc(3 * var(--favorites-tv-crt-line)),
+      transparent calc(3.5 * var(--favorites-tv-crt-line))
     );
+
+  @variant tv-floating {
+    --favorites-tv-crt-line: 0.7px;
+  }
 }
 
-/* Short burst of static with a rolling bar, like a channel switch */
+/* Short burst of static with a rolling bar, like a channel switch. The grey
+   noise is tinted to vanilla grains on the dark void of the page */
 @utility favorites-tv-static {
-  @apply pointer-events-none overflow-hidden bg-dark-void-dark;
-  background-image: url("/assets/images/tv-static.png");
+  @apply pointer-events-none overflow-hidden bg-vanilla;
+  background-image:
+    linear-gradient(
+      color-mix(in oklab, var(--color-dark-void-dark) 45%, transparent)
+    ),
+    url("/assets/images/tv-static.png");
+  background-blend-mode: normal, multiply;
   animation: favoritesTvStatic 0.45s steps(1) both;
 
   &::after {

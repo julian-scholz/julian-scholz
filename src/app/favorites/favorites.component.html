@@ -1,10 +1,15 @@
-<section class="max-w-[unset] px-0 pb-0">
+<section class="flow-root max-w-[unset] overflow-y-clip px-0 pb-0">
   <div class="container mx-auto px-8">
     <h2 i18n="@@favoritesHeading">Favoriten</h2>
     <div class="divider"></div>
   </div>
-  <!-- The tv sticks to the top for two view heights of scrolling, which drive the zoom -->
-  <div #zoomTrack class="supports-[animation-timeline:view()]:h-[300lvh]">
+  <!-- The tv sticks to the top for two view heights of scrolling, which drive the zoom.
+       The track reaches 1px past the clipped end of the page, so the rounded page height
+       never lets the frame slip at the very bottom -->
+  <div #zoomTrack class="
+    supports-[animation-timeline:view()]:-mb-px
+    supports-[animation-timeline:view()]:h-[calc(300lvh+1px)]
+  ">
     <div #zoomFrame [style]="tvStyles"
          [attr.data-channel-on]="isChannelOn() || null"
          class="
@@ -44,14 +49,15 @@
         </div>
       </section>
       <div class="h-lvh"></div>
-      <div #tvWrapper class="
+      <div #tvWrapper [attr.data-tv-loaded]="isTvImageLoaded() || null" class="
         @container-size pointer-events-none absolute top-0 z-20 grid h-lvh
-        place-items-center
+        place-items-center opacity-0 transition-opacity duration-300
         *:relative *:col-start-1 *:row-start-1
         *:aspect-(--favorites-tv-aspect-ratio)
         *:w-[min(100cqw,calc(100cqh*var(--favorites-tv-aspect-ratio)))]
         group-data-channel-on/favorites:z-10
-        tv-floating:pt-16 tv-floating:pb-[calc(100lvh-100svh+15rem)]
+        data-tv-loaded:opacity-100
+        tv-floating:pt-16 tv-floating:pb-[calc(100lvh-100svh+16rem)]
       ">
         <div #tvLayer class="
           bg-dark-void-dark will-change-transform favorites-tv-screen-clip
@@ -94,6 +100,7 @@
           <img [ngSrc]="tvImagePath"
                ngSrcset="2560w, 1920w" sizes="100vw" fill
                [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
+               (load)="isTvImageLoaded.set(true)"
                class="will-change-transform"
                i18n-alt="@@favoritesTvAlt"
                alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">

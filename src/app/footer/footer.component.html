@@ -22,12 +22,17 @@
       }
     </div>
     <div class="
-      mt-6 flex flex-col text-center text-xs/5
+      mt-6 flex flex-col gap-0.5 text-center text-xs/5
       md:not-short:order-1 md:not-short:mt-0
     ">
-      <button i18n="@@footerCopyright" (click)="openInspirationsModal()">&copy; {{ currentYear }} Julian Scholz, Alle Rechte vorbehalten.
+      <button i18n="@@footerCopyright" (click)="openInspirationsModal()" class="
+        py-0.5
+      ">&copy; {{ currentYear }} Julian Scholz, Alle Rechte vorbehalten.
       </button>
-      <div class="flex justify-evenly">
+      <div class="
+        flex justify-center gap-x-6
+        *:py-0.5
+      ">
         <button i18n="@@legalNoticeTitle" (click)="openLegalNoticeModal()">Impressum</button>
         <button i18n="@@privacyPolicyTitle" (click)="openPrivacyPolicyModal()">Datenschutzerklärung</button>
       </div>
