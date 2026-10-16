@@ -88,7 +88,7 @@ export class FavoritesComponent {
         this.getRandomBackgroundImagePath([firstPath]),
       ]);
       this.observeTvVisibility();
-      if ('ViewTimeline' in window) {
+      if ('ScrollTimeline' in window) {
         this.observeZoomProgress();
       }
     });
@@ -138,7 +138,7 @@ export class FavoritesComponent {
     this.scrollTrigger = ScrollTrigger.create({
       trigger: this.zoomTrack().nativeElement,
       start: 'top top',
-      end: 'bottom bottom',
+      end: () => `+=${this.getZoomScrollRange().distance}`,
       onRefresh: () => this.animateZoom(),
       onUpdate: (self) =>
         this.setChannelOn(self.progress >= this.channelOnProgress),
@@ -160,10 +160,11 @@ export class FavoritesComponent {
         tvCenteringOffset,
       ),
     );
+    const { start, distance } = this.getZoomScrollRange();
     const options: KeyframeAnimationOptions = {
-      timeline: new ViewTimeline({ subject: this.zoomTrack().nativeElement }),
-      rangeStart: 'contain 0%',
-      rangeEnd: 'contain 100%',
+      timeline: new ScrollTimeline(),
+      rangeStart: `${start}px`,
+      rangeEnd: `${start + distance}px`,
       fill: 'both',
     };
 
@@ -183,6 +184,18 @@ export class FavoritesComponent {
         options,
       ),
     ];
+  }
+
+  // Scroll positions of the page during which the frame sticks. Both only
+  // depend on the page layout and lvh, not on the visible height, so a mobile
+  // address bar that shows or hides does not shift the zoom
+  private getZoomScrollRange(): { start: number; distance: number } {
+    const zoomTrack = this.zoomTrack().nativeElement;
+    return {
+      start: zoomTrack.getBoundingClientRect().top + window.scrollY,
+      distance:
+        zoomTrack.offsetHeight - this.zoomFrame().nativeElement.offsetHeight,
+    };
   }
 
   // On portrait screens the tv leaves room for the footer, so it can be
