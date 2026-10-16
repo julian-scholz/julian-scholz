@@ -6,6 +6,13 @@ export { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// On touch-only devices ScrollTrigger handles the touch scrolling
+// itself, so the favorites pin starts and ends in step with the scroll
+// position instead of after it
+if (typeof window !== 'undefined' && ScrollTrigger.isTouch === 1) {
+  ScrollTrigger.normalizeScroll(true);
+}
+
 // ScrollTrigger scrolls to the top to measure when it refreshes on
 // DOMContentLoaded and load. In most page loads that undoes or prevents the
 // browser's jump to the section named in the url, so the jump is repeated
