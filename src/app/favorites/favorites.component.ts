@@ -64,10 +64,8 @@ export class FavoritesComponent {
   private readonly zoomDepth: number = 250;
   private readonly backgroundZoomScale: number = 1.4;
 
-  private readonly zoomTrack =
-    viewChild.required<ElementRef<HTMLElement>>('zoomTrack');
-  private readonly zoomFrame =
-    viewChild.required<ElementRef<HTMLElement>>('zoomFrame');
+  private readonly scrollTriggerElement =
+    viewChild.required<ElementRef<HTMLElement>>('scrollTrigger');
   private readonly tvWrapper =
     viewChild.required<ElementRef<HTMLElement>>('tvWrapper');
   private readonly tvLayers = viewChildren<ElementRef<HTMLElement>>('tvLayer');
@@ -119,20 +117,17 @@ export class FavoritesComponent {
       },
       { threshold: [0, this.tvOnVisibility] },
     );
-    observer.observe(this.zoomFrame().nativeElement);
+    observer.observe(this.scrollTriggerElement().nativeElement);
     this.destroyRef.onDestroy(() => observer.disconnect());
   }
 
   private initZoom(): void {
     const zoomEase = gsap.parseEase('power1.inOut');
-    const zoomTrack = this.zoomTrack().nativeElement;
-    const zoomFrame = this.zoomFrame().nativeElement;
-    // The frame holds still by css (sticky), the scroll trigger only reads
-    // how far it is through that distance
     this.scrollTrigger = ScrollTrigger.create({
-      trigger: zoomTrack,
+      trigger: this.scrollTriggerElement().nativeElement,
       start: 'top top',
-      end: () => `+=${zoomTrack.offsetHeight - zoomFrame.offsetHeight}`,
+      end: '+=200%',
+      pin: true,
       onRefresh: (self) => {
         this.measureTvLayout();
         this.renderZoom(zoomEase(self.progress));

@@ -3,111 +3,108 @@
     <h2 i18n="@@favoritesHeading">Favoriten</h2>
     <div class="divider"></div>
   </div>
-  <!-- The tv sticks to the top for two view heights of scrolling, which drive the zoom -->
-  <div #zoomTrack class="h-[300lvh]">
-    <div #zoomFrame [style]="tvStyles"
-         [attr.data-channel-on]="isChannelOn() || null"
-         class="
-           group/favorites sticky top-0 overflow-hidden
-           *:w-full
-         ">
-      <section (focusin)="zoomInForFocusedOverlay($event)" class="
-        absolute inset-x-0 z-10 h-svh px-5
-        group-data-channel-on/favorites:z-30
-        landscape:h-lvh
+  <div #scrollTrigger [style]="tvStyles"
+       [attr.data-channel-on]="isChannelOn() || null"
+       class="
+         group/favorites relative overflow-hidden
+         *:w-full
+       ">
+    <section (focusin)="zoomInForFocusedOverlay($event)" class="
+      absolute inset-x-0 z-10 h-svh px-5
+      group-data-channel-on/favorites:z-30
+      landscape:h-lvh
+    ">
+      <div class="
+        flex h-full flex-col items-center gap-5
+        *:relative *:flex *:max-w-full *:flex-auto *:items-center
+        *:overflow-hidden
+        short:flex-row short:justify-center
       ">
-        <div class="
-          flex h-full flex-col items-center gap-5
-          *:relative *:flex *:max-w-full *:flex-auto *:items-center
-          *:overflow-hidden
-          short:flex-row short:justify-center
+        <div class="short:hidden"></div>
+        <app-favorites-overlay [isChannelOn]="isChannelOn()" class="
+          w-96 opacity-0
+          group-data-channel-on/favorites:opacity-100
+          group-data-channel-on/favorites:transition-opacity
+          group-data-channel-on/favorites:delay-300
+          group-data-channel-on/favorites:duration-0
+          2xl:w-140
+          short:flex-none
+        " />
+        <app-footer class="
+          shrink-0! opacity-0
+          group-data-channel-on/favorites:opacity-100
+          group-data-channel-on/favorites:transition-opacity
+          group-data-channel-on/favorites:delay-300
+          group-data-channel-on/favorites:duration-0
+          short:flex-none
+          tv-floating:flex-none tv-floating:opacity-100
+        " />
+      </div>
+    </section>
+    <div class="h-lvh"></div>
+    <div #tvWrapper class="
+      @container-size pointer-events-none absolute top-0 z-20 grid h-lvh
+      place-items-center
+      *:relative *:col-start-1 *:row-start-1
+      *:aspect-(--favorites-tv-aspect-ratio)
+      *:w-[min(100cqw,calc(100cqh*var(--favorites-tv-aspect-ratio)))]
+      group-data-channel-on/favorites:z-10
+      tv-floating:pt-16 tv-floating:pb-[calc(100lvh-100svh+15rem)]
+    ">
+      <div #tvLayer class="bg-dark-void-dark favorites-tv-screen-clip">
+        <div #backgroundLayer [attr.data-tv-on]="isTvOn() || null" class="
+          absolute top-1/2 left-1/2 h-lvh w-screen -translate-1/2 opacity-0
+          data-tv-on:opacity-100
+          motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
+          motion-reduce:transition-opacity motion-reduce:duration-700
         ">
-          <div class="short:hidden"></div>
-          <app-favorites-overlay [isChannelOn]="isChannelOn()" class="
-            w-96 opacity-0
-            group-data-channel-on/favorites:opacity-100
-            group-data-channel-on/favorites:transition-opacity
-            group-data-channel-on/favorites:delay-300
-            group-data-channel-on/favorites:duration-0
-            2xl:w-140
-            short:flex-none
-          " />
-          <app-footer class="
-            shrink-0! opacity-0
-            group-data-channel-on/favorites:opacity-100
-            group-data-channel-on/favorites:transition-opacity
-            group-data-channel-on/favorites:delay-300
-            group-data-channel-on/favorites:duration-0
-            short:flex-none
-            tv-floating:flex-none tv-floating:opacity-100
-          " />
-        </div>
-      </section>
-      <div class="h-lvh"></div>
-      <div #tvWrapper class="
-        @container-size pointer-events-none absolute top-0 z-20 grid h-lvh
-        place-items-center
-        *:relative *:col-start-1 *:row-start-1
-        *:aspect-(--favorites-tv-aspect-ratio)
-        *:w-[min(100cqw,calc(100cqh*var(--favorites-tv-aspect-ratio)))]
-        group-data-channel-on/favorites:z-10
-        tv-floating:pt-16 tv-floating:pb-[calc(100lvh-100svh+15rem)]
-      ">
-        <div #tvLayer class="bg-dark-void-dark favorites-tv-screen-clip">
-          <div #backgroundLayer [attr.data-tv-on]="isTvOn() || null" class="
-            absolute top-1/2 left-1/2 h-lvh w-screen -translate-1/2 opacity-0
-            data-tv-on:opacity-100
-            motion-safe:data-tv-on:animate-[favoritesTvOn_1.2s_ease-out_both]
-            motion-reduce:transition-opacity motion-reduce:duration-700
-          ">
-            @for (path of backgroundImageSlots(); track $index) {
-              <img [ngSrc]="path"
-                   ngSrcset="2560w, 1920w" sizes="100vw" fill
-                   [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
-                   [attr.data-active]="$index === activeBackgroundImageSlot() || null"
-                   [alt]="$index === activeBackgroundImageSlot() ? backgroundImageAlt : ''"
-                   class="
-                     object-cover opacity-0
-                     data-active:opacity-100
-                   ">
+          @for (path of backgroundImageSlots(); track $index) {
+            <img [ngSrc]="path"
+                 ngSrcset="2560w, 1920w" sizes="100vw" fill
+                 [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
+                 [attr.data-active]="$index === activeBackgroundImageSlot() || null"
+                 [alt]="$index === activeBackgroundImageSlot() ? backgroundImageAlt : ''"
+                 class="
+                   object-cover opacity-0
+                   data-active:opacity-100
+                 ">
+          }
+          @if (channelSwitchId()) {
+            @for (id of [channelSwitchId()]; track id) {
+              <div class="
+                favorites-tv-static absolute inset-0
+                motion-reduce:hidden
+              "></div>
             }
-            @if (channelSwitchId()) {
-              @for (id of [channelSwitchId()]; track id) {
-                <div class="
-                  favorites-tv-static absolute inset-0
-                  motion-reduce:hidden
-                "></div>
-              }
-            }
-            <div class="absolute inset-0 favorites-tv-crt"></div>
-          </div>
+          }
+          <div class="absolute inset-0 favorites-tv-crt"></div>
         </div>
-        <div #tvLayer class="@container z-10">
-          <app-shelf aria-hidden="true" class="
-            absolute inset-x-0 bottom-[calc(-0.6%-0.75rem)] hidden
-            [--shelf-surface-depth:max(1.5rem,5cqw/var(--favorites-tv-aspect-ratio))]
-            tv-floating:block
-          " />
-          <img [ngSrc]="tvImagePath"
-               ngSrcset="2560w, 1920w" sizes="100vw" fill
-               [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
-               class="will-change-transform"
-               i18n-alt="@@favoritesTvAlt"
-               alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
-          <button type="button" (click)="zapChannel()" [disabled]="!isTvOn()"
-                  i18n-aria-label="@@favoritesTvKnobLabel"
-                  aria-label="Programm wechseln"
-                  i18n-title="@@favoritesTvKnobLabel"
-                  title="Programm wechseln"
-                  class="
-                    pointer-events-auto absolute top-[36.8%] left-[86.3%]
-                    aspect-square w-[9.8%] -translate-1/2 cursor-pointer
-                    rounded-full
-                    focus-visible:outline-4 focus-visible:outline-offset-4
-                    focus-visible:outline-vanilla
-                    disabled:cursor-default
-                  "></button>
-        </div>
+      </div>
+      <div #tvLayer class="@container z-10">
+        <app-shelf aria-hidden="true" class="
+          absolute inset-x-0 bottom-[calc(-0.6%-0.75rem)] hidden
+          [--shelf-surface-depth:max(1.5rem,5cqw/var(--favorites-tv-aspect-ratio))]
+          tv-floating:block
+        " />
+        <img [ngSrc]="tvImagePath"
+             ngSrcset="2560w, 1920w" sizes="100vw" fill
+             [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
+             class="will-change-transform"
+             i18n-alt="@@favoritesTvAlt"
+             alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
+        <button type="button" (click)="zapChannel()" [disabled]="!isTvOn()"
+                i18n-aria-label="@@favoritesTvKnobLabel"
+                aria-label="Programm wechseln"
+                i18n-title="@@favoritesTvKnobLabel"
+                title="Programm wechseln"
+                class="
+                  pointer-events-auto absolute top-[36.8%] left-[86.3%]
+                  aspect-square w-[9.8%] -translate-1/2 cursor-pointer
+                  rounded-full
+                  focus-visible:outline-4 focus-visible:outline-offset-4
+                  focus-visible:outline-vanilla
+                  disabled:cursor-default
+                "></button>
       </div>
     </div>
   </div>
