@@ -128,7 +128,6 @@ export class FavoritesComponent {
       start: 'top top',
       end: '+=200%',
       pin: true,
-      anticipatePin: 1,
       onRefresh: (self) => {
         this.measureTvLayout();
         this.renderZoom(zoomEase(self.progress));
