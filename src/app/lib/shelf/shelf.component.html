@@ -10,14 +10,14 @@
   after:shadow-[0_0_1rem_0.125rem] after:shadow-dark-void
   data-lit:before:opacity-100
   motion-safe:data-lit:before:animate-[shelfLightOn_1.4s_linear_both]
-  dark:border-b-dark-void-light/60
+  dark:border-b-[color-mix(in_srgb,var(--color-dark-void-light)_60%,var(--color-dark-void))]
   dark:before:block
   dark:after:shadow-transparent
 " (focusin)="isShelfLit.set(true)">
   <div class="
-    after:relative after:block
-    after:border-b-(length:--shelf-surface-depth,1.5rem) after:border-solid
-    after:border-b-dark-void after:bg-dark-void
+    after:relative after:-mb-px after:block
+    after:border-b-[calc(var(--shelf-surface-depth,1.5rem)+1px)]
+    after:border-solid after:border-b-dark-void after:bg-dark-void
     after:[clip-path:polygon(1.5rem_0,calc(100%-1.5rem)_0,calc(100%+1.5rem)_200%,-1.5rem_200%)]
     dark:after:border-b-dark-void-light dark:after:bg-dark-void-light
   ">

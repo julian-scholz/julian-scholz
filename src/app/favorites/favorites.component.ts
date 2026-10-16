@@ -1,20 +1,15 @@
 import {
-  AfterViewInit,
+  afterNextRender,
   Component,
+  DestroyRef,
   ElementRef,
   inject,
-  OnDestroy,
-  OnInit,
-  PLATFORM_ID,
   signal,
-  viewChild
+  viewChild,
+  viewChildren
 } from '@angular/core';
-import { gsap } from '../lib/misc/gsap/gsap';
-import {
-  isPlatformBrowser,
-  NgOptimizedImage,
-  NgStyle
-} from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
+import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
 import { FavoritesOverlayComponent } from './favorites-overlay/favorites-overlay.component';
 import { FooterComponent } from '../footer/footer.component';
 import { environment } from '../../environment/environment';
@@ -24,141 +19,82 @@ import { ShelfComponent } from '../lib/shelf/shelf.component';
   selector: 'app-favorites',
   imports: [
     NgOptimizedImage,
-    NgStyle,
     FavoritesOverlayComponent,
     FooterComponent,
     ShelfComponent,
   ],
   templateUrl: './favorites.component.html',
 })
-export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
-  private readonly platformId: object = inject(PLATFORM_ID);
+export class FavoritesComponent {
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
 
-  protected readonly foregroundImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv`;
-  private readonly foregroundImageAspectRatio: number = 256 / 299;
-  private readonly foregroundImageScreen = {
-    top: 0.3,
-    right: 0.25,
-    bottom: 0.21,
-    left: 0.09,
+  protected readonly tvImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv`;
+  private readonly tvAspectRatio: number = 256 / 299;
+  // Transparent screen of the tv image, as fractions of its size
+  private readonly tvScreen = { top: 0.3, right: 0.25, bottom: 0.21, left: 0.09 };
+  protected readonly tvStyles: Record<string, number> = {
+    '--favorites-tv-aspect-ratio': this.tvAspectRatio,
+    '--favorites-tv-screen-top': this.tvScreen.top,
+    '--favorites-tv-screen-right': this.tvScreen.right,
+    '--favorites-tv-screen-bottom': this.tvScreen.bottom,
+    '--favorites-tv-screen-left': this.tvScreen.left,
   };
-  protected readonly foregroundImageStyles: Record<string, number> = {
-    '--favorites-tv-aspect-ratio': this.foregroundImageAspectRatio,
-    '--favorites-tv-screen-top': this.foregroundImageScreen.top,
-    '--favorites-tv-screen-right': this.foregroundImageScreen.right,
-    '--favorites-tv-screen-bottom': this.foregroundImageScreen.bottom,
-    '--favorites-tv-screen-left': this.foregroundImageScreen.left,
-  };
-  private readonly backgroundImagesCount: number = 24;
+
+  private readonly backgroundImagePaths: string[] = Array.from(
+    { length: 24 },
+    (_, index) => `${environment.assetsUrl}/images/favorites/bg/${index}`,
+  );
   protected readonly backgroundImageAlt: string = $localize`:@@favoritesBackgroundImageAlt:Landschaft mit weitem Blick in die Ferne.`;
-  protected backgroundImagePaths = signal<string[]>([]);
-  protected activeBackgroundImageIndex = signal<number>(0);
 
-  private readonly showFavoritesOverlayThreshold: number = 0.6;
-  protected showFavoritesOverlay = signal<boolean>(false);
-  protected channelSwitchId = signal<number>(0);
+  // Two slots, so the inactive one can load the picture of the next channel
+  protected readonly backgroundImageSlots = signal<string[]>([]);
+  protected readonly activeBackgroundImageSlot = signal<number>(0);
 
-  private readonly showBackgroundImageThreshold: number = 0.6;
-  private backgroundImageIntersectionObserver: IntersectionObserver | undefined;
-  protected showBackgroundImage = signal<boolean>(false);
+  // Share of the tv that has to be in view to switch it on, and share of the
+  // zoom after which the channel with teletext and footer comes on
+  private readonly tvOnVisibility: number = 0.6;
+  private readonly channelOnProgress: number = 0.6;
+  protected readonly isTvOn = signal<boolean>(false);
+  protected readonly isChannelOn = signal<boolean>(false);
+  protected readonly channelSwitchId = signal<number>(0);
 
-  private readonly favoritesScrollTrigger = viewChild.required<
-    ElementRef<HTMLDivElement>
-  >('favoritesScrollTrigger');
-
-  private gsapTimeline: gsap.core.Timeline | undefined;
-
+  // The zoom imitates a 3d push towards the screen, so it speeds up at the end
   private readonly zoomScale: number = 2.7;
   private readonly zoomPerspective: number = 500;
   private readonly zoomDepth: number = 250;
   private readonly backgroundZoomScale: number = 1.4;
 
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const activePath = this.getRandomBackgroundImagePath([]);
-      this.backgroundImagePaths.set([
-        activePath,
-        this.getRandomBackgroundImagePath([activePath]),
+  private readonly scrollTriggerElement =
+    viewChild.required<ElementRef<HTMLElement>>('scrollTrigger');
+  private readonly tvWrapper =
+    viewChild.required<ElementRef<HTMLElement>>('tvWrapper');
+  private readonly tvLayers = viewChildren<ElementRef<HTMLElement>>('tvLayer');
+  private readonly backgroundLayer =
+    viewChild.required<ElementRef<HTMLElement>>('backgroundLayer');
+
+  private scrollTrigger: ScrollTrigger | undefined;
+  private finalTvScale: number = 1;
+  private tvCenteringOffset: number = 0;
+
+  constructor() {
+    afterNextRender(() => {
+      const firstPath = this.getRandomBackgroundImagePath([]);
+      this.backgroundImageSlots.set([
+        firstPath,
+        this.getRandomBackgroundImagePath([firstPath]),
       ]);
-    }
-  }
-
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.backgroundImageIntersectionObserver = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.intersectionRatio >= this.showBackgroundImageThreshold) {
-            this.showBackgroundImage.set(true);
-          } else if (!entry.isIntersecting && this.showBackgroundImage()) {
-            this.showBackgroundImage.set(false);
-            this.switchBackgroundImage();
-          }
-        },
-        { threshold: [0, this.showBackgroundImageThreshold] },
-      );
-      this.backgroundImageIntersectionObserver.observe(
-        this.favoritesScrollTrigger().nativeElement,
-      );
-
+      this.observeTvVisibility();
       this.initZoom();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.gsapTimeline?.kill();
-
-    this.backgroundImageIntersectionObserver?.disconnect();
-  }
-
-  private initZoom(): void {
-    const zoomEase = gsap.parseEase('power1.inOut');
-    const finalZoomScale = this.getApparentZoomScale(1);
-    const finalBackgroundCounterScale = this.getBackgroundCounterScale(1);
-
-    this.gsapTimeline = gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: '#favorites-scroll-trigger',
-          start: 'top top',
-          end: '+=200%',
-          pin: true,
-          scrub: true,
-          onUpdate: (self) => {
-            const showFavoritesOverlay =
-              self.progress >= this.showFavoritesOverlayThreshold;
-            if (showFavoritesOverlay !== this.showFavoritesOverlay()) {
-              this.showFavoritesOverlay.set(showFavoritesOverlay);
-              this.channelSwitchId.update((id) => id + 1);
-            }
-          },
-        },
-      })
-      .to('[data-favorites-tv]', {
-        scale: finalZoomScale,
-        transformOrigin: 'center center',
-        ease: (time: number) =>
-          (this.getApparentZoomScale(zoomEase(time)) - 1) /
-          (finalZoomScale - 1),
-      })
-      .to(
-        '#favorites-image-section',
-        {
-          scale: finalBackgroundCounterScale,
-          transformOrigin: 'center center',
-          ease: (time: number) =>
-            (this.getBackgroundCounterScale(zoomEase(time)) - 1) /
-            (finalBackgroundCounterScale - 1),
-        },
-        '<',
-      );
+    });
   }
 
   // Teletext and footer are only visible once zoomed in, so keyboard focus
-  // on them has to bring the zoom along
-  protected zoomInForFocusedOverlay(): void {
-    const scrollTrigger = this.gsapTimeline?.scrollTrigger;
-    if (scrollTrigger && !this.showFavoritesOverlay()) {
-      scrollTrigger.scroll(scrollTrigger.end);
+  // on them has to bring the zoom along. Clicks are left alone, they can only
+  // reach what is already visible
+  protected zoomInForFocusedOverlay(event: FocusEvent): void {
+    const isKeyboardFocus = (event.target as Element).matches(':focus-visible');
+    if (this.scrollTrigger && isKeyboardFocus && !this.isChannelOn()) {
+      this.scrollTrigger.scroll(this.scrollTrigger.end);
     }
   }
 
@@ -167,40 +103,109 @@ export class FavoritesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.switchBackgroundImage();
   }
 
-  private switchBackgroundImage(): void {
-    const previousIndex = this.activeBackgroundImageIndex();
-    this.activeBackgroundImageIndex.set(1 - previousIndex);
-    this.backgroundImagePaths.update((paths) =>
-      paths.map((path, index) =>
-        index === previousIndex
-          ? this.getRandomBackgroundImagePath(paths)
-          : path,
-      ),
+  // The tv switches on once it is mostly in view and off once it has left it,
+  // the next time it comes on it shows another channel
+  private observeTvVisibility(): void {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.intersectionRatio >= this.tvOnVisibility) {
+          this.isTvOn.set(true);
+        } else if (!entry.isIntersecting && this.isTvOn()) {
+          this.isTvOn.set(false);
+          this.switchBackgroundImage();
+        }
+      },
+      { threshold: [0, this.tvOnVisibility] },
     );
+    observer.observe(this.scrollTriggerElement().nativeElement);
+    this.destroyRef.onDestroy(() => observer.disconnect());
   }
 
-  private getRandomBackgroundImagePath(excludedPaths: string[]): string {
-    const paths = Array.from(
-      { length: this.backgroundImagesCount },
-      (_, index) => `${environment.assetsUrl}/images/favorites/bg/${index}`,
-    ).filter((path) => !excludedPaths.includes(path));
+  private initZoom(): void {
+    const zoomEase = gsap.parseEase('power1.inOut');
+    this.scrollTrigger = ScrollTrigger.create({
+      trigger: this.scrollTriggerElement().nativeElement,
+      start: 'top top',
+      end: '+=200%',
+      pin: true,
+      onRefresh: (self) => {
+        this.measureTvLayout();
+        this.renderZoom(zoomEase(self.progress));
+      },
+      onUpdate: (self) => {
+        this.renderZoom(zoomEase(self.progress));
+        this.setChannelOn(self.progress >= this.channelOnProgress);
+      },
+    });
+    this.destroyRef.onDestroy(() => this.scrollTrigger?.kill());
+  }
 
-    return gsap.utils.random(paths);
+  // On portrait screens the tv leaves room for the footer, so it can be
+  // smaller than the view allows and above the middle. The zoom makes up for
+  // both, it zooms further by that ratio and moves the tv back to the middle
+  private measureTvLayout(): void {
+    const tvWrapper = this.tvWrapper().nativeElement;
+    const { paddingTop, paddingBottom } = getComputedStyle(tvWrapper);
+    const largestTvWidth = Math.min(
+      tvWrapper.clientWidth,
+      tvWrapper.clientHeight * this.tvAspectRatio,
+    );
+    const tvWidth = this.tvLayers()[0].nativeElement.offsetWidth;
+
+    this.finalTvScale =
+      (this.getApparentZoomScale(1) * largestTvWidth) / tvWidth;
+    this.tvCenteringOffset =
+      (parseFloat(paddingBottom) - parseFloat(paddingTop)) / 2;
+  }
+
+  // The background picture sits inside the tv, so it is scaled and moved
+  // against the tv. That way it stays in the middle of the view and only
+  // zooms in, much less than the tv
+  private renderZoom(progress: number): void {
+    const zoom =
+      (this.getApparentZoomScale(progress) - 1) /
+      (this.getApparentZoomScale(1) - 1);
+    const tvScale = 1 + (this.finalTvScale - 1) * zoom;
+    const tvOffset = this.tvCenteringOffset * zoom;
+
+    gsap.set(
+      this.tvLayers().map(({ nativeElement }) => nativeElement),
+      { scale: tvScale, y: tvOffset },
+    );
+    gsap.set(this.backgroundLayer().nativeElement, {
+      scale: (1 + (this.backgroundZoomScale - 1) * progress) / tvScale,
+      y: (this.tvCenteringOffset - tvOffset) / tvScale,
+    });
   }
 
   private getApparentZoomScale(progress: number): number {
     return (
       (1 + (this.zoomScale - 1) * progress) *
-      (this.zoomPerspective / (this.zoomPerspective - this.zoomDepth * progress))
+      (this.zoomPerspective /
+        (this.zoomPerspective - this.zoomDepth * progress))
     );
   }
 
-  // The background image sits inside the scaled tv, so it is scaled against
-  // it to end up at its own, much smaller zoom
-  private getBackgroundCounterScale(progress: number): number {
-    return (
-      (1 + (this.backgroundZoomScale - 1) * progress) /
-      this.getApparentZoomScale(progress)
+  private setChannelOn(isChannelOn: boolean): void {
+    if (isChannelOn !== this.isChannelOn()) {
+      this.isChannelOn.set(isChannelOn);
+      this.channelSwitchId.update((id) => id + 1);
+    }
+  }
+
+  private switchBackgroundImage(): void {
+    const previousSlot = this.activeBackgroundImageSlot();
+    this.activeBackgroundImageSlot.set(1 - previousSlot);
+    this.backgroundImageSlots.update((paths) =>
+      paths.map((path, slot) =>
+        slot === previousSlot ? this.getRandomBackgroundImagePath(paths) : path,
+      ),
+    );
+  }
+
+  private getRandomBackgroundImagePath(excludedPaths: string[]): string {
+    return gsap.utils.random(
+      this.backgroundImagePaths.filter((path) => !excludedPaths.includes(path)),
     );
   }
 }
