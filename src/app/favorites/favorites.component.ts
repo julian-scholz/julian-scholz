@@ -58,14 +58,19 @@ export class FavoritesComponent {
   protected readonly isChannelOn = signal<boolean>(false);
   protected readonly channelSwitchId = signal<number>(0);
 
-  // The zoom imitates a 3d push towards the screen, so it speeds up at the end
+  // The zoom imitates a 3d push towards the screen, so it speeds up at the
+  // end. The browser plays it along the scroll from keyframes sampled in steps
   private readonly zoomScale: number = 2.7;
   private readonly zoomPerspective: number = 500;
   private readonly zoomDepth: number = 250;
   private readonly backgroundZoomScale: number = 1.4;
+  private readonly zoomEase = gsap.parseEase('power1.inOut');
+  private readonly zoomSteps: number = 20;
 
-  private readonly scrollTriggerElement =
-    viewChild.required<ElementRef<HTMLElement>>('scrollTrigger');
+  private readonly zoomTrack =
+    viewChild.required<ElementRef<HTMLElement>>('zoomTrack');
+  private readonly zoomFrame =
+    viewChild.required<ElementRef<HTMLElement>>('zoomFrame');
   private readonly tvWrapper =
     viewChild.required<ElementRef<HTMLElement>>('tvWrapper');
   private readonly tvLayers = viewChildren<ElementRef<HTMLElement>>('tvLayer');
@@ -73,8 +78,7 @@ export class FavoritesComponent {
     viewChild.required<ElementRef<HTMLElement>>('backgroundLayer');
 
   private scrollTrigger: ScrollTrigger | undefined;
-  private finalTvScale: number = 1;
-  private tvCenteringOffset: number = 0;
+  private zoomAnimations: Animation[] = [];
 
   constructor() {
     afterNextRender(() => {
@@ -84,7 +88,9 @@ export class FavoritesComponent {
         this.getRandomBackgroundImagePath([firstPath]),
       ]);
       this.observeTvVisibility();
-      this.initZoom();
+      if ('ViewTimeline' in window) {
+        this.observeZoomProgress();
+      }
     });
   }
 
@@ -104,7 +110,8 @@ export class FavoritesComponent {
   }
 
   // The tv switches on once it is mostly in view and off once it has left it,
-  // the next time it comes on it shows another channel
+  // the next time it comes on it shows another channel. Browsers without
+  // scroll-driven animations get no zoom, there the channel comes on with the tv
   private observeTvVisibility(): void {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -114,36 +121,74 @@ export class FavoritesComponent {
           this.isTvOn.set(false);
           this.switchBackgroundImage();
         }
+        if (!this.scrollTrigger) {
+          this.setChannelOn(this.isTvOn());
+        }
       },
       { threshold: [0, this.tvOnVisibility] },
     );
-    observer.observe(this.scrollTriggerElement().nativeElement);
+    observer.observe(this.zoomFrame().nativeElement);
     this.destroyRef.onDestroy(() => observer.disconnect());
   }
 
-  private initZoom(): void {
-    const zoomEase = gsap.parseEase('power1.inOut');
+  // The frame stays in view by css (sticky) while the track scrolls past, the
+  // scroll trigger follows the same distance for the channel and rebuilds the
+  // zoom whenever the layout changes
+  private observeZoomProgress(): void {
     this.scrollTrigger = ScrollTrigger.create({
-      trigger: this.scrollTriggerElement().nativeElement,
+      trigger: this.zoomTrack().nativeElement,
       start: 'top top',
-      end: '+=200%',
-      pin: true,
-      onRefresh: (self) => {
-        this.measureTvLayout();
-        this.renderZoom(zoomEase(self.progress));
-      },
-      onUpdate: (self) => {
-        this.renderZoom(zoomEase(self.progress));
-        this.setChannelOn(self.progress >= this.channelOnProgress);
-      },
+      end: 'bottom bottom',
+      onRefresh: () => this.animateZoom(),
+      onUpdate: (self) =>
+        this.setChannelOn(self.progress >= this.channelOnProgress),
     });
-    this.destroyRef.onDestroy(() => this.scrollTrigger?.kill());
+    this.destroyRef.onDestroy(() => {
+      this.scrollTrigger?.kill();
+      this.zoomAnimations.forEach((animation) => animation.cancel());
+    });
+  }
+
+  private animateZoom(): void {
+    this.zoomAnimations.forEach((animation) => animation.cancel());
+
+    const { finalTvScale, tvCenteringOffset } = this.measureTvLayout();
+    const steps = Array.from({ length: this.zoomSteps + 1 }, (_, step) =>
+      this.getZoomStep(
+        this.zoomEase(step / this.zoomSteps),
+        finalTvScale,
+        tvCenteringOffset,
+      ),
+    );
+    const options: KeyframeAnimationOptions = {
+      timeline: new ViewTimeline({ subject: this.zoomTrack().nativeElement }),
+      rangeStart: 'contain 0%',
+      rangeEnd: 'contain 100%',
+      fill: 'both',
+    };
+
+    this.zoomAnimations = [
+      ...this.tvLayers().map(({ nativeElement }) =>
+        nativeElement.animate(
+          steps.map(({ tvScale, tvOffset }) => ({
+            transform: `translateY(${tvOffset}px) scale(${tvScale})`,
+          })),
+          options,
+        ),
+      ),
+      this.backgroundLayer().nativeElement.animate(
+        steps.map(({ backgroundScale, backgroundOffset }) => ({
+          transform: `translateY(${backgroundOffset}px) scale(${backgroundScale})`,
+        })),
+        options,
+      ),
+    ];
   }
 
   // On portrait screens the tv leaves room for the footer, so it can be
   // smaller than the view allows and above the middle. The zoom makes up for
   // both, it zooms further by that ratio and moves the tv back to the middle
-  private measureTvLayout(): void {
+  private measureTvLayout(): { finalTvScale: number; tvCenteringOffset: number } {
     const tvWrapper = this.tvWrapper().nativeElement;
     const { paddingTop, paddingBottom } = getComputedStyle(tvWrapper);
     const largestTvWidth = Math.min(
@@ -152,30 +197,30 @@ export class FavoritesComponent {
     );
     const tvWidth = this.tvLayers()[0].nativeElement.offsetWidth;
 
-    this.finalTvScale =
-      (this.getApparentZoomScale(1) * largestTvWidth) / tvWidth;
-    this.tvCenteringOffset =
-      (parseFloat(paddingBottom) - parseFloat(paddingTop)) / 2;
+    return {
+      finalTvScale: (this.getApparentZoomScale(1) * largestTvWidth) / tvWidth,
+      tvCenteringOffset:
+        (parseFloat(paddingBottom) - parseFloat(paddingTop)) / 2,
+    };
   }
 
   // The background picture sits inside the tv, so it is scaled and moved
   // against the tv. That way it stays in the middle of the view and only
   // zooms in, much less than the tv
-  private renderZoom(progress: number): void {
+  private getZoomStep(progress: number, finalTvScale: number, tvCenteringOffset: number) {
     const zoom =
       (this.getApparentZoomScale(progress) - 1) /
       (this.getApparentZoomScale(1) - 1);
-    const tvScale = 1 + (this.finalTvScale - 1) * zoom;
-    const tvOffset = this.tvCenteringOffset * zoom;
+    const tvScale = 1 + (finalTvScale - 1) * zoom;
+    const tvOffset = tvCenteringOffset * zoom;
 
-    gsap.set(
-      this.tvLayers().map(({ nativeElement }) => nativeElement),
-      { scale: tvScale, y: tvOffset },
-    );
-    gsap.set(this.backgroundLayer().nativeElement, {
-      scale: (1 + (this.backgroundZoomScale - 1) * progress) / tvScale,
-      y: (this.tvCenteringOffset - tvOffset) / tvScale,
-    });
+    return {
+      tvScale,
+      tvOffset,
+      backgroundScale:
+        (1 + (this.backgroundZoomScale - 1) * progress) / tvScale,
+      backgroundOffset: (tvCenteringOffset - tvOffset) / tvScale,
+    };
   }
 
   private getApparentZoomScale(progress: number): number {
