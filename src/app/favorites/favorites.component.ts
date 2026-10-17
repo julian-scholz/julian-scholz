@@ -1,6 +1,7 @@
 import {
   afterNextRender,
   Component,
+  computed,
   DestroyRef,
   ElementRef,
   inject,
@@ -14,6 +15,13 @@ import { FavoritesOverlayComponent } from './favorites-overlay/favorites-overlay
 import { FooterComponent } from '../footer/footer.component';
 import { environment } from '../../environment/environment';
 import { ShelfComponent } from '../lib/shelf/shelf.component';
+
+interface ZoomStep {
+  tvScale: number;
+  tvOffset: number;
+  backgroundScale: number;
+  backgroundOffset: number;
+}
 
 @Component({
   selector: 'app-favorites',
@@ -59,7 +67,11 @@ export class FavoritesComponent {
   protected readonly isTvImageLoaded = signal<boolean>(false);
   protected readonly isTvOn = signal<boolean>(false);
   protected readonly isChannelOn = signal<boolean>(false);
-  protected readonly channelSwitchId = signal<number>(0);
+  private readonly channelSwitchId = signal<number>(0);
+  // A new id renders a new static, so its animation plays again on every switch
+  protected readonly channelSwitchIds = computed(() =>
+    this.channelSwitchId() ? [this.channelSwitchId()] : [],
+  );
 
   // The zoom imitates a 3d push towards the screen, so it speeds up at the
   // end. The browser plays it along the scroll from keyframes sampled in steps
@@ -69,6 +81,7 @@ export class FavoritesComponent {
   private readonly backgroundZoomScale: number = 1.4;
   private readonly zoomEase = gsap.parseEase('power1.inOut');
   private readonly zoomSteps: number = 20;
+  private readonly finalApparentZoomScale: number = this.getApparentZoomScale(1);
 
   private readonly zoomTrack =
     viewChild.required<ElementRef<HTMLElement>>('zoomTrack');
@@ -85,15 +98,15 @@ export class FavoritesComponent {
 
   constructor() {
     afterNextRender(() => {
-      const firstPath = this.getRandomBackgroundImagePath([]);
+      const firstPath = this.getRandomBackgroundImagePath();
       this.backgroundImageSlots.set([
         firstPath,
         this.getRandomBackgroundImagePath([firstPath]),
       ]);
-      this.observeTvVisibility();
       if ('ViewTimeline' in window) {
         this.observeZoomProgress();
       }
+      this.observeTvVisibility();
     });
   }
 
@@ -148,12 +161,12 @@ export class FavoritesComponent {
     });
     this.destroyRef.onDestroy(() => {
       this.scrollTrigger?.kill();
-      this.zoomAnimations.forEach((animation) => animation.cancel());
+      this.cancelZoomAnimations();
     });
   }
 
   private animateZoom(): void {
-    this.zoomAnimations.forEach((animation) => animation.cancel());
+    this.cancelZoomAnimations();
 
     const { finalTvScale, tvCenteringOffset } = this.measureTvLayout();
     const steps = Array.from({ length: this.zoomSteps + 1 }, (_, step) =>
@@ -169,23 +182,28 @@ export class FavoritesComponent {
       rangeEnd: 'contain 100%',
       fill: 'both',
     };
+    const tvKeyframes = steps.map(({ tvOffset, tvScale }) =>
+      this.getZoomKeyframe(tvOffset, tvScale),
+    );
+    const backgroundKeyframes = steps.map(
+      ({ backgroundOffset, backgroundScale }) =>
+        this.getZoomKeyframe(backgroundOffset, backgroundScale),
+    );
 
     this.zoomAnimations = [
       ...this.tvLayers().map(({ nativeElement }) =>
-        nativeElement.animate(
-          steps.map(({ tvScale, tvOffset }) => ({
-            transform: `translateY(${tvOffset}px) scale(${tvScale})`,
-          })),
-          options,
-        ),
+        nativeElement.animate(tvKeyframes, options),
       ),
-      this.backgroundLayer().nativeElement.animate(
-        steps.map(({ backgroundScale, backgroundOffset }) => ({
-          transform: `translateY(${backgroundOffset}px) scale(${backgroundScale})`,
-        })),
-        options,
-      ),
+      this.backgroundLayer().nativeElement.animate(backgroundKeyframes, options),
     ];
+  }
+
+  private cancelZoomAnimations(): void {
+    this.zoomAnimations.forEach((animation) => animation.cancel());
+  }
+
+  private getZoomKeyframe(offset: number, scale: number): Keyframe {
+    return { transform: `translateY(${offset}px) scale(${scale})` };
   }
 
   // On portrait screens the tv leaves room for the footer, so it can be
@@ -201,7 +219,7 @@ export class FavoritesComponent {
     const tvWidth = this.tvLayers()[0].nativeElement.offsetWidth;
 
     return {
-      finalTvScale: (this.getApparentZoomScale(1) * largestTvWidth) / tvWidth,
+      finalTvScale: (this.finalApparentZoomScale * largestTvWidth) / tvWidth,
       tvCenteringOffset:
         (parseFloat(paddingBottom) - parseFloat(paddingTop)) / 2,
     };
@@ -210,10 +228,14 @@ export class FavoritesComponent {
   // The background picture sits inside the tv, so it is scaled and moved
   // against the tv. That way it stays in the middle of the view and only
   // zooms in, much less than the tv
-  private getZoomStep(progress: number, finalTvScale: number, tvCenteringOffset: number) {
+  private getZoomStep(
+    progress: number,
+    finalTvScale: number,
+    tvCenteringOffset: number,
+  ): ZoomStep {
     const zoom =
       (this.getApparentZoomScale(progress) - 1) /
-      (this.getApparentZoomScale(1) - 1);
+      (this.finalApparentZoomScale - 1);
     const tvScale = 1 + (finalTvScale - 1) * zoom;
     const tvOffset = tvCenteringOffset * zoom;
 
@@ -251,7 +273,7 @@ export class FavoritesComponent {
     );
   }
 
-  private getRandomBackgroundImagePath(excludedPaths: string[]): string {
+  private getRandomBackgroundImagePath(excludedPaths: string[] = []): string {
     return gsap.utils.random(
       this.backgroundImagePaths.filter((path) => !excludedPaths.includes(path)),
     );

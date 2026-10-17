@@ -70,23 +70,22 @@
             motion-reduce:transition-opacity motion-reduce:duration-700
           ">
             @for (path of backgroundImageSlots(); track $index) {
+              @let isActive = $index === activeBackgroundImageSlot();
               <img [ngSrc]="path"
                    ngSrcset="2560w, 1920w" sizes="100vw" fill
                    [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
-                   [attr.data-active]="$index === activeBackgroundImageSlot() || null"
-                   [alt]="$index === activeBackgroundImageSlot() ? backgroundImageAlt : ''"
+                   [attr.data-active]="isActive || null"
+                   [alt]="isActive ? backgroundImageAlt : ''"
                    class="
                      object-cover opacity-0
                      data-active:opacity-100
                    ">
             }
-            @if (channelSwitchId()) {
-              @for (id of [channelSwitchId()]; track id) {
-                <div class="
-                  favorites-tv-static absolute inset-0
-                  motion-reduce:hidden
-                "></div>
-              }
+            @for (id of channelSwitchIds(); track id) {
+              <div class="
+                favorites-tv-static absolute inset-0
+                motion-reduce:hidden
+              "></div>
             }
             <div class="absolute inset-0 favorites-tv-crt"></div>
           </div>
