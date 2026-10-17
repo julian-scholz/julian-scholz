@@ -369,15 +369,12 @@
 }
 
 /* Short burst of static with a rolling bar, like a channel switch. The grey
-   noise is tinted to vanilla grains on the dark void of the page */
+   noise lightens and darkens the picture below, so the grains take on its
+   colours instead of covering it */
 @utility favorites-tv-static {
-  @apply pointer-events-none overflow-hidden bg-vanilla;
-  background-image:
-    linear-gradient(
-      color-mix(in oklab, var(--color-dark-void-dark) 45%, transparent)
-    ),
-    url("/assets/images/tv-static.png");
-  background-blend-mode: normal, multiply;
+  @apply pointer-events-none overflow-hidden contrast-200;
+  background-image: url("/assets/images/tv-static.png");
+  mix-blend-mode: hard-light;
   animation: favoritesTvStatic 0.45s steps(1) both;
 
   &::after {
