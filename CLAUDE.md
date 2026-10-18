@@ -11,15 +11,15 @@ German is the source locale at `/`, English is served at `/en`.
 - Tailwind CSS v4 via PostCSS, configured in `src/styles.css` (no tailwind config file)
 - GSAP 3 with ScrollTrigger, imported only via `src/app/lib/misc/gsap/gsap.ts`
 - Node version from `.nvmrc`, TypeScript ~6.0
-- Hosting: Cloudflare Pages (`wrangler.toml`), Pages Function `src/functions/_middleware.ts`
+- Hosting: Cloudflare Pages (`wrangler.toml`), Pages Function `functions/_middleware.ts` (TypeScript, bundled by Cloudflare on deploy)
 
 ## Commands
 
 - `npm start` / `npm run start:en`: dev server (de / en)
-- `npm run build`: runs the tests, then the production build of both locales, then compiles `src/functions`, then `postbuild.js` runs
+- `npm run build`: runs the tests, then the production build of both locales, then `postbuild.js` runs
 - `npm run lint`: ESLint (TypeScript, Angular templates, `better-tailwindcss`)
 - `npm run extract-i18n`: updates `src/locale/messages.json`
-- `npm test`: vitest with `@cloudflare/vitest-plugin`, runs `test/**/*.test.ts` in the Workers runtime (currently the CSP middleware). It runs as `prebuild`, so a failing test stops the Cloudflare deploy. There are no Angular tests; the vitest target in `angular.json` is not set up
+- `npm test`: type-checks `functions` and `test` with `tsc` (Cloudflare only transpiles the functions), then vitest with `@cloudflare/vitest-plugin`, runs `test/**/*.test.ts` in the Workers runtime (currently the CSP middleware). It runs as `prebuild`, so a failing test stops the Cloudflare deploy. There are no Angular tests; the vitest target in `angular.json` is not set up
 - The husky pre-commit hook runs lint-staged (`ng lint --fix` on staged `.ts`/`.html`)
 
 ## Build and deploy
@@ -36,7 +36,7 @@ German is the source locale at `/`, English is served at `/en`.
 
 ## Security
 
-- The CSP is set in `src/functions/_middleware.ts`. It replaces `DUMMY_NONCE_VALUE` (`ngCspNonce` in `src/index.html`) with a nonce per request. Static headers live in `src/_headers`
+- The CSP is set in `functions/_middleware.ts`. It replaces `DUMMY_NONCE_VALUE` (`ngCspNonce` in `src/index.html`) with a nonce per request. Static headers live in `src/_headers`
 - `test/middleware.test.ts` asserts the exact CSP string, so an intended CSP change has to update the test too
 - Do not loosen or extend the CSP without explicit approval. New external hosts, inline handlers or `eval`-like code break it
 - Never commit or deploy licensed stock originals (e.g. `AdobeStock_*`); only derived, optimized files are allowed

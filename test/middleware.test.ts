@@ -1,6 +1,6 @@
 import { createPagesEventContext } from 'cloudflare:test';
 import { describe, expect, it } from 'vitest';
-import { onRequest } from '../src/functions/_middleware';
+import { onRequest } from '../functions/_middleware';
 
 const getExpectedCsp = (nonce: string): string =>
   `default-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'; style-src 'self' 'unsafe-inline'; script-src 'nonce-${nonce}' 'unsafe-inline'; font-src 'self' https://assets.julian-scholz.dev; connect-src 'self'; img-src 'self' https://assets.julian-scholz.dev;`;

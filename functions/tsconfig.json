@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "../../functions",
+    "noEmit": true,
     "target": "esnext",
     "module": "esnext",
     "lib": [

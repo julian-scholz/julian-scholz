@@ -9,11 +9,10 @@
     "start:en": "ng serve --configuration en",
     "extract-i18n": "ng extract-i18n",
     "prebuild": "npm test",
-    "build": "ng build && npm run build:functions",
-    "build:functions": "tsc --project src/functions/tsconfig.json",
+    "build": "ng build",
     "postbuild": "node postbuild.js",
     "watch": "ng build --watch --configuration development",
-    "test": "vitest run",
+    "test": "tsc --project functions && tsc --project test && vitest run",
     "lint": "ng lint",
     "lint-staged": "lint-staged"
   },
