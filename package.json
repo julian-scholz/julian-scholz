@@ -38,8 +38,8 @@
   "devDependencies": {
     "@angular/build": "22.2.2",
     "@angular/cli": "22.2.2",
-    "@angular/compiler-cli": "22.2.2",
-    "@angular/localize": "22.2.2",
+    "@angular/compiler-cli": "22.2.3",
+    "@angular/localize": "22.2.3",
     "@cloudflare/vitest-plugin": "^1.4.4",
     "@cloudflare/workers-types": "^5.20261003.1",
     "@typescript-eslint/eslint-plugin": "8.71.2",
