@@ -5,6 +5,9 @@
     "schedule:monthly",
     ":maintainLockFilesMonthly"
   ],
+  "constraints": {
+    "npm": "<12"
+  },
   "packageRules": [
     {
       "groupName": "cloudflare",
