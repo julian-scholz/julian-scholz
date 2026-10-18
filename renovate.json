@@ -10,7 +10,7 @@
   "schedule": ["* * 1 * *"],
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": ["* * 15 * *"],
+    "schedule": ["* * 1 * *"],
     "automerge": true
   },
   "platformAutomerge": false,
@@ -19,9 +19,12 @@
   },
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true,
+      "matchDatasources": ["npm"],
       "minimumReleaseAge": "14 days"
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     },
     {
       "groupName": "cloudflare",
