@@ -5,6 +5,10 @@
 /tmp
 /out-tsc
 /bazel-out
+/functions
+
+# Cloudflare
+/.wrangler
 
 # Node
 /node_modules
