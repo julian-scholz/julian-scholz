@@ -2,16 +2,31 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:best-practices",
-    "schedule:monthly",
-    ":maintainLockFilesMonthly"
+    "config:js-app",
+    "group:allNonMajor",
+    ":separateMultipleMajorReleases"
   ],
+  "timezone": "Europe/Berlin",
+  "schedule": ["* * 1 * *"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* * 15 * *"],
+    "automerge": true
+  },
+  "platformAutomerge": false,
   "constraints": {
     "npm": "<12"
   },
   "packageRules": [
     {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "minimumReleaseAge": "14 days"
+    },
+    {
       "groupName": "cloudflare",
-      "matchPackageNames": ["wrangler", "@cloudflare/**"]
+      "matchPackageNames": ["wrangler", "@cloudflare/**"],
+      "matchUpdateTypes": ["major"]
     }
   ]
 }
