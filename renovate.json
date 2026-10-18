@@ -27,6 +27,16 @@
       "automerge": true
     },
     {
+      "matchManagers": ["renovate-config"],
+      "matchDepNames": ["npm"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
       "groupName": "cloudflare",
       "matchPackageNames": ["wrangler", "@cloudflare/**"],
       "matchUpdateTypes": ["major"]
