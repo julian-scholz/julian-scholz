@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'node:fs';
+import path from 'node:path';
 
 const prefix = '[postbuild]';
 
-const browserPath = path.join(__dirname, 'dist', 'julian-scholz', 'browser');
+const browserPath = path.join(import.meta.dirname, 'dist', 'julian-scholz', 'browser');
 // The german source locale is built into the root, every other locale into its own directory
 const localeDirectories = ['', 'en'];
 // The assets are copied into every locale, these only matter at the root of the site
@@ -25,7 +25,7 @@ for (const localeDirectory of localeDirectories) {
   }
 }
 
-const licensesSourcePath = path.join(__dirname, 'dist', 'julian-scholz', '3rdpartylicenses.txt');
+const licensesSourcePath = path.join(import.meta.dirname, 'dist', 'julian-scholz', '3rdpartylicenses.txt');
 try {
   fs.copyFileSync(licensesSourcePath, path.join(browserPath, 'licenses.txt'));
   console.log(`${prefix} Copied 3rdpartylicenses.txt to licenses.txt.`);

@@ -1,0 +1,14 @@
+{
+  "extends": "../src/functions/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "..",
+    "types": [
+      "@cloudflare/workers-types",
+      "@cloudflare/vitest-plugin/types"
+    ]
+  },
+  "include": [
+    "./**/*.ts"
+  ]
+}

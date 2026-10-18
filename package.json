@@ -1,17 +1,19 @@
 {
   "name": "julian-scholz",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "prepare": "husky",
     "start": "ng serve",
     "start:en": "ng serve --configuration en",
     "extract-i18n": "ng extract-i18n",
+    "prebuild": "npm test",
     "build": "ng build && npm run build:functions",
     "build:functions": "tsc --project src/functions/tsconfig.json",
     "postbuild": "node postbuild.js",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "test": "vitest run",
     "lint": "ng lint",
     "lint-staged": "lint-staged"
   },
@@ -40,6 +42,7 @@
     "@angular/cli": "^22.2.1",
     "@angular/compiler-cli": "^22.2.1",
     "@angular/localize": "^22.2.2",
+    "@cloudflare/vitest-plugin": "^1.4.4",
     "@cloudflare/workers-types": "^5.20261003.1",
     "@types/node": "^24.19.1",
     "@typescript-eslint/eslint-plugin": "^8.71.0",

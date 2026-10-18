@@ -16,10 +16,10 @@ German is the source locale at `/`, English is served at `/en`.
 ## Commands
 
 - `npm start` / `npm run start:en`: dev server (de / en)
-- `npm run build`: production build of both locales, then compiles `src/functions`, then `postbuild.js` runs
+- `npm run build`: runs the tests, then the production build of both locales, then compiles `src/functions`, then `postbuild.js` runs
 - `npm run lint`: ESLint (TypeScript, Angular templates, `better-tailwindcss`)
 - `npm run extract-i18n`: updates `src/locale/messages.json`
-- Tests: `angular.json` has a vitest target, but there is no `tsconfig.spec.json` and no spec files, so `npm test` is not set up
+- `npm test`: vitest with `@cloudflare/vitest-plugin`, runs `test/**/*.test.ts` in the Workers runtime (currently the CSP middleware). It runs as `prebuild`, so a failing test stops the Cloudflare deploy. There are no Angular tests; the vitest target in `angular.json` is not set up
 - The husky pre-commit hook runs lint-staged (`ng lint --fix` on staged `.ts`/`.html`)
 
 ## Build and deploy
@@ -37,6 +37,7 @@ German is the source locale at `/`, English is served at `/en`.
 ## Security
 
 - The CSP is set in `src/functions/_middleware.ts`. It replaces `DUMMY_NONCE_VALUE` (`ngCspNonce` in `src/index.html`) with a nonce per request. Static headers live in `src/_headers`
+- `test/middleware.test.ts` asserts the exact CSP string, so an intended CSP change has to update the test too
 - Do not loosen or extend the CSP without explicit approval. New external hosts, inline handlers or `eval`-like code break it
 - Never commit or deploy licensed stock originals (e.g. `AdobeStock_*`); only derived, optimized files are allowed
 - The legal texts (`src/app/modals/contents/*`) are based on eRecht24. The English versions are the project's own translations and must not be copied from other sites

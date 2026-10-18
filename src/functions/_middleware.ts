@@ -3,8 +3,7 @@ export const onRequest: PagesFunction = async (context) => {
   const nonce = crypto.getRandomValues(new Uint8Array(16)).toHex();
 
   if (response.headers.get('Content-Type')?.includes('text/html')) {
-    let text = await response.text();
-    text = text.replace(/nonce="DUMMY_NONCE_VALUE"/g, `nonce="${nonce}"`);
+    const text = (await response.text()).replaceAll('DUMMY_NONCE_VALUE', nonce);
 
     response.headers.set(
       'Content-Security-Policy',

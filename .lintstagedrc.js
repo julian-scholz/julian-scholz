@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   "*.{ts,html}": (fileNames) =>
     `ng lint ${fileNames.map((fileName) => `--lint-file-patterns=${fileName}`).join(" ")} --fix`
 };
