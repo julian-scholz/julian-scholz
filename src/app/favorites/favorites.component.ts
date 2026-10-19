@@ -46,6 +46,8 @@ export class FavoritesComponent {
     '--favorites-tv-screen-right': this.tvScreen.right,
     '--favorites-tv-screen-bottom': this.tvScreen.bottom,
     '--favorites-tv-screen-left': this.tvScreen.left,
+    '--favorites-tv-screen-width': 1 - this.tvScreen.left - this.tvScreen.right,
+    '--favorites-tv-screen-height': 1 - this.tvScreen.top - this.tvScreen.bottom,
   };
 
   private readonly backgroundImagePaths: string[] = Array.from(
