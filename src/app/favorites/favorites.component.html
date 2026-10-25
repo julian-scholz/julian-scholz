@@ -6,10 +6,17 @@
   <!-- The tv sticks to the top for two view heights of scrolling, which drive the zoom.
        The track reaches 1px past the clipped end of the page, so the rounded page height
        never lets the frame slip at the very bottom -->
-  <div #zoomTrack class="
+  <div class="
+    relative
     supports-[animation-timeline:view()]:-mb-px
     supports-[animation-timeline:view()]:h-[calc(300lvh+1px)]
   ">
+    <!-- The zoom follows this range as it passes the top of the view, so the height of the
+         view, which changes with the address bar on phones, does not move the zoom -->
+    <div #zoomRange class="
+      absolute inset-x-0 top-0
+      supports-[animation-timeline:view()]:h-[calc(100%-100lvh)]
+    "></div>
     <div #zoomFrame [style]="tvStyles"
          [attr.data-channel-on]="isChannelOn() || null"
          class="
