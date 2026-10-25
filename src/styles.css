@@ -351,6 +351,26 @@
   initial-value: 50%;
 }
 
+/* The favorites zoom animates these variables instead of transform. Safari
+   runs scroll-driven transform animations in its scrolling process, apart
+   from the main thread, which variables keep it out of */
+@property --favorites-zoom-offset {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --favorites-zoom-scale {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 1;
+}
+
+@utility favorites-zoom {
+  transform: translateY(var(--favorites-zoom-offset))
+    scale(var(--favorites-zoom-scale));
+}
+
 /* The transparent screen of the tv, relative to the tv itself */
 @utility favorites-tv-screen-clip {
   clip-path: inset(

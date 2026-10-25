@@ -205,7 +205,10 @@ export class FavoritesComponent {
   }
 
   private getZoomKeyframe(offset: number, scale: number): Keyframe {
-    return { transform: `translateY(${offset}px) scale(${scale})` };
+    return {
+      '--favorites-zoom-offset': `${offset}px`,
+      '--favorites-zoom-scale': scale,
+    };
   }
 
   // On portrait screens the tv leaves room for the footer, so it can be
