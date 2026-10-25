@@ -59,6 +59,7 @@ German is the source locale at `/`, English is served at `/en`.
 ## Favorites zoom (non-obvious)
 
 - The tv zoom runs as CSS `position: sticky` plus Web Animations on a `ViewTimeline`. ScrollTrigger only switches the channel at 60 % and rebuilds the zoom on refresh
+- The zoom animates the registered variables `--favorites-zoom-offset`/`--favorites-zoom-scale` (utility `favorites-zoom` in `src/styles.css`), not `transform`. Safari (26.4+) runs scroll-driven `transform` animations in its scrolling process, which made the zoom jump on iPhone whenever scrolling started. The variables keep it on the main thread, at the price of about 60 fps on ProMotion devices, which was accepted. Do not switch the keyframes back to `transform`
 - Browsers without `ViewTimeline` get no zoom; there the channel follows the tv-on state
 - ScrollTrigger refreshes on resize by itself. If content above the section changes height without a resize, call `ScrollTrigger.refresh()` right where that happens, not through a global observer
 - Safari on iPhone is the critical target and cannot be tested locally. Name such changes as unverified
