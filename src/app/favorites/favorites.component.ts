@@ -85,8 +85,8 @@ export class FavoritesComponent {
   private readonly zoomSteps: number = 20;
   private readonly finalApparentZoomScale: number = this.getApparentZoomScale(1);
 
-  private readonly zoomRange =
-    viewChild.required<ElementRef<HTMLElement>>('zoomRange');
+  private readonly zoomTrack =
+    viewChild.required<ElementRef<HTMLElement>>('zoomTrack');
   private readonly zoomFrame =
     viewChild.required<ElementRef<HTMLElement>>('zoomFrame');
   private readonly tvWrapper =
@@ -150,13 +150,13 @@ export class FavoritesComponent {
   }
 
   // The frame stays in view by css (sticky) while the track scrolls past, the
-  // scroll trigger follows the same range as the zoom for the channel and
-  // rebuilds the zoom whenever the layout changes
+  // scroll trigger follows the same distance for the channel and rebuilds the
+  // zoom whenever the layout changes
   private observeZoomProgress(): void {
     this.scrollTrigger = ScrollTrigger.create({
-      trigger: this.zoomRange().nativeElement,
+      trigger: this.zoomTrack().nativeElement,
       start: 'top top',
-      end: 'bottom top',
+      end: 'bottom bottom',
       onRefresh: () => this.animateZoom(),
       onUpdate: (self) =>
         this.setChannelOn(self.progress >= this.channelOnProgress),
@@ -179,9 +179,9 @@ export class FavoritesComponent {
       ),
     );
     const options: KeyframeAnimationOptions = {
-      timeline: new ViewTimeline({ subject: this.zoomRange().nativeElement }),
-      rangeStart: 'exit-crossing 0%',
-      rangeEnd: 'exit-crossing 100%',
+      timeline: new ViewTimeline({ subject: this.zoomTrack().nativeElement }),
+      rangeStart: 'contain 0%',
+      rangeEnd: 'contain 100%',
       fill: 'both',
     };
     const tvKeyframes = steps.map(({ tvOffset, tvScale }) =>
