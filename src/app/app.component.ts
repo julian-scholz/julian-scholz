@@ -15,7 +15,6 @@ import { BookRecommendationsComponent } from './book-recommendations/book-recomm
 import { FavoritesComponent } from './favorites/favorites.component';
 import { VitaComponent } from './vita/vita.component';
 import { navigationEntries } from './app.routes';
-import { CursorGridComponent } from './lib/cursor-grid/cursor-grid.component';
 import { SeoService } from './lib/seo/seo.service';
 
 @Component({
@@ -28,7 +27,6 @@ import { SeoService } from './lib/seo/seo.service';
     BookRecommendationsComponent,
     FavoritesComponent,
     VitaComponent,
-    CursorGridComponent,
   ],
   providers: [
     {
