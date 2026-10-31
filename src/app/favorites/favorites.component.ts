@@ -15,6 +15,13 @@ import { FavoritesOverlayComponent } from './favorites-overlay/favorites-overlay
 import { FooterComponent } from '../footer/footer.component';
 import { environment } from '../../environment/environment';
 import { ShelfComponent } from '../lib/shelf/shelf.component';
+import { ThemeModeToggleService } from '../lib/theme-mode-toggle/theme-mode-toggle.service';
+import { ThemeMode } from '../lib/theme-mode-toggle/utils/theme-mode-toggle.enum';
+
+interface BackgroundImage {
+  path: string;
+  lightColor: string;
+}
 
 interface ZoomStep {
   tvScale: number;
@@ -35,6 +42,9 @@ interface ZoomStep {
 })
 export class FavoritesComponent {
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
+  protected readonly themeModeToggleService: ThemeModeToggleService = inject(
+    ThemeModeToggleService,
+  );
 
   protected readonly tvImagePath: string = `${environment.assetsUrl}/images/favorites/tv/tv`;
   private readonly tvAspectRatio: number = 256 / 299;
@@ -50,15 +60,36 @@ export class FavoritesComponent {
     '--favorites-tv-screen-height': 1 - this.tvScreen.top - this.tvScreen.bottom,
   };
 
-  private readonly backgroundImagePaths: string[] = Array.from(
-    { length: 24 },
-    (_, index) => `${environment.assetsUrl}/images/favorites/bg/${index}`,
+  // Each picture with its average colour, brightened to full intensity, for
+  // the light the screen casts on the shelf in dark mode
+  private readonly backgroundImages: BackgroundImage[] = [
+    '#ff7b79', '#ff7788', '#ff87a0', '#ff9d92', '#ffd1e1', '#ffb7d9',
+    '#ffa486', '#ffa266', '#ffcdb3', '#ff9566', '#ff7e55', '#ff9598',
+    '#ff7658', '#ffc7e7', '#ffa550', '#ffb79c', '#ff8162', '#ffd3b0',
+    '#ff8e5b', '#ffeabf', '#ffecdf', '#ff87d2', '#ffd3ec', '#ffc7b7',
+  ].map((lightColor, index) => ({
+    path: `${environment.assetsUrl}/images/favorites/bg/${index}`,
+    lightColor,
+  }));
+  private readonly testCardLightColor: string = '#d8d8f0';
+
+  // The lamp on the lowboard is on in the dark and switches the theme mode
+  protected readonly lampImagePath: string = `${environment.assetsUrl}/images/favorites/lamp/lamp`;
+  protected readonly flowersImagePath: string = `${environment.assetsUrl}/images/favorites/flowers/flowers`;  protected readonly lampSwitchLabel = computed(() =>
+    this.themeModeToggleService.currentMode() === ThemeMode.DARK
+      ? $localize`:@@favoritesLampOffLabel:Licht ausschalten`
+      : $localize`:@@favoritesLampOnLabel:Licht einschalten`,
   );
   protected readonly backgroundImageAlt: string = $localize`:@@favoritesBackgroundImageAlt:Landschaft mit weitem Blick in die Ferne.`;
 
   // Two slots, so the inactive one can load the picture of the next channel
-  protected readonly backgroundImageSlots = signal<string[]>([]);
+  protected readonly backgroundImageSlots = signal<BackgroundImage[]>([]);
   protected readonly activeBackgroundImageSlot = signal<number>(0);
+  protected readonly tvLightColor = computed(() =>
+    this.isOffAir()
+      ? this.testCardLightColor
+      : this.backgroundImageSlots()[this.activeBackgroundImageSlot()]?.lightColor,
+  );
 
   // Share of the tv that has to be in view to switch it on, and share of the
   // zoom after which the channel with teletext and footer comes on
@@ -69,6 +100,20 @@ export class FavoritesComponent {
   protected readonly isTvImageLoaded = signal<boolean>(false);
   protected readonly isTvOn = signal<boolean>(false);
   protected readonly isChannelOn = signal<boolean>(false);
+  // After a minute without any input while the tv is on, the programme ends
+  // with a test card. The next input brings it back on another channel
+  protected readonly isOffAir = signal<boolean>(false);
+  protected readonly isChannelShown = computed(
+    () => this.isChannelOn() && !this.isOffAir(),
+  );
+  protected readonly isOffAirZoomedIn = computed(
+    () => this.isChannelOn() && this.isOffAir(),
+  );
+  private readonly offAirDelay: number = 60_000;
+  private readonly offAirInputEvents: string[] = [
+    'scroll', 'wheel', 'pointermove', 'pointerdown', 'touchstart', 'keydown',
+  ];
+  private stopOffAirCountdown: (() => void) | undefined;
   private readonly channelSwitchId = signal<number>(0);
   // A new id renders a new static, so its animation plays again on every switch
   protected readonly channelSwitchIds = computed(() =>
@@ -100,10 +145,10 @@ export class FavoritesComponent {
 
   constructor() {
     afterNextRender(() => {
-      const firstPath = this.getRandomBackgroundImagePath();
+      const firstImage = this.getRandomBackgroundImage();
       this.backgroundImageSlots.set([
-        firstPath,
-        this.getRandomBackgroundImagePath([firstPath]),
+        firstImage,
+        this.getRandomBackgroundImage([firstImage]),
       ]);
       if ('ViewTimeline' in window) {
         this.observeZoomProgress();
@@ -135,8 +180,11 @@ export class FavoritesComponent {
       ([entry]) => {
         if (entry.intersectionRatio >= this.tvOnVisibility) {
           this.isTvOn.set(true);
+          this.stopOffAirCountdown ??= this.startOffAirCountdown();
         } else if (!entry.isIntersecting && this.isTvOn()) {
           this.isTvOn.set(false);
+          this.stopOffAirCountdown?.();
+          this.stopOffAirCountdown = undefined;
           this.switchBackgroundImage();
         }
         if (!this.scrollTrigger) {
@@ -146,7 +194,36 @@ export class FavoritesComponent {
       { threshold: [0, this.tvOnVisibility] },
     );
     observer.observe(this.zoomFrame().nativeElement);
-    this.destroyRef.onDestroy(() => observer.disconnect());
+    this.destroyRef.onDestroy(() => {
+      observer.disconnect();
+      this.stopOffAirCountdown?.();
+    });
+  }
+
+  // Every input restarts the countdown, the first one after the test card
+  // also switches the channel back on
+  private startOffAirCountdown(): () => void {
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const onInput = (): void => {
+      if (this.isOffAir()) {
+        this.isOffAir.set(false);
+        this.zapChannel();
+      }
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => this.isOffAir.set(true), this.offAirDelay);
+    };
+    this.offAirInputEvents.forEach((type) =>
+      window.addEventListener(type, onInput, { passive: true }),
+    );
+    onInput();
+
+    return () => {
+      clearTimeout(timeoutId);
+      this.offAirInputEvents.forEach((type) =>
+        window.removeEventListener(type, onInput),
+      );
+      this.isOffAir.set(false);
+    };
   }
 
   // The frame stays in view by css (sticky) while the track scrolls past, the
@@ -211,7 +288,7 @@ export class FavoritesComponent {
     };
   }
 
-  // On portrait screens the tv leaves room for the footer, so it can be
+  // Unless the view is short, the tv leaves room for the footer, so it can be
   // smaller than the view allows and above the middle. The zoom makes up for
   // both, it zooms further by that ratio and moves the tv back to the middle
   private measureTvLayout(): { finalTvScale: number; tvCenteringOffset: number } {
@@ -271,16 +348,18 @@ export class FavoritesComponent {
   private switchBackgroundImage(): void {
     const previousSlot = this.activeBackgroundImageSlot();
     this.activeBackgroundImageSlot.set(1 - previousSlot);
-    this.backgroundImageSlots.update((paths) =>
-      paths.map((path, slot) =>
-        slot === previousSlot ? this.getRandomBackgroundImagePath(paths) : path,
+    this.backgroundImageSlots.update((images) =>
+      images.map((image, slot) =>
+        slot === previousSlot ? this.getRandomBackgroundImage(images) : image,
       ),
     );
   }
 
-  private getRandomBackgroundImagePath(excludedPaths: string[] = []): string {
+  private getRandomBackgroundImage(
+    excludedImages: BackgroundImage[] = [],
+  ): BackgroundImage {
     return gsap.utils.random(
-      this.backgroundImagePaths.filter((path) => !excludedPaths.includes(path)),
+      this.backgroundImages.filter((image) => !excludedImages.includes(image)),
     );
   }
 }

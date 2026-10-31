@@ -49,7 +49,7 @@ German is the source locale at `/`, English is served at `/en`.
   - resets colors and fonts in `@theme`, so only the defined tokens exist (`dark-void*`, `vanilla*`, `snow`)
   - defines keyframes inside `@theme`
   - defines reusable effects as `@utility`
-  - defines the custom variants `dark`, `short` (max-height 500px) and `tv-floating` (portrait favorites layout)
+  - defines the custom variants `dark`, `short` (max-height 500px), `tv-floating` (portrait favorites layout) and `tv-sideboard` (wide views, where the lowboard reaches out beside the tv and holds a lamp that switches the theme mode and a pot of dried flowers that reaches over the tv)
 - Icons use the project's own `app-icon` (`src/app/lib/icon`) with FontAwesome `IconDefinition`s imported per icon, not an icon library component
 - Shared UI lives in `src/app/lib` (e.g. `app-shelf`, used by the book recommendations and the favorites tv)
 - Keep comments minimal. Write them only where the code is otherwise unclear, and never base them on unverified browser-bug theories
@@ -60,6 +60,7 @@ German is the source locale at `/`, English is served at `/en`.
 
 - The tv zoom runs as CSS `position: sticky` plus Web Animations on a `ViewTimeline`. ScrollTrigger only switches the channel at 60 % and rebuilds the zoom on refresh
 - The zoom animates the registered variables `--favorites-zoom-offset`/`--favorites-zoom-scale` (utility `favorites-zoom` in `src/styles.css`), not `transform`. Safari (26.4+) runs scroll-driven `transform` animations in its scrolling process, which made the zoom jump on iPhone whenever scrolling started. The variables keep it on the main thread, at the price of about 60 fps on ProMotion devices, which was accepted. Do not switch the keyframes back to `transform`
+- Except in short views (`short`), the tv stands on a lowboard in the flat style of the book shelf: `app-shelf` is its top, below it a front with three doors (`favorites-lowboard-front`) reaches out of the view. The bottom padding of the tv wrapper keeps room for it, and the zoom makes up for the smaller tv (`measureTvLayout`). In `tv-floating` (narrower than the tv) only the shelf is left, with its light below (`--shelf-light-below`), and the footer is visible from the start below it; the padding reserves its height. Otherwise the footer only comes with the channel, where it and the teletext share the column with a spacer
 - Browsers without `ViewTimeline` get no zoom; there the channel follows the tv-on state
 - ScrollTrigger refreshes on resize by itself. If content above the section changes height without a resize, call `ScrollTrigger.refresh()` right where that happens, not through a global observer
 - Safari on iPhone is the critical target and cannot be tested locally. Name such changes as unverified

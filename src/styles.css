@@ -4,6 +4,8 @@
 @custom-variant short (@media (max-height: 500px));
 /* Viewports narrower than the favorites tv, where it no longer reaches the bottom */
 @custom-variant tv-floating (@media (max-aspect-ratio: 256/299));
+/* Views wide enough for the lowboard to reach out beside the favorites tv */
+@custom-variant tv-sideboard (@media (min-aspect-ratio: 3/2) and (min-height: 501px));
 
 @theme {
   --color-*: initial;
@@ -379,6 +381,189 @@
       calc(var(--favorites-tv-screen-bottom) * 100%)
       calc(var(--favorites-tv-screen-left) * 100%)
   );
+}
+
+/* Covers the screen of the tv */
+@utility favorites-tv-screen {
+  position: absolute;
+  inset: calc(var(--favorites-tv-screen-top) * 100%)
+    calc(var(--favorites-tv-screen-right) * 100%)
+    calc(var(--favorites-tv-screen-bottom) * 100%)
+    calc(var(--favorites-tv-screen-left) * 100%);
+}
+
+/* The lamp on the left mirrored in the glass of the tube */
+@utility favorites-tv-screen-glare {
+  background:
+    linear-gradient(
+      110deg,
+      transparent 6%,
+      color-mix(in oklab, var(--color-vanilla) 18%, transparent) 16%,
+      transparent 30%
+    ),
+    radial-gradient(
+      ellipse 30% 60% at 0% 45%,
+      color-mix(in oklab, var(--color-vanilla) 14%, transparent),
+      transparent
+    );
+}
+
+/* Light of the lit lamp on the lowboard: a halo around the source and a pool
+   on the shelf. The box reaches beyond the lamp, the gradients sit relative to it */
+@utility favorites-lamp-light {
+  pointer-events: none;
+  inset: -12% -70% -3%;
+  background:
+    radial-gradient(
+      ellipse 28% 3.5% at 50% 97%,
+      color-mix(in oklab, var(--color-vanilla) 20%, transparent),
+      color-mix(in oklab, var(--color-vanilla) 10%, transparent) 50%,
+      transparent
+    ),
+    radial-gradient(
+      ellipse 40% 32% at 50% 35%,
+      color-mix(in oklab, var(--color-vanilla) 20%, transparent),
+      transparent
+    );
+}
+
+/* Daylight shadow of an object on the lowboard, in the same box as the light */
+@utility favorites-lowboard-shadow {
+  pointer-events: none;
+  inset: -12% -70% -3%;
+  background: radial-gradient(
+    ellipse 20% 3% at 50% 97%,
+    color-mix(in oklab, var(--color-dark-void) 35%, transparent),
+    transparent
+  );
+}
+
+/* The lit shade, laid over the photo of the lamp */
+@utility favorites-lamp-shade-glow {
+  pointer-events: none;
+  inset: 0 0 43%;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    ellipse 60% 55% at 50% 60%,
+    color-mix(in oklab, var(--color-vanilla-light) 55%, transparent),
+    transparent 85%
+  );
+}
+
+/* Test card with SMPTE colour bars, as on the 404 page */
+@utility favorites-tv-test-card {
+  background:
+    linear-gradient(
+        to right,
+        #bfbfbf 0 14.29%, #bfbf00 0 28.57%, #00bfbf 0 42.86%, #00bf00 0 57.14%,
+        #bf00bf 0 71.43%, #bf0000 0 85.71%, #0000bf 0
+      )
+      top / 100% 67% no-repeat,
+    linear-gradient(
+        to right,
+        #0000bf 0 14.29%, #131313 0 28.57%, #bf00bf 0 42.86%, #131313 0 57.14%,
+        #00bfbf 0 71.43%, #131313 0 85.71%, #bfbfbf 0
+      )
+      0 72.83% / 100% 8% no-repeat,
+    linear-gradient(
+        to right,
+        #00214c 0 17.86%, #fbfbfb 0 35.71%, #32006a 0 53.57%, #131313 0 71.43%,
+        #090909 0 77.39%, #131313 0 83.36%, #1d1d1d 0 89.29%, #131313 0
+      )
+      bottom / 100% 25% no-repeat;
+}
+
+@utility favorites-tv-test-card-label {
+  @apply pointer-events-none border-snow bg-dark-void-dark font-mono font-extrabold tracking-[0.08em] text-snow uppercase;
+}
+
+/* Front of the lowboard below the shelf, a little darker than the shelf edge and
+   shaded below it in daylight */
+@utility favorites-lowboard-front {
+  --lowboard-front: color-mix(
+    in oklab,
+    var(--color-vanilla-light) 50%,
+    var(--color-dark-void-light)
+  );
+  --lowboard-seam: color-mix(in oklab, var(--lowboard-front) 75%, var(--color-dark-void));
+  --lowboard-shade: color-mix(in oklab, var(--color-dark-void) 25%, transparent);
+  border-top: 2px solid var(--lowboard-seam);
+  background:
+    linear-gradient(var(--lowboard-shade), transparent) top / 100% 1.5rem no-repeat,
+    var(--lowboard-front);
+
+  @variant dark {
+    --lowboard-front: color-mix(
+      in srgb,
+      var(--color-dark-void-light) 45%,
+      var(--color-dark-void)
+    );
+    --lowboard-seam: var(--color-dark-void-dark);
+    --lowboard-shade: transparent;
+  }
+}
+
+/* Daylight shadows of the tv on the shelf: one under each pair of legs and a
+   soft one under the body, where the tv blocks the light from above */
+@utility favorites-tv-shelf-shadow {
+  background:
+    radial-gradient(
+      ellipse 6% 45% at 17.5% 60%,
+      color-mix(in oklab, var(--color-dark-void) 40%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 6% 45% at 84% 60%,
+      color-mix(in oklab, var(--color-dark-void) 40%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      ellipse 50% 100% at 50% 0%,
+      color-mix(in oklab, var(--color-dark-void) 22%, transparent),
+      transparent
+    );
+}
+
+/* Light the screen casts on the wall. It fades into the opaque colour of the
+   page, as fading to transparent left a darker ring where the nearly
+   transparent edge is rounded. The box stays inside the frame: above the tv
+   only within the top padding of the tv wrapper, and beside the tv only where
+   the tv leaves room */
+@utility favorites-tv-wall-light {
+  inset: -4rem -40% 0;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in oklab, var(--favorites-tv-light) 18%, var(--color-dark-void)),
+    color-mix(in oklab, var(--favorites-tv-light) 12%, var(--color-dark-void)) 30%,
+    color-mix(in oklab, var(--favorites-tv-light) 5.5%, var(--color-dark-void)) 55%,
+    color-mix(in oklab, var(--favorites-tv-light) 1.5%, var(--color-dark-void)) 80%,
+    var(--color-dark-void)
+  );
+
+  @variant short {
+    inset-block-start: 0;
+  }
+
+  @variant tv-floating {
+    inset-inline: 0;
+  }
+}
+
+/* Shadow of the tv cabinet on the wall, with the light from the left. The box
+   stays within the cabinet, as no shadow is drawn below the box itself */
+@utility favorites-tv-wall-shadow {
+  inset: 28% 3% 14%;
+  border-radius: 4cqw;
+  box-shadow: 3.5cqw 3cqw 5cqw 1.5cqw
+    color-mix(in oklab, var(--color-dark-void) 32%, transparent);
+}
+
+/* Colour of the light the screen casts on the shelf and the wall, it fades
+   between channels */
+@property --favorites-tv-light {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
 }
 
 /* Scanlines and darkened edges of a tube tv. The lines are finer on narrow

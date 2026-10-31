@@ -11,7 +11,8 @@
     supports-[animation-timeline:view()]:h-[calc(300lvh+1px)]
   ">
     <div #zoomFrame [style]="tvStyles"
-         [attr.data-channel-on]="isChannelOn() || null"
+         [attr.data-channel-on]="isChannelShown() || null"
+         [attr.data-off-air-zoomed-in]="isOffAirZoomedIn() || null"
          class="
            group/favorites sticky top-0 overflow-hidden
            *:w-full
@@ -19,8 +20,17 @@
       <section (focusin)="zoomInForFocusedOverlay($event)" class="
         absolute inset-x-0 z-10 h-svh px-5
         group-data-channel-on/favorites:z-30
+        group-data-off-air-zoomed-in/favorites:z-30
         landscape:h-lvh
       ">
+        <!-- Zoomed in, the screen would magnify the label beyond the view, so it
+             takes the place of the teletext instead -->
+        @if (isOffAirZoomedIn()) {
+          <p aria-hidden="true" i18n="@@favoritesTvOffAir" class="
+            favorites-tv-test-card-label absolute top-1/2 left-1/2
+            -translate-1/2 border-4 px-7 py-5 text-[clamp(1.5rem,8vw,3rem)]
+          ">Sendeschluss</p>
+        }
         <div class="
           flex h-full flex-col items-center gap-5
           *:relative *:flex *:max-w-full *:flex-auto *:items-center
@@ -28,7 +38,7 @@
           short:flex-row short:justify-center
         ">
           <div class="short:hidden"></div>
-          <app-favorites-overlay [isChannelOn]="isChannelOn()" class="
+          <app-favorites-overlay [isChannelOn]="isChannelShown()" class="
             w-96 opacity-0
             group-data-channel-on/favorites:opacity-100
             group-data-channel-on/favorites:transition-opacity
@@ -49,16 +59,34 @@
         </div>
       </section>
       <div class="h-lvh"></div>
-      <div #tvWrapper [attr.data-tv-loaded]="isTvImageLoaded() || null" class="
-        @container-size pointer-events-none absolute top-0 z-20 grid h-lvh
-        place-items-center opacity-0 transition-opacity duration-300
-        *:relative *:col-start-1 *:row-start-1
-        *:aspect-(--favorites-tv-aspect-ratio)
-        *:w-[min(100cqw,calc(100cqh*var(--favorites-tv-aspect-ratio)))]
-        group-data-channel-on/favorites:z-10
-        data-tv-loaded:opacity-100
-        tv-floating:pt-21 tv-floating:pb-[calc(100lvh-100svh+14.5rem)]
-      ">
+      <div #tvWrapper [attr.data-tv-loaded]="isTvImageLoaded() || null"
+           [style.--favorites-tv-light]="tvLightColor()" class="
+             @container-size pointer-events-none absolute top-0 z-20 grid h-lvh
+             place-items-center opacity-0 transition-opacity duration-300
+             *:relative *:col-start-1 *:row-start-1
+             *:aspect-(--favorites-tv-aspect-ratio)
+             *:w-[min(100cqw,calc(100cqh*var(--favorites-tv-aspect-ratio)))]
+             not-short:pt-21 not-short:pb-[calc(100lvh-100svh+6rem)]
+             group-data-channel-on/favorites:z-10
+             data-tv-loaded:opacity-100
+             tv-floating:pb-[calc(100lvh-100svh+14.5rem)]
+           ">
+        <!-- On the wall behind the tv: by day the shadow of its cabinet, in the
+             dark the colour of the picture on the screen -->
+        <div #tvLayer aria-hidden="true" class="
+          @container favorites-zoom will-change-transform
+        ">
+          <div class="
+            absolute favorites-tv-wall-shadow transition-opacity duration-700
+            dark:opacity-0
+          "></div>
+          <div [attr.data-tv-on]="isTvOn() || null" class="
+            absolute favorites-tv-wall-light hidden opacity-0
+            transition-[opacity,--favorites-tv-light] duration-700
+            data-tv-on:opacity-100
+            dark:block
+          "></div>
+        </div>
         <div #tvLayer class="
           favorites-zoom bg-dark-void-dark will-change-transform
           favorites-tv-screen-clip
@@ -73,9 +101,9 @@
               absolute top-1/2 left-1/2 h-lvh w-screen -translate-1/2
               favorites-zoom will-change-transform
             ">
-              @for (path of backgroundImageSlots(); track $index) {
+              @for (image of backgroundImageSlots(); track $index) {
                 @let isActive = $index === activeBackgroundImageSlot();
-                <img [ngSrc]="path"
+                <img [ngSrc]="image.path"
                      ngSrcset="2560w, 1920w" sizes="100vw" fill
                      [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
                      [attr.data-active]="isActive || null"
@@ -93,16 +121,83 @@
               }
               <div class="absolute inset-0 favorites-tv-crt"></div>
             </div>
+            @if (isOffAir()) {
+              <div aria-hidden="true" class="
+                @container favorites-tv-screen grid place-items-center
+                favorites-tv-test-card
+              ">
+                @if (!isOffAirZoomedIn()) {
+                  <p i18n="@@favoritesTvOffAir" class="
+                    favorites-tv-test-card-label border-[0.8cqw] px-[5cqw]
+                    py-[2.5cqw] text-[6cqw]
+                  ">Sendeschluss</p>
+                }
+                <div class="absolute inset-0 favorites-tv-crt"></div>
+              </div>
+            }
           </div>
+          <!-- The lit lamp beside the tv is mirrored in the glass of the tube -->
+          <div class="
+            favorites-tv-screen hidden transition-opacity duration-700
+            favorites-tv-screen-glare
+            group-data-channel-on/favorites:opacity-0
+            tv-sideboard:dark:block
+          "></div>
         </div>
+        <!-- On wide views the lowboard reaches out on both sides by this share of
+             the tv width, for the lamp and the flowers -->
         <div #tvLayer class="
           @container z-10 favorites-zoom will-change-transform
+          [--favorites-sideboard:0]
+          [--shelf-surface-depth:max(1.5rem,5cqw/var(--favorites-tv-aspect-ratio))]
+          tv-sideboard:[--favorites-sideboard:0.4]
         ">
-          <app-shelf aria-hidden="true" class="
-            absolute inset-x-0 bottom-[calc(-0.6%-0.75rem)] hidden
-            [--shelf-surface-depth:max(1.5rem,5cqw/var(--favorites-tv-aspect-ratio))]
-            tv-floating:block
-          " />
+          <!-- A lowboard: the shelf of the books as its top, below it a front with
+               three doors that reaches out of the view. Where the footer follows
+               below the tv, only the shelf is left, with its light below -->
+          <div aria-hidden="true" class="
+            absolute inset-x-[calc(var(--favorites-sideboard)*-100%)]
+            bottom-[calc(-0.6%-0.75rem)] hidden
+            not-short:block
+          ">
+            <app-shelf class="
+              block [--shelf-light-below:none]
+              tv-floating:[--shelf-light-below:block]
+            " />
+            <div class="
+              absolute inset-x-0 top-full grid h-lvh grid-cols-3
+              favorites-lowboard-front
+              *:border-l-2 *:border-(--lowboard-seam)
+              *:after:mx-auto *:after:mt-[3cqw] *:after:block
+              *:after:h-[max(3px,0.8cqw)] *:after:w-1/4 *:after:rounded-full
+              *:after:bg-(--lowboard-seam)
+              *:first:border-l-0
+              tv-floating:hidden
+            ">
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <!-- The part of the shelf top below the tv -->
+          <div aria-hidden="true" class="
+            pointer-events-none absolute inset-x-0 bottom-[-0.6%] hidden
+            h-(--shelf-surface-depth)
+            not-short:block
+          ">
+            <div class="
+              absolute inset-0 favorites-tv-shelf-shadow
+              dark:hidden
+            "></div>
+            <!-- In the dark the screen casts the colour of its picture on the shelf -->
+            <div [attr.data-tv-on]="isTvOn() || null" class="
+              absolute inset-x-[10%] inset-y-0 hidden
+              bg-[radial-gradient(ellipse_at_50%_0%,color-mix(in_oklab,var(--favorites-tv-light)_30%,transparent),transparent_70%)]
+              opacity-0 transition-[opacity,--favorites-tv-light] duration-700
+              data-tv-on:opacity-100
+              dark:block
+            "></div>
+          </div>
           <img [ngSrc]="tvImagePath"
                ngSrcset="2560w, 1920w" sizes="100vw" fill
                [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
@@ -110,6 +205,50 @@
                class="will-change-transform"
                i18n-alt="@@favoritesTvAlt"
                alt="Retro-Fernseher mit ausgeschnittenem Bildschirm.">
+          <button type="button" (click)="themeModeToggleService.toggleThemeMode()"
+                  [attr.aria-label]="lampSwitchLabel()" [title]="lampSwitchLabel()"
+                  class="
+                    pointer-events-auto absolute right-[calc(100%+7cqw)]
+                    bottom-[0.4%] hidden aspect-960/2057 h-[61cqw]
+                    cursor-pointer
+                    focus-visible:outline-4 focus-visible:outline-offset-4
+                    focus-visible:outline-vanilla
+                    tv-sideboard:block
+                  ">
+            <span class="
+              favorites-lowboard-shadow absolute
+              dark:hidden
+            "></span>
+            <span class="
+              favorites-lamp-light absolute opacity-0 transition-opacity
+              duration-700
+              dark:opacity-100
+            "></span>
+            <!-- Sizes leave room for the zoom, which enlarges the lamp with the tv -->
+            <img [ngSrc]="lampImagePath" ngSrcset="960w, 1600w" sizes="50vw" fill
+                 [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}" alt="">
+            <span class="
+              favorites-lamp-shade-glow absolute opacity-0 transition-opacity
+              duration-700
+              dark:opacity-100
+            "></span>
+          </button>
+          <!-- In front of the tv, so its flowers reach over the edge of the cabinet -->
+          <div aria-hidden="true" class="
+            absolute bottom-[0.4%] left-[calc(100%-4cqw)] hidden
+            aspect-1750/2672 w-[36cqw]
+            tv-sideboard:block
+          ">
+            <span class="absolute inset-y-0 right-[29%] left-[32%]">
+              <span class="
+                favorites-lowboard-shadow absolute
+                dark:hidden
+              "></span>
+            </span>
+            <img [ngSrc]="flowersImagePath" ngSrcset="960w, 1600w" sizes="65vw"
+                 fill [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
+                 alt="">
+          </div>
           <button type="button" (click)="zapChannel()" [disabled]="!isTvOn()"
                   i18n-aria-label="@@favoritesTvKnobLabel"
                   aria-label="Programm wechseln"
