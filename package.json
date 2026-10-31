@@ -42,6 +42,7 @@
     "@angular/localize": "22.2.3",
     "@cloudflare/vitest-plugin": "1.4.4",
     "@cloudflare/workers-types": "5.20261014.1",
+    "@stylistic/eslint-plugin": "5.10.0",
     "@typescript-eslint/eslint-plugin": "8.71.2",
     "@typescript-eslint/parser": "8.71.2",
     "angular-eslint": "22.6.0",

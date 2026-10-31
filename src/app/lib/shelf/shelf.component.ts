@@ -8,7 +8,7 @@ import {
   Renderer2,
   RendererStyleFlags2,
   signal,
-  viewChild
+  viewChild,
 } from '@angular/core';
 import { isPlatformBrowser, NgStyle } from '@angular/common';
 

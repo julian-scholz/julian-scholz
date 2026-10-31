@@ -9,7 +9,7 @@ import {
   PLATFORM_ID,
   signal,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
 } from '@angular/core';
 import { BookRecommendationsShelfComponent } from './shelf/shelf.component';
 import { BookModel } from './book/models/book.model';

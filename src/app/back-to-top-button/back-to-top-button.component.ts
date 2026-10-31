@@ -6,14 +6,14 @@ import {
   inject,
   PLATFORM_ID,
   signal,
-  DOCUMENT
+  DOCUMENT,
 } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import {
   isPlatformBrowser,
   NgStyle,
-  ViewportScroller
+  ViewportScroller,
 } from '@angular/common';
 import { fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';

@@ -4,7 +4,7 @@ import {
   inject,
   OnDestroy,
   PLATFORM_ID,
-  signal
+  signal,
 } from '@angular/core';
 import { faJs } from '@fortawesome/free-brands-svg-icons';
 import { isPlatformBrowser, NgStyle, ViewportScroller } from '@angular/common';

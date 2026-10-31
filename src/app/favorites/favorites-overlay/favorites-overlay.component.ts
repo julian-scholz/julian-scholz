@@ -5,12 +5,12 @@ import {
   inject,
   input,
   PLATFORM_ID,
-  signal
+  signal,
 } from '@angular/core';
 import { DatePipe, isPlatformBrowser, NgClass, NgStyle } from '@angular/common';
 import {
   FavoritesOverlayEntryModel,
-  FavoritesOverlayPageId
+  FavoritesOverlayPageId,
 } from './models/favorites-overlay-entry.model';
 import { tagList } from '../../../tag-list';
 

@@ -7,7 +7,7 @@ import {
   inject,
   signal,
   viewChild,
-  viewChildren
+  viewChildren,
 } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
 import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
@@ -75,7 +75,8 @@ export class FavoritesComponent {
 
   // The lamp on the lowboard is on in the dark and switches the theme mode
   protected readonly lampImagePath: string = `${environment.assetsUrl}/images/favorites/lamp/lamp`;
-  protected readonly flowersImagePath: string = `${environment.assetsUrl}/images/favorites/flowers/flowers`;  protected readonly lampSwitchLabel = computed(() =>
+  protected readonly flowersImagePath: string = `${environment.assetsUrl}/images/favorites/flowers/flowers`;
+  protected readonly lampSwitchLabel = computed(() =>
     this.themeModeToggleService.currentMode() === ThemeMode.DARK
       ? $localize`:@@favoritesLampOffLabel:Licht ausschalten`
       : $localize`:@@favoritesLampOnLabel:Licht einschalten`,

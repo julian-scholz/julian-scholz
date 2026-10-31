@@ -8,7 +8,7 @@ import {
   Renderer2,
   RendererStyleFlags2,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 

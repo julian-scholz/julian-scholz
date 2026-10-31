@@ -17,7 +17,7 @@ German is the source locale at `/`, English is served at `/en`.
 
 - `npm start` / `npm run start:en`: dev server (de / en)
 - `npm run build`: runs the tests, then the production build of both locales, then `postbuild.js` runs
-- `npm run lint`: ESLint (TypeScript, Angular templates, `better-tailwindcss`)
+- `npm run lint`: ESLint (TypeScript, Angular templates, `better-tailwindcss`). It also formats `.ts` through the `@stylistic` preset with a few overrides for the existing style. There is no Prettier on purpose, as it collapses the multi-line class strings that `better-tailwindcss` wraps
 - `npm run extract-i18n`: updates `src/locale/messages.json`
 - `npm test`: type-checks `functions` and `test` with `tsc` (Cloudflare only transpiles the functions), then vitest with `@cloudflare/vitest-plugin`, runs `test/**/*.test.ts` in the Workers runtime (currently the CSP middleware). It runs as `prebuild`, so a failing test stops the Cloudflare deploy. There are no Angular tests; the vitest target in `angular.json` is not set up
 - The husky pre-commit hook runs lint-staged (`ng lint --fix` on staged `.ts`/`.html`)

@@ -1,7 +1,7 @@
 import {
   Component,
   computed,
-  inject
+  inject,
 } from '@angular/core';
 import { ThemeModeToggleService } from './theme-mode-toggle.service';
 import { ThemeMode } from './utils/theme-mode-toggle.enum';

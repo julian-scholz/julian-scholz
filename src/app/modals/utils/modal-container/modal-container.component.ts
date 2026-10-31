@@ -5,7 +5,7 @@ import {
   inject,
   LOCALE_ID,
   viewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { faClose } from '@fortawesome/free-solid-svg-icons';

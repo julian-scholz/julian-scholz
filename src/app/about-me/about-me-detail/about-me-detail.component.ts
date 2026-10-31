@@ -5,7 +5,7 @@ import {
   input,
   signal,
   inject,
-  PLATFORM_ID
+  PLATFORM_ID,
 } from '@angular/core';
 import { isPlatformBrowser, NgClass } from '@angular/common';
 import { AboutMeDetailModel } from './models/about-me-detail.model';

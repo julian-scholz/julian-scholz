@@ -12,7 +12,7 @@ import {
   signal,
   untracked,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HeaderNavComponent } from './nav/nav.component';
@@ -152,12 +152,12 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
 
     this.ringCanvas.height =
       this.textCanvas.height =
-      this.canvas().nativeElement.height =
-        this.canvas().nativeElement.offsetHeight * this.dpi;
+        this.canvas().nativeElement.height =
+          this.canvas().nativeElement.offsetHeight * this.dpi;
     this.ringCanvas.width =
       this.textCanvas.width =
-      this.canvas().nativeElement.width =
-        this.canvas().nativeElement.offsetWidth * this.dpi;
+        this.canvas().nativeElement.width =
+          this.canvas().nativeElement.offsetWidth * this.dpi;
 
     this.textContext.fillStyle =
       this.themeMode() !== ThemeMode.DARK

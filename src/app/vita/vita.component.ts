@@ -11,7 +11,7 @@ import {
   RendererStyleFlags2,
   signal,
   viewChild,
-  DOCUMENT
+  DOCUMENT,
 } from '@angular/core';
 import {
   faChevronDown,
@@ -27,7 +27,7 @@ import {
   isPlatformBrowser,
   NgClass,
   NgStyle,
-  UpperCasePipe
+  UpperCasePipe,
 } from '@angular/common';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';

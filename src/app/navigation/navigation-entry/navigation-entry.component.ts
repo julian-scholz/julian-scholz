@@ -6,12 +6,12 @@ import {
   OnDestroy,
   PLATFORM_ID,
   signal,
-  DOCUMENT
+  DOCUMENT,
 } from '@angular/core';
 import {
   isPlatformBrowser,
   NgStyle,
-  ViewportScroller
+  ViewportScroller,
 } from '@angular/common';
 import { ScrollTrigger } from '../../lib/misc/gsap/gsap';
 import { NavigationEntryModel } from './models/navigation-entry.model';

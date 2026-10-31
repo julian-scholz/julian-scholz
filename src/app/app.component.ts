@@ -3,7 +3,7 @@ import {
   Component,
   inject,
   viewChild,
-  ViewContainerRef
+  ViewContainerRef,
 } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { NavigationComponent } from './navigation/navigation.component';
