@@ -27,9 +27,13 @@
         place-items-center pl-(--header-nav-logo-gap)
       " (click)="navigateToTop()"
               i18n-aria-label="@@backToTopLabel" aria-label="Zurück zum Seitenanfang">
+        <!-- The platter rim with strobe dots stands still, only the record turns -->
+        <span class="
+          grid size-10 place-items-center rounded-full border-2 border-dotted
+          border-snow/12
+        ">
         <span #record class="
-          relative grid size-10 place-items-center rounded-full
-          bg-dark-void-dark [--navigation-record-needle:1]
+          relative grid size-9 place-items-center rounded-full bg-dark-void-dark
           [--navigation-record-turn:0deg]
         ">
           <span aria-hidden="true" class="
@@ -48,16 +52,13 @@
             <span class="inset-2 border-transparent border-b-vanilla/25"></span>
           </span>
           <span aria-hidden="true" class="
-            absolute inset-0 scale-(--navigation-record-needle) rounded-full
-            border-2 border-vanilla-light
-          "></span>
-          <span aria-hidden="true" class="
             relative grid size-4
             rotate-[calc(var(--header-nav-intent,0)*360deg)] place-items-center
             rounded-full bg-vanilla text-[0.5rem] leading-none font-black
             tracking-tight text-dark-void transition-transform duration-500
             hover:[--header-nav-intent:1]
           ">JS</span>
+        </span>
         </span>
       </button>
       <ul class="m-0 flex list-none items-center px-(--header-nav-ul-gap) py-0">

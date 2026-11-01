@@ -36,12 +36,10 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
     inject(ViewportScroller);
 
   // The back-to-top button is a small record with a "JS" label. Scrolling
-  // turns its grooves, the label stays upright to stay readable. Its needle
-  // runs from the outer groove to the label as the page goes on
+  // turns its grooves, the label stays upright to stay readable
   private readonly record =
     viewChild.required<ElementRef<HTMLElement>>('record');
   private readonly recordTurnPerPixel: number = 360 / 600;
-  private readonly needleInnerScale: number = 0.45;
   protected readonly navigationEntries = navigationEntries;
 
   protected navbarExpanded = signal<number>(0);
@@ -67,27 +65,18 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
 
   private playRecord(): void {
     const angularWindow = this.angularDocument.defaultView!;
+    if (angularWindow.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
     const record = this.record().nativeElement;
-    const turns = !angularWindow.matchMedia('(prefers-reduced-motion: reduce)')
-      .matches;
-    listenToScroll(() => {
-      const scrollY = angularWindow.scrollY;
-      const maxScrollY =
-        this.angularDocument.documentElement.scrollHeight -
-        angularWindow.innerHeight;
-      const progress =
-        maxScrollY > 0 ? Math.min(Math.max(scrollY / maxScrollY, 0), 1) : 0;
-      record.style.setProperty(
-        '--navigation-record-needle',
-        String(1 - progress * (1 - this.needleInnerScale)),
-      );
-      if (turns) {
+    listenToScroll(
+      () =>
         record.style.setProperty(
           '--navigation-record-turn',
-          `${scrollY * this.recordTurnPerPixel}deg`,
-        );
-      }
-    }, this.destroyRef);
+          `${angularWindow.scrollY * this.recordTurnPerPixel}deg`,
+        ),
+      this.destroyRef,
+    );
   }
 
   protected navigateToTop(): void {

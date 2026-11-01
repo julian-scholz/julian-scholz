@@ -34,6 +34,11 @@
       [attr.stroke-dashoffset]="strokeDashoffset()"
     ></circle>
   </svg>
+  <!-- Inside the progress ring lie the grooves of a record -->
+  <span aria-hidden="true" class="
+    absolute size-10 rounded-full
+    bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.12)_0_0.5px,transparent_0.5px_1.75px)]
+  "></span>
   <button
     class="
       absolute flex size-12 items-center justify-center rounded-full
@@ -41,7 +46,11 @@
     "
     (click)="navigateToTop()" i18n-aria-label="@@backToTopLabel" aria-label="Zurück zum Seitenanfang"
     [attr.tabindex]="isVisible() ? null : -1">
-    <app-icon [icon]="faCaretUp" size="2xl" class="text-vanilla" />
+    <span class="
+      grid size-5 place-items-center rounded-full bg-vanilla text-xs
+      text-dark-void
+    ">
+      <app-icon [icon]="faCaretUp" />
+    </span>
   </button>
 </div>
-
