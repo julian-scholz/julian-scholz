@@ -8,7 +8,7 @@
     "start": "ng serve",
     "start:en": "ng serve --configuration en",
     "extract-i18n": "ng extract-i18n",
-    "prebuild": "npm test",
+    "prebuild": "npm run lint && npm test",
     "build": "ng build",
     "postbuild": "node postbuild.js",
     "watch": "ng build --watch --configuration development",
