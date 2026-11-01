@@ -43,7 +43,12 @@
               "src/_headers",
               "src/404.html",
               "src/robots.txt",
-              "src/sitemap.xml"
+              "src/sitemap.xml",
+              {
+                "glob": "security.txt",
+                "input": "src/.well-known",
+                "output": ".well-known"
+              }
             ],
             "styles": [
               "src/styles.css"

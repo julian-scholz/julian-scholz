@@ -7,7 +7,7 @@ const browserPath = path.join(import.meta.dirname, 'dist', 'julian-scholz', 'bro
 // The german source locale is built into the root, every other locale into its own directory
 const localeDirectories = ['', 'en'];
 // The assets are copied into every locale, these only matter at the root of the site
-const rootOnlyFiles = ['_headers', '404.html', 'robots.txt', 'sitemap.xml'];
+const rootOnlyFiles = ['_headers', '404.html', 'robots.txt', 'sitemap.xml', '.well-known'];
 
 for (const localeDirectory of localeDirectories) {
   const filesToDelete = ['index.csr.html', ...(localeDirectory ? rootOnlyFiles : [])];
@@ -15,7 +15,7 @@ for (const localeDirectory of localeDirectories) {
     const fileToDeletePath = path.join(browserPath, localeDirectory, fileToDelete);
     if (fs.existsSync(fileToDeletePath)) {
       try {
-        fs.rmSync(fileToDeletePath);
+        fs.rmSync(fileToDeletePath, { recursive: true });
         console.log(`${prefix} Deleted ${path.join(localeDirectory, fileToDelete)}.`);
       } catch (err) {
         console.error(`${prefix}`, err);

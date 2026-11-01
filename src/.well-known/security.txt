@@ -1,0 +1,6 @@
+Contact: https://github.com/julian-scholz/julian-scholz/security/advisories/new
+Contact: mailto:mail@julian-scholz.dev
+Expires: 2027-10-31T23:00:00.000Z
+Preferred-Languages: en, de
+Canonical: https://julian-scholz.dev/.well-known/security.txt
+Policy: https://github.com/julian-scholz/julian-scholz/blob/main/SECURITY.md
