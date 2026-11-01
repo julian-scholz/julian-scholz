@@ -1,9 +1,9 @@
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   inject,
   input,
-  OnDestroy,
   PLATFORM_ID,
   signal,
   DOCUMENT,
@@ -13,17 +13,20 @@ import {
   NgStyle,
   ViewportScroller,
 } from '@angular/common';
-import { ScrollTrigger } from '../../lib/misc/gsap/gsap';
 import { NavigationEntryModel } from './models/navigation-entry.model';
+import { listenToScroll } from '../../lib/misc/scroll/listen-to-scroll';
+
+type SectionPosition = 'before' | 'inside' | 'after';
 
 @Component({
   selector: 'app-navigation-entry',
   imports: [NgStyle],
   templateUrl: './navigation-entry.component.html',
 })
-export class NavigationEntryComponent implements AfterViewInit, OnDestroy {
+export class NavigationEntryComponent implements AfterViewInit {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
   private readonly viewportScroller: ViewportScroller =
     inject(ViewportScroller);
 
@@ -33,32 +36,47 @@ export class NavigationEntryComponent implements AfterViewInit, OnDestroy {
 
   protected opacity = signal<number>(0);
 
-  private gsapScrollTrigger: ScrollTrigger | undefined;
+  // The entry is active while its section covers the top of the view, 5px
+  // below the edge
+  private readonly sectionOffset: number = 5;
+  private sectionPosition: SectionPosition = 'before';
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.gsapScrollTrigger = ScrollTrigger.create({
-        trigger: `#${this.navigationEntry().id}`,
-        start: 'top-=5 top',
-        endTrigger: `#${this.navigationEntry().id}`,
-        end: 'bottom-=5 top',
-        scrub: true,
-        onEnter: () => {
-          this.opacity.set(1);
-          this.replaceCurrentState(`#${this.navigationEntry().id}`);
-        },
-        onEnterBack: () => {
-          this.opacity.set(1);
-          this.replaceCurrentState(`#${this.navigationEntry().id}`);
-        },
-        onLeave: () => this.opacity.set(this.navigationLastEntry() ? 1 : 0),
-        onLeaveBack: () => {
-          this.opacity.set(0);
-          if (this.navigationEntryIndex() === 0) {
-            this.replaceCurrentState('');
-          }
-        },
-      });
+      const section = this.angularDocument.getElementById(
+        this.navigationEntry().id,
+      )!;
+      listenToScroll(() => this.updateSectionPosition(section), this.destroyRef);
+    }
+  }
+
+  private updateSectionPosition(section: HTMLElement): void {
+    const { top, bottom } = section.getBoundingClientRect();
+    const sectionPosition: SectionPosition =
+      top >= this.sectionOffset
+        ? 'before'
+        : bottom > this.sectionOffset
+          ? 'inside'
+          : 'after';
+    if (sectionPosition === this.sectionPosition) {
+      return;
+    }
+    this.sectionPosition = sectionPosition;
+
+    const location = this.angularDocument.defaultView!.location;
+    const sectionHash = `#${this.navigationEntry().id}`;
+    if (sectionPosition === 'inside') {
+      this.opacity.set(1);
+      this.replaceCurrentState(sectionHash);
+    } else {
+      this.opacity.set(
+        sectionPosition === 'after' && this.navigationLastEntry() ? 1 : 0,
+      );
+      // A section that is entered next sets its own hash, also when its
+      // listener ran first
+      if (location.hash === sectionHash) {
+        this.replaceCurrentState(location.pathname + location.search);
+      }
     }
   }
 
@@ -68,9 +86,5 @@ export class NavigationEntryComponent implements AfterViewInit, OnDestroy {
 
   protected navigateTo(elementId: string) {
     this.viewportScroller.scrollToAnchor(elementId);
-  }
-
-  ngOnDestroy(): void {
-    this.gsapScrollTrigger?.kill();
   }
 }

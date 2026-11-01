@@ -5,6 +5,7 @@ import {
   OnDestroy,
   PLATFORM_ID,
   signal,
+  DOCUMENT,
 } from '@angular/core';
 import { faJs } from '@fortawesome/free-brands-svg-icons';
 import { isPlatformBrowser, NgStyle, ViewportScroller } from '@angular/common';
@@ -13,7 +14,6 @@ import { LanguageSwitchComponent } from '../lib/language-switch/language-switch.
 import { navigationEntries } from '../app.routes';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { NavigationEntryComponent } from './navigation-entry/navigation-entry.component';
-import { ScrollTrigger } from '../lib/misc/gsap/gsap';
 import { NavigationEntryModel } from './navigation-entry/models/navigation-entry.model';
 import { IconComponent } from '../lib/icon/icon.component';
 
@@ -30,6 +30,7 @@ import { IconComponent } from '../lib/icon/icon.component';
 })
 export class NavigationComponent implements AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
+  private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly viewportScroller: ViewportScroller =
     inject(ViewportScroller);
 
@@ -38,7 +39,7 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
 
   protected navbarExpanded = signal<number>(0);
 
-  private gsapScrollTrigger: ScrollTrigger | undefined;
+  private headerIntersectionObserver: IntersectionObserver | undefined;
 
   protected readonly sortedRouteEntries: NavigationEntryModel[] = Object.values(
     this.navigationEntries,
@@ -46,14 +47,13 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.gsapScrollTrigger = ScrollTrigger.create({
-        trigger: 'header',
-        scrub: true,
-        onEnter: () => this.navbarExpanded.set(0),
-        onEnterBack: () => this.navbarExpanded.set(0),
-        onLeave: () => this.navbarExpanded.set(1),
-        onLeaveBack: () => this.navbarExpanded.set(1),
-      });
+      // The navbar expands once the header is out of view
+      this.headerIntersectionObserver = new IntersectionObserver(([entry]) =>
+        this.navbarExpanded.set(entry.isIntersecting ? 0 : 1),
+      );
+      this.headerIntersectionObserver.observe(
+        this.angularDocument.querySelector('header')!,
+      );
     }
   }
 
@@ -62,6 +62,6 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gsapScrollTrigger?.kill();
+    this.headerIntersectionObserver?.disconnect();
   }
 }

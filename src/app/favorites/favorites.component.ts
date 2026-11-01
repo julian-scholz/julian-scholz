@@ -10,7 +10,8 @@ import {
   viewChildren,
 } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
-import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
+import { getRandomItem } from '../lib/misc/random/random';
+import { listenToScroll } from '../lib/misc/scroll/listen-to-scroll';
 import { FavoritesOverlayComponent } from './favorites-overlay/favorites-overlay.component';
 import { FooterComponent } from '../footer/footer.component';
 import { environment } from '../../environment/environment';
@@ -127,7 +128,6 @@ export class FavoritesComponent {
   private readonly zoomPerspective: number = 500;
   private readonly zoomDepth: number = 250;
   private readonly backgroundZoomScale: number = 1.4;
-  private readonly zoomEase = gsap.parseEase('power1.inOut');
   private readonly zoomSteps: number = 20;
   private readonly finalApparentZoomScale: number = this.getApparentZoomScale(1);
 
@@ -141,7 +141,7 @@ export class FavoritesComponent {
   private readonly backgroundLayer =
     viewChild.required<ElementRef<HTMLElement>>('backgroundLayer');
 
-  private scrollTrigger: ScrollTrigger | undefined;
+  private isZoomSupported = false;
   private zoomAnimations: Animation[] = [];
 
   constructor() {
@@ -151,7 +151,8 @@ export class FavoritesComponent {
         firstImage,
         this.getRandomBackgroundImage([firstImage]),
       ]);
-      if ('ViewTimeline' in window) {
+      this.isZoomSupported = 'ViewTimeline' in window;
+      if (this.isZoomSupported) {
         this.observeZoomProgress();
       }
       this.observeTvVisibility();
@@ -163,8 +164,8 @@ export class FavoritesComponent {
   // reach what is already visible
   protected zoomInForFocusedOverlay(event: FocusEvent): void {
     const isKeyboardFocus = (event.target as Element).matches(':focus-visible');
-    if (this.scrollTrigger && isKeyboardFocus && !this.isChannelOn()) {
-      this.scrollTrigger.scroll(this.scrollTrigger.end);
+    if (this.isZoomSupported && isKeyboardFocus && !this.isChannelOn()) {
+      this.zoomTrack().nativeElement.scrollIntoView({ block: 'end' });
     }
   }
 
@@ -188,7 +189,7 @@ export class FavoritesComponent {
           this.stopOffAirCountdown = undefined;
           this.switchBackgroundImage();
         }
-        if (!this.scrollTrigger) {
+        if (!this.isZoomSupported) {
           this.setChannelOn(this.isTvOn());
         }
       },
@@ -227,20 +228,23 @@ export class FavoritesComponent {
     };
   }
 
-  // The frame stays in view by css (sticky) while the track scrolls past, the
-  // scroll trigger follows the same distance for the channel and rebuilds the
-  // zoom whenever the layout changes
+  // The frame stays in view by css (sticky) while the track scrolls past. The
+  // channel follows the same distance, from the top of the track at the top
+  // of the view to its bottom at the bottom of the view. The zoom is rebuilt
+  // whenever the tv changes its size
   private observeZoomProgress(): void {
-    this.scrollTrigger = ScrollTrigger.create({
-      trigger: this.zoomTrack().nativeElement,
-      start: 'top top',
-      end: 'bottom bottom',
-      onRefresh: () => this.animateZoom(),
-      onUpdate: (self) =>
-        this.setChannelOn(self.progress >= this.channelOnProgress),
-    });
+    const zoomTrack = this.zoomTrack().nativeElement;
+    listenToScroll(() => {
+      const { top, height } = zoomTrack.getBoundingClientRect();
+      const progress = -top / (height - window.innerHeight);
+      this.setChannelOn(progress >= this.channelOnProgress);
+    }, this.destroyRef);
+
+    const resizeObserver = new ResizeObserver(() => this.animateZoom());
+    resizeObserver.observe(this.tvWrapper().nativeElement);
+    resizeObserver.observe(this.tvLayers()[0].nativeElement);
     this.destroyRef.onDestroy(() => {
-      this.scrollTrigger?.kill();
+      resizeObserver.disconnect();
       this.cancelZoomAnimations();
     });
   }
@@ -251,7 +255,7 @@ export class FavoritesComponent {
     const { finalTvScale, tvCenteringOffset } = this.measureTvLayout();
     const steps = Array.from({ length: this.zoomSteps + 1 }, (_, step) =>
       this.getZoomStep(
-        this.zoomEase(step / this.zoomSteps),
+        this.easeZoom(step / this.zoomSteps),
         finalTvScale,
         tvCenteringOffset,
       ),
@@ -331,6 +335,13 @@ export class FavoritesComponent {
     };
   }
 
+  // Quadratic ease in and out
+  private easeZoom(progress: number): number {
+    return progress < 0.5
+      ? 2 * progress ** 2
+      : 1 - 2 * (1 - progress) ** 2;
+  }
+
   private getApparentZoomScale(progress: number): number {
     return (
       (1 + (this.zoomScale - 1) * progress) *
@@ -359,7 +370,7 @@ export class FavoritesComponent {
   private getRandomBackgroundImage(
     excludedImages: BackgroundImage[] = [],
   ): BackgroundImage {
-    return gsap.utils.random(
+    return getRandomItem(
       this.backgroundImages.filter((image) => !excludedImages.includes(image)),
     );
   }

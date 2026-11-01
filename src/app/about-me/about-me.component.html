@@ -1,5 +1,5 @@
 <section class="px-5 py-0">
-  <div #scrollTrigger [ngStyle]="{
+  <div #scrollTrack [ngStyle]="{
     '--about-me-content-length': contentLength,
     '--about-me-buffer': buffer,
     '--about-me-ppc': ppc,
@@ -22,7 +22,7 @@
       <div class="text-center" aria-hidden="true">
         @for (detailListEntry of detailList; track detailListEntry) {
           <app-about-me-detail
-            [scrollTrigger]="scrollTrigger"
+            [scrolledDistance]="scrolledDistance()"
             [detail]="detailListEntry"
             [ppc]="ppc"
           />

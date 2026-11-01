@@ -9,7 +9,7 @@ German is the source locale at `/`, English is served at `/en`.
 - Static prerender (`prerender: true`, `ssr: false`), no hydration
 - `@angular/localize` with `$localize`/`i18n` and explicit `@@ids`
 - Tailwind CSS v4 via PostCSS, configured in `src/styles.css` (no tailwind config file)
-- GSAP 3 with ScrollTrigger, imported only via `src/app/lib/misc/gsap/gsap.ts`
+- No animation library: scroll states are measured live through `listenToScroll` (`src/app/lib/misc/scroll`) or an `IntersectionObserver`, random helpers live in `src/app/lib/misc/random`
 - Node version from `.nvmrc`, TypeScript ~6.0
 - Hosting: Cloudflare Pages (`wrangler.toml`), Pages Function `functions/_middleware.ts` (TypeScript, bundled by Cloudflare on deploy)
 
@@ -58,9 +58,9 @@ German is the source locale at `/`, English is served at `/en`.
 
 ## Favorites zoom (non-obvious)
 
-- The tv zoom runs as CSS `position: sticky` plus Web Animations on a `ViewTimeline`. ScrollTrigger only switches the channel at 60 % and rebuilds the zoom on refresh
+- The tv zoom runs as CSS `position: sticky` plus Web Animations on a `ViewTimeline`. A scroll listener only switches the channel at 60 % of the track, a `ResizeObserver` on the tv wrapper and the first tv layer rebuilds the zoom keyframes. The observer relies on the tv wrapper being sized in `lvh`/`svh`, which stay put while the iPhone address bar moves; with `dvh` or `%` it would rebuild the zoom on every address bar step
 - The zoom animates the registered variables `--favorites-zoom-offset`/`--favorites-zoom-scale` (utility `favorites-zoom` in `src/styles.css`), not `transform`. Safari (26.4+) runs scroll-driven `transform` animations in its scrolling process, which made the zoom jump on iPhone whenever scrolling started. The variables keep it on the main thread, at the price of about 60 fps on ProMotion devices, which was accepted. Do not switch the keyframes back to `transform`
 - Except in short views (`short`), the tv stands on a lowboard in the flat style of the book shelf: `app-shelf` is its top, below it a front with three doors (`favorites-lowboard-front`) reaches out of the view. The bottom padding of the tv wrapper keeps room for it, and the zoom makes up for the smaller tv (`measureTvLayout`). In `tv-floating` (narrower than the tv) only the shelf is left, with its light below (`--shelf-light-below`), and the footer is visible from the start below it; the padding reserves its height. Otherwise the footer only comes with the channel, where it and the teletext share the column with a spacer
 - Browsers without `ViewTimeline` get no zoom; there the channel follows the tv-on state
-- ScrollTrigger refreshes on resize by itself. If content above the section changes height without a resize, call `ScrollTrigger.refresh()` right where that happens, not through a global observer
+- Scroll positions are measured on every scroll, nothing caches them, so content above the section that changes its height needs no refresh
 - Safari on iPhone is the critical target and cannot be tested locally. Name such changes as unverified

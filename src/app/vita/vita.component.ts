@@ -1,10 +1,8 @@
 import {
-  afterNextRender,
   AfterViewInit,
   Component,
   ElementRef,
   inject,
-  Injector,
   OnDestroy,
   PLATFORM_ID,
   Renderer2,
@@ -30,7 +28,7 @@ import {
   UpperCasePipe,
 } from '@angular/common';
 import { IconDefinition } from '@fortawesome/fontawesome-common-types';
-import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
+import { getRandomItem } from '../lib/misc/random/random';
 import { IconComponent } from '../lib/icon/icon.component';
 
 @Component({
@@ -42,7 +40,6 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly renderer: Renderer2 = inject(Renderer2);
-  private readonly injector: Injector = inject(Injector);
   private markerIntersectionObserver: IntersectionObserver | undefined;
   private iconIntersectionObserver: IntersectionObserver | undefined;
   private titleIntersectionObserver: IntersectionObserver | undefined;
@@ -104,19 +101,12 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
         documentStyles.getPropertyValue('--color-vanilla-darker'),
         documentStyles.getPropertyValue('--color-vanilla-extra-dark'),
       ];
-      const getRandomHighlightColorIndex: () => number = gsap.utils.random(
-        0,
-        highlightColors.length - 1,
-        1,
-        true,
-      );
 
       this.markerIntersectionObserver = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {
             if (entry.isIntersecting) {
-              const newHighlightColor =
-                highlightColors[getRandomHighlightColorIndex()];
+              const newHighlightColor = getRandomItem(highlightColors);
               this.renderer.setStyle(
                 entry.target,
                 '--vita-entry-mark-highlight-color-light',
@@ -166,27 +156,6 @@ export class VitaComponent implements AfterViewInit, OnDestroy {
       }
       return updated;
     });
-
-    if (!this.isDescriptionHeightAnimated()) {
-      afterNextRender(() => ScrollTrigger.refresh(true), {
-        injector: this.injector,
-      });
-    }
-  }
-
-  protected refreshScrollTriggersAfterResize(event: TransitionEvent): void {
-    if (event.target === event.currentTarget && event.propertyName === 'height') {
-      ScrollTrigger.refresh(true);
-    }
-  }
-
-  private isDescriptionHeightAnimated(): boolean {
-    const angularWindow = this.angularDocument.defaultView!;
-
-    return (
-      angularWindow.CSS.supports('interpolate-size', 'allow-keywords') &&
-      !angularWindow.matchMedia('(prefers-reduced-motion: reduce)').matches
-    );
   }
 
   private initIconIgnition(): void {

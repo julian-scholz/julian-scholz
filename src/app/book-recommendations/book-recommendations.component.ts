@@ -1,11 +1,9 @@
 import {
-  afterNextRender,
   AfterViewInit,
   Component,
   DestroyRef,
   ElementRef,
   inject,
-  Injector,
   PLATFORM_ID,
   signal,
   viewChild,
@@ -16,7 +14,7 @@ import { BookModel } from './book/models/book.model';
 import { isPlatformBrowser } from '@angular/common';
 import { debounceTime, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { gsap, ScrollTrigger } from '../lib/misc/gsap/gsap';
+import { shuffle } from '../lib/misc/random/random';
 import { environment } from '../../environment/environment';
 
 @Component({
@@ -28,7 +26,6 @@ export class BookRecommendationsComponent implements AfterViewInit {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
   private readonly destroyRef: DestroyRef = inject(DestroyRef);
-  private readonly injector: Injector = inject(Injector);
 
   private readonly section = viewChild.required<ElementRef<HTMLElement>>(
     'bookRecommendationsSection',
@@ -130,7 +127,7 @@ export class BookRecommendationsComponent implements AfterViewInit {
     let currentWidthForRow = minNeededWidthForRow;
 
     if (shuffleBookOrder) {
-      gsap.utils.shuffle(this.bookDetails);
+      shuffle(this.bookDetails);
     }
     for (let i = 0; i < this.bookDetails.length; i++) {
       const widthForNewBook = this.bookWidth + (i === 0 ? 0 : this.bookGap);
@@ -156,10 +153,6 @@ export class BookRecommendationsComponent implements AfterViewInit {
 
     if (!this.isShelvesLengthEqual(this.shelveRows(), newShelveRows)) {
       this.shelveRows.set(newShelveRows);
-
-      afterNextRender(() => ScrollTrigger.refresh(true), {
-        injector: this.injector,
-      });
     }
   }
 

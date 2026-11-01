@@ -104,9 +104,7 @@
         <div [id]="'vita-entry-description-' + $index"
              [ngClass]="isExpanded ? 'h-auto' : '
                h-[3lh] mask-[linear-gradient(to_bottom,black_30%,transparent)]
-             '"
-             (transitionend)="refreshScrollTriggersAfterResize($event)"
-             class="
+             '"             class="
                mx-[-0.15em] overflow-hidden px-[0.15em] text-base font-normal
                transition-[height] duration-500 ease-in-out
                [interpolate-size:allow-keywords]

@@ -1,7 +1,16 @@
-import { Component } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  DestroyRef,
+  ElementRef,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { NgStyle } from '@angular/common';
 import { AboutMeDetailModel } from './about-me-detail/models/about-me-detail.model';
 import { AboutMeDetailComponent } from './about-me-detail/about-me-detail.component';
+import { listenToScroll } from '../lib/misc/scroll/listen-to-scroll';
 
 @Component({
   selector: 'app-about-me',
@@ -9,6 +18,8 @@ import { AboutMeDetailComponent } from './about-me-detail/about-me-detail.compon
   templateUrl: './about-me.component.html',
 })
 export class AboutMeComponent {
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
+
   protected readonly buffer: number = 40;
   protected readonly ppc: number = 10;
   protected readonly pad: number = 8;
@@ -32,6 +43,11 @@ export class AboutMeComponent {
 
   protected readonly detailList: AboutMeDetailModel[];
 
+  private readonly scrollTrack =
+    viewChild.required<ElementRef<HTMLElement>>('scrollTrack');
+  // How far the top of the track has been scrolled past the top of the view
+  protected readonly scrolledDistance = signal<number>(-Infinity);
+
   constructor() {
     this.detailList = [];
 
@@ -53,6 +69,15 @@ export class AboutMeComponent {
 
         wordSum += word.length + 1;
       });
+    });
+
+    afterNextRender(() => {
+      const scrollTrack = this.scrollTrack().nativeElement;
+      listenToScroll(
+        () =>
+          this.scrolledDistance.set(-scrollTrack.getBoundingClientRect().top),
+        this.destroyRef,
+      );
     });
   }
 }

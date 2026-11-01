@@ -21,7 +21,7 @@ import { RingModel } from './models/ring.model';
 import { ThemeModeToggleService } from '../lib/theme-mode-toggle/theme-mode-toggle.service';
 import { debounceTime, fromEvent } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { gsap } from '../lib/misc/gsap/gsap';
+import { getRandomNumber } from '../lib/misc/random/random';
 
 @Component({
   selector: 'app-header',
@@ -52,8 +52,12 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   private ringCanvas!: HTMLCanvasElement;
   private ringContext!: CanvasRenderingContext2D;
 
-  private gsapAnimations: gsap.core.Tween[] = [];
-  private gsapTickerCallback: gsap.Callback | undefined;
+  // The rings turn at 24 fps, their time only runs while the canvas is visible
+  private readonly ringFrameInterval: number = 1000 / 24;
+  private ringFrameId: number | undefined;
+  private nextRingFrameTime = 0;
+  private lastRingFrameTime: number | undefined;
+  private ringTime = 0;
   private canvasIntersectionObserver: IntersectionObserver | undefined;
   private isCanvasVisible = true;
   private prefersReducedMotion = false;
@@ -103,12 +107,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         this.startRingAnimations(documentStyles);
 
         this.canvasIntersectionObserver = new IntersectionObserver(
-          ([entry]) => {
-            this.isCanvasVisible = entry.isIntersecting;
-            this.gsapAnimations.forEach((animation) =>
-              animation.paused(!this.isCanvasVisible),
-            );
-          },
+          ([entry]) => (this.isCanvasVisible = entry.isIntersecting),
         );
         this.canvasIntersectionObserver.observe(this.canvas().nativeElement);
 
@@ -118,16 +117,10 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.gsapTickerCallback) {
-      gsap.ticker.remove(this.gsapTickerCallback);
+    if (this.ringFrameId !== undefined) {
+      cancelAnimationFrame(this.ringFrameId);
     }
-    this.resetGsapAnimations();
     this.canvasIntersectionObserver?.disconnect();
-  }
-
-  private resetGsapAnimations() {
-    this.gsapAnimations.forEach((animation) => animation.kill());
-    this.gsapAnimations = [];
   }
 
   private initComponent(documentStyles: CSSStyleDeclaration) {
@@ -176,14 +169,16 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     for (let i = 0; i < 150; i++) {
       this.rings.push({
         id: i,
-        saturation: gsap.utils.random(0, 100, 1),
-        lightness: gsap.utils.random(
+        saturation: getRandomNumber(0, 100, 1),
+        lightness: getRandomNumber(
           0,
           this.themeMode() !== ThemeMode.DARK ? 100 : 70,
           1,
         ),
-        spread: gsap.utils.random(75, 359, 1),
-        angle: this.prefersReducedMotion ? gsap.utils.random(0, 359, 1) : 0,
+        spread: getRandomNumber(75, 359, 1),
+        angle: this.prefersReducedMotion ? getRandomNumber(0, 359, 1) : 0,
+        duration: getRandomNumber(5, 20, 0.2),
+        timeOffset: getRandomNumber(1, 5, 0.1),
       });
     }
 
@@ -202,20 +197,8 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     this.context.drawImage(this.textCanvas, 0, 0);
     this.context.globalCompositeOperation = 'source-in';
 
-    this.resetGsapAnimations();
+    this.ringTime = 0;
     this.isRingRedrawPending = true;
-    if (!this.prefersReducedMotion) {
-      this.gsapAnimations = this.rings.map((ring) =>
-        gsap.to(ring, {
-          angle: 360,
-          repeat: -1,
-          ease: 'none',
-          duration: () => gsap.utils.random(5, 20, 0.2),
-          delay: () => gsap.utils.random(-5, -1, 0.1),
-          paused: !this.isCanvasVisible,
-        }),
-      );
-    }
   }
 
   private initRingAnimations(
@@ -286,18 +269,41 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
       documentStyles.getPropertyValue('--color-vanilla-light'),
     ];
 
-    gsap.ticker.fps(24);
-    this.gsapTickerCallback = gsap.ticker.add(() => {
-      if (
-        this.isCanvasVisible &&
-        (!this.prefersReducedMotion || this.isRingRedrawPending)
-      ) {
-        this.initRingAnimations(
-          lightGradientColorStops,
-          darkGradientFirstColorStops,
-        );
-        this.isRingRedrawPending = false;
+    const drawRingFrame = (now: number): void => {
+      this.ringFrameId = requestAnimationFrame(drawRingFrame);
+      if (now < this.nextRingFrameTime) {
+        return;
       }
-    });
+      this.nextRingFrameTime = Math.max(
+        this.nextRingFrameTime + this.ringFrameInterval,
+        now,
+      );
+      // A long gap, e.g. from a hidden tab, counts as one frame
+      const elapsed = Math.min(
+        now - (this.lastRingFrameTime ?? now),
+        2 * this.ringFrameInterval,
+      );
+      this.lastRingFrameTime = now;
+
+      if (
+        !this.isCanvasVisible ||
+        (this.prefersReducedMotion && !this.isRingRedrawPending)
+      ) {
+        return;
+      }
+      if (!this.prefersReducedMotion) {
+        this.ringTime += elapsed / 1000;
+        for (const ring of this.rings) {
+          ring.angle =
+            (((this.ringTime + ring.timeOffset) / ring.duration) % 1) * 360;
+        }
+      }
+      this.initRingAnimations(
+        lightGradientColorStops,
+        darkGradientFirstColorStops,
+      );
+      this.isRingRedrawPending = false;
+    };
+    this.ringFrameId = requestAnimationFrame(drawRingFrame);
   }
 }
