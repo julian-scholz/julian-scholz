@@ -1,26 +1,26 @@
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
+  ElementRef,
   inject,
   OnDestroy,
   PLATFORM_ID,
   signal,
+  viewChild,
   DOCUMENT,
 } from '@angular/core';
-import { faJs } from '@fortawesome/free-brands-svg-icons';
 import { isPlatformBrowser, NgStyle, ViewportScroller } from '@angular/common';
 import { ThemeModeToggleComponent } from '../lib/theme-mode-toggle/theme-mode-toggle.component';
 import { LanguageSwitchComponent } from '../lib/language-switch/language-switch.component';
 import { navigationEntries } from '../app.routes';
-import { IconDefinition } from '@fortawesome/fontawesome-common-types';
 import { NavigationEntryComponent } from './navigation-entry/navigation-entry.component';
 import { NavigationEntryModel } from './navigation-entry/models/navigation-entry.model';
-import { IconComponent } from '../lib/icon/icon.component';
+import { listenToScroll } from '../lib/misc/scroll/listen-to-scroll';
 
 @Component({
   selector: 'app-navigation',
   imports: [
-    IconComponent,
     NgStyle,
     ThemeModeToggleComponent,
     NavigationEntryComponent,
@@ -31,10 +31,17 @@ import { IconComponent } from '../lib/icon/icon.component';
 export class NavigationComponent implements AfterViewInit, OnDestroy {
   private readonly platformId: object = inject(PLATFORM_ID);
   private readonly angularDocument: Document = inject(DOCUMENT);
+  private readonly destroyRef: DestroyRef = inject(DestroyRef);
   private readonly viewportScroller: ViewportScroller =
     inject(ViewportScroller);
 
-  protected readonly faJs: IconDefinition = faJs;
+  // The back-to-top button is a small record with a "JS" label. Scrolling
+  // turns its grooves, the label stays upright to stay readable. Its needle
+  // runs from the outer groove to the label as the page goes on
+  private readonly record =
+    viewChild.required<ElementRef<HTMLElement>>('record');
+  private readonly recordTurnPerPixel: number = 360 / 600;
+  private readonly needleInnerScale: number = 0.45;
   protected readonly navigationEntries = navigationEntries;
 
   protected navbarExpanded = signal<number>(0);
@@ -54,7 +61,33 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
       this.headerIntersectionObserver.observe(
         this.angularDocument.querySelector('header')!,
       );
+      this.playRecord();
     }
+  }
+
+  private playRecord(): void {
+    const angularWindow = this.angularDocument.defaultView!;
+    const record = this.record().nativeElement;
+    const turns = !angularWindow.matchMedia('(prefers-reduced-motion: reduce)')
+      .matches;
+    listenToScroll(() => {
+      const scrollY = angularWindow.scrollY;
+      const maxScrollY =
+        this.angularDocument.documentElement.scrollHeight -
+        angularWindow.innerHeight;
+      const progress =
+        maxScrollY > 0 ? Math.min(Math.max(scrollY / maxScrollY, 0), 1) : 0;
+      record.style.setProperty(
+        '--navigation-record-needle',
+        String(1 - progress * (1 - this.needleInnerScale)),
+      );
+      if (turns) {
+        record.style.setProperty(
+          '--navigation-record-turn',
+          `${scrollY * this.recordTurnPerPixel}deg`,
+        );
+      }
+    }, this.destroyRef);
   }
 
   protected navigateToTop(): void {

@@ -17,10 +17,17 @@
       sticky -top-px z-40 w-full
       sm:z-auto
     "/>
-    <span class="
-      relative mr-2 ml-auto inline-block text-transparent
-      sm:mr-[10vw]
-    ">
+    <span #ringArea
+          (pointerdown)="startScratch($event)"
+          (pointermove)="moveScratch($event)"
+          (pointerup)="endScratch($event)"
+          (pointercancel)="cancelScratch()"
+          class="
+            relative mr-2 ml-auto inline-block cursor-grab touch-pan-y
+            text-transparent
+            active:cursor-grabbing
+            sm:mr-[10vw]
+          ">
       <span>{{ secondLine }}</span>
       <canvas #canvas
               [ngStyle]="{

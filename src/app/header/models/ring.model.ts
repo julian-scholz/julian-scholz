@@ -3,7 +3,6 @@ export interface RingModel {
   saturation: number;
   lightness: number;
   spread: number;
-  angle: number;
   // Seconds per turn, and how far into its first turn the ring starts
   duration: number;
   timeOffset: number;

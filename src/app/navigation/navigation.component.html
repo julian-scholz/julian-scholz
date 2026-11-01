@@ -22,15 +22,43 @@
            ease-header-nav-function
          "
     >
-      <button class="grid w-12 place-items-center pl-(--header-nav-logo-gap)" (click)="navigateToTop()"
+      <button class="
+        grid w-[calc(--spacing(10)+var(--header-nav-logo-gap))]
+        place-items-center pl-(--header-nav-logo-gap)
+      " (click)="navigateToTop()"
               i18n-aria-label="@@backToTopLabel" aria-label="Zurück zum Seitenanfang">
-        <app-icon [icon]="faJs" size="xl"
-                  class="
-                    rotate-[calc(var(--header-nav-intent,0)*360deg)]
-                    text-vanilla transition-transform duration-500
-                    hover:[--header-nav-intent:1]
-                    focus-visible:[--header-nav-intent:1]
-                  " />
+        <span #record class="
+          relative grid size-10 place-items-center rounded-full
+          bg-dark-void-dark [--navigation-record-needle:1]
+          [--navigation-record-turn:0deg]
+        ">
+          <span aria-hidden="true" class="
+            absolute inset-0.5 rounded-full
+            bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.14)_0_0.5px,transparent_0.5px_1.75px)]
+          "></span>
+          <span aria-hidden="true" class="
+            absolute inset-0 rounded-full
+            bg-[conic-gradient(from_-60deg,transparent_0_6%,rgb(255_255_255/0.22)_12%,transparent_18%_56%,rgb(255_255_255/0.22)_62%,transparent_68%)]
+          "></span>
+          <span aria-hidden="true" class="
+            absolute inset-0 rotate-(--navigation-record-turn)
+            *:absolute *:rounded-full *:border
+          ">
+            <span class="inset-1 border-transparent border-t-vanilla/35"></span>
+            <span class="inset-2 border-transparent border-b-vanilla/25"></span>
+          </span>
+          <span aria-hidden="true" class="
+            absolute inset-0 scale-(--navigation-record-needle) rounded-full
+            border-2 border-vanilla-light
+          "></span>
+          <span aria-hidden="true" class="
+            relative grid size-4
+            rotate-[calc(var(--header-nav-intent,0)*360deg)] place-items-center
+            rounded-full bg-vanilla text-[0.5rem] leading-none font-black
+            tracking-tight text-dark-void transition-transform duration-500
+            hover:[--header-nav-intent:1]
+          ">JS</span>
+        </span>
       </button>
       <ul class="m-0 flex list-none items-center px-(--header-nav-ul-gap) py-0">
         @for (navigationEntry of sortedRouteEntries; track navigationEntry; let i = $index; let isLast = $last) {
