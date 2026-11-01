@@ -8,6 +8,7 @@
   ],
   "timezone": "Europe/Berlin",
   "schedule": ["* * 1 * *"],
+  "prHourlyLimit": 0,
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": ["* * 1 * *"],
@@ -19,7 +20,7 @@
   },
   "packageRules": [
     {
-      "matchDatasources": ["npm"],
+      "matchDatasources": ["npm", "node-version"],
       "minimumReleaseAge": "14 days"
     },
     {
@@ -39,6 +40,15 @@
     {
       "groupName": "cloudflare",
       "matchPackageNames": ["wrangler", "@cloudflare/**"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "groupName": "angular",
+      "matchPackageNames": [
+        "@angular/**",
+        "@angular-devkit/**",
+        "angular-eslint"
+      ],
       "matchUpdateTypes": ["major"]
     }
   ]
