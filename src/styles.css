@@ -477,19 +477,23 @@
   @apply pointer-events-none border-snow bg-dark-void-dark font-mono font-extrabold tracking-[0.08em] text-snow uppercase;
 }
 
-/* Front of the lowboard below the shelf, a little darker than the shelf edge and
-   shaded below it in daylight */
+/* Front of the lowboard below the shelf. In daylight the light comes from
+   above: the overhanging top shades the front, which darkens downwards, the
+   doors part in dark gaps and the handles catch a little light */
 @utility favorites-lowboard-front {
-  --lowboard-front: color-mix(
+  --lowboard-front: var(--color-dark-void);
+  --lowboard-seam: var(--color-dark-void-dark);
+  --lowboard-handle: color-mix(
     in oklab,
-    var(--color-vanilla-light) 50%,
-    var(--color-dark-void-light)
+    var(--color-dark-void-light) 80%,
+    var(--color-snow)
   );
-  --lowboard-seam: color-mix(in oklab, var(--lowboard-front) 75%, var(--color-dark-void));
-  --lowboard-shade: color-mix(in oklab, var(--color-dark-void) 25%, transparent);
+  --lowboard-shade: color-mix(in oklab, var(--color-dark-void-dark) 80%, transparent);
+  --lowboard-fade: color-mix(in oklab, var(--color-dark-void-dark) 70%, transparent);
   border-top: 2px solid var(--lowboard-seam);
   background:
     linear-gradient(var(--lowboard-shade), transparent) top / 100% 1.5rem no-repeat,
+    linear-gradient(transparent, var(--lowboard-fade)) top / 100% 100svh no-repeat,
     var(--lowboard-front);
 
   @variant dark {
@@ -499,7 +503,9 @@
       var(--color-dark-void)
     );
     --lowboard-seam: var(--color-dark-void-dark);
+    --lowboard-handle: var(--color-dark-void-dark);
     --lowboard-shade: transparent;
+    --lowboard-fade: transparent;
   }
 }
 
@@ -509,17 +515,17 @@
   background:
     radial-gradient(
       ellipse 6% 45% at 17.5% 60%,
-      color-mix(in oklab, var(--color-dark-void) 40%, transparent),
+      color-mix(in oklab, var(--color-dark-void-dark) 85%, transparent),
       transparent
     ),
     radial-gradient(
       ellipse 6% 45% at 84% 60%,
-      color-mix(in oklab, var(--color-dark-void) 40%, transparent),
+      color-mix(in oklab, var(--color-dark-void-dark) 85%, transparent),
       transparent
     ),
     radial-gradient(
       ellipse 50% 100% at 50% 0%,
-      color-mix(in oklab, var(--color-dark-void) 22%, transparent),
+      color-mix(in oklab, var(--color-dark-void-dark) 60%, transparent),
       transparent
     );
 }
