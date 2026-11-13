@@ -1,10 +1,12 @@
-<section class="px-5 py-0">
+<!-- Clipped at the screen edge, not at the padding, so the shadows of sleeve and
+     record can fade out -->
+<section class="overflow-x-clip px-5 py-0">
   <div #scrollTrack class="h-[300lvh]">
     <!-- On narrow views the record slides out below the sleeve, on wider ones
          beside it. The pair moves back, so it stays in the middle -->
     <div #stage class="
-      sticky top-0 grid h-lvh place-items-center overflow-hidden pt-17
-      [--about-me-axis-x:0] [--about-me-axis-y:1] [--about-me-pair-shift:-36%]
+      sticky top-0 grid h-lvh place-items-center pt-17 [--about-me-axis-x:0]
+      [--about-me-axis-y:1] [--about-me-pair-shift:-36%]
       [--about-me-record-out:0.2] [--about-me-record-travel:78%]
       [--about-me-sleeve:min(86vw,48lvh)] [--about-me-spin:1]
       motion-reduce:[--about-me-spin:0]
