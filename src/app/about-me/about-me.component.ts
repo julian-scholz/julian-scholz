@@ -65,9 +65,9 @@ export class AboutMeComponent {
   );
 
   // The record shows the side of the track that lit up last
-  private readonly sideBTrackIndex: number = this.tracks
-    .map(({ side }) => Boolean(side))
-    .lastIndexOf(true);
+  private readonly sideBTrackIndex: number = this.tracks.findLastIndex(
+    ({ side }) => side,
+  );
   protected readonly isSideBPlaying = computed(
     () => this.litTrackCount() > this.sideBTrackIndex,
   );
