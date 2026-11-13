@@ -3,40 +3,59 @@
     <!-- On narrow views the record slides out below the sleeve, on wider ones
          beside it. The pair moves back, so it stays in the middle -->
     <div #stage class="
-      sticky top-0 grid h-lvh place-items-center overflow-hidden
-      [--about-me-axis-x:0] [--about-me-axis-y:1] [--about-me-record-out:0.2]
-      [--about-me-sleeve:min(80vw,44lvh)] [--about-me-spin:1]
+      sticky top-0 grid h-lvh place-items-center overflow-hidden pt-17
+      [--about-me-axis-x:0] [--about-me-axis-y:1] [--about-me-pair-shift:-36%]
+      [--about-me-record-out:0.2] [--about-me-record-travel:78%]
+      [--about-me-sleeve:min(86vw,48lvh)] [--about-me-spin:1]
       motion-reduce:[--about-me-spin:0]
-      md:[--about-me-axis-x:1] md:[--about-me-axis-y:0]
+      md:pt-0 md:[--about-me-axis-x:1] md:[--about-me-axis-y:0]
+      md:[--about-me-pair-shift:-43%] md:[--about-me-record-travel:93%]
       md:[--about-me-sleeve:min(36rem,42vw,72lvh)]
     ">
       <h2 class="sr-only">{{ secondLine }} {{ thirdLine }} {{ fourthLine }}</h2>
       <p class="sr-only" lang="en">{{ quote }} ({{ quoteAuthor }})</p>
       <div aria-hidden="true" class="
         relative size-(--about-me-sleeve)
-        translate-x-[calc(var(--about-me-record-out)*var(--about-me-axis-x)*-43%)]
-        translate-y-[calc(var(--about-me-record-out)*var(--about-me-axis-y)*-28%)]
+        translate-x-[calc(var(--about-me-record-out)*var(--about-me-axis-x)*var(--about-me-pair-shift))]
+        translate-y-[calc(var(--about-me-record-out)*var(--about-me-axis-y)*var(--about-me-pair-shift))]
       ">
         <div class="
           absolute inset-[4%]
-          translate-x-[calc(var(--about-me-record-out)*var(--about-me-axis-x)*93%)]
-          translate-y-[calc(var(--about-me-record-out)*var(--about-me-axis-y)*60%)]
+          translate-x-[calc(var(--about-me-record-out)*var(--about-me-axis-x)*var(--about-me-record-travel))]
+          translate-y-[calc(var(--about-me-record-out)*var(--about-me-axis-y)*var(--about-me-record-travel))]
         ">
           <div class="
-            @container grid size-full
+            @container size-full
             rotate-[calc(var(--about-me-record-out)*var(--about-me-spin)*200deg)]
-            place-items-center rounded-full bg-dark-void-dark
-            shadow-[0_10px_40px_rgb(0_0_0/0.25)]
+            perspective-distant
           ">
-            <span class="
-              absolute inset-[2%] rounded-full
-              bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.07)_0_0.6px,transparent_0.6px_2.4px)]
-            "></span>
-            <span class="
-              relative grid size-[28%] place-items-center rounded-full
-              bg-vanilla text-center text-[3.2cqw] leading-tight font-black
-              text-dark-void
-            ">julian<br>scholz</span>
+            <!-- With the first track of side B the record is turned over -->
+            <div [class.rotate-y-180]="isSideBPlaying()" class="
+              relative size-full transition-transform duration-700 ease-in-out
+              transform-3d
+              motion-reduce:transition-none
+            ">
+              @for (recordSide of recordSides; track recordSide.label) {
+                <div [class.rotate-y-180]="recordSide.isBack" class="
+                  absolute inset-0 grid place-items-center rounded-full
+                  bg-dark-void-dark shadow-[0_10px_40px_rgb(0_0_0/0.25)]
+                  backface-hidden
+                ">
+                  <span class="
+                    absolute inset-[2%] rounded-full
+                    bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.07)_0_0.6px,transparent_0.6px_2.4px)]
+                  "></span>
+                  <span [class]="recordSide.isBack ? 'bg-snow' : 'bg-vanilla'" class="
+                    relative grid size-[28%] place-content-center rounded-full
+                    text-center text-[3.2cqw] leading-tight font-black
+                    text-dark-void
+                  ">julian<br>scholz<span class="
+                    mt-[0.6cqw] block text-[1.6cqw] font-semibold
+                    tracking-[0.15em] uppercase
+                  ">{{ recordSide.label }}</span></span>
+                </div>
+              }
+            </div>
           </div>
           <!-- The sheen stays put while the record turns below it -->
           <span class="
@@ -61,10 +80,13 @@
             md:inset-x-auto md:inset-y-0 md:left-0 md:h-auto md:w-[3cqw]
             md:border-r md:border-b-0
           "></span>
-          <div class="relative flex size-full flex-col p-[8cqw]">
+          <div class="
+            relative flex size-full flex-col p-[6cqw]
+            md:p-[8cqw]
+          ">
             <div class="
-              flex justify-between text-[2.3cqw] tracking-[0.18em] uppercase
-              opacity-55
+              flex justify-between text-[max(2.3cqw,0.625rem)] tracking-[0.18em]
+              uppercase opacity-65
             ">
               <span>julian-scholz.dev</span><span class="font-mono">JS-001</span>
             </div>
@@ -73,7 +95,9 @@
               @let isPlaying = i === litTrackCount() - 1;
               @if (track.side) {
                 <div class="
-                  mt-[6cqw] text-[2.3cqw] tracking-[0.18em] uppercase opacity-45
+                  mt-[4cqw] text-[max(2.3cqw,0.625rem)] tracking-[0.18em]
+                  uppercase opacity-55
+                  md:mt-[6cqw]
                 ">{{ track.side }}</div>
               }
               <div [class.opacity-20]="!isLit" class="
@@ -81,7 +105,8 @@
                 duration-500
               ">
                 <span class="
-                  relative w-[5cqw] font-mono text-[2.6cqw] opacity-70
+                  relative w-[max(5cqw,1.5rem)] font-mono
+                  text-[max(2.6cqw,0.6875rem)] opacity-75
                 ">
                   @if (isPlaying) {
                     <span class="
@@ -92,19 +117,21 @@
                   {{ track.number }}
                 </span>
                 <span [class.text-vanilla]="isPlaying" class="
-                  flex-1 text-[8.5cqw] leading-[1.05] font-bold
+                  flex-1 text-[7.5cqw] leading-[1.05] font-bold
                   transition-colors duration-500
+                  md:text-[8.5cqw]
                 ">{{ track.encrypted ? encryptedTitle() : track.title }}</span>
-                <span class="font-mono text-[2.6cqw] opacity-50">{{ track.length }}</span>
+                <span class="font-mono text-[max(2.6cqw,0.6875rem)] opacity-60">{{ track.length }}</span>
               </div>
             }
             <p class="
-              mt-auto max-w-[75cqw] text-[2.6cqw] leading-snug italic opacity-60
+              mt-auto max-w-[75cqw] text-[max(2.6cqw,0.6875rem)] leading-snug
+              italic opacity-70
             ">
               {{ quote }}
               <span class="
-                mt-[1cqw] block text-[2.2cqw] font-semibold tracking-widest
-                uppercase not-italic
+                mt-[1cqw] block text-[max(2.2cqw,0.625rem)] font-semibold
+                tracking-widest uppercase not-italic
               ">{{ quoteAuthor }} · Liner Notes</span>
             </p>
           </div>

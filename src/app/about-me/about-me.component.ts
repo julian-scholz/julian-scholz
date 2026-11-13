@@ -64,6 +64,18 @@ export class AboutMeComponent {
     () => this.tracks.filter(({ litAt }) => this.progress() >= litAt).length,
   );
 
+  // The record shows the side of the track that lit up last
+  private readonly sideBTrackIndex: number = this.tracks
+    .map(({ side }) => Boolean(side))
+    .lastIndexOf(true);
+  protected readonly isSideBPlaying = computed(
+    () => this.litTrackCount() > this.sideBTrackIndex,
+  );
+  protected readonly recordSides: { label: string; isBack: boolean }[] = [
+    { label: this.tracks[0].side!, isBack: false },
+    { label: this.tracks[this.sideBTrackIndex].side!, isBack: true },
+  ];
+
   private readonly decryptStep: number = 70;
   protected readonly encryptedTitle = signal<string>('');
 
