@@ -1,32 +1,114 @@
 <section class="px-5 py-0">
-  <div #scrollTrack [ngStyle]="{
-    '--about-me-content-length': contentLength,
-    '--about-me-buffer': buffer,
-    '--about-me-ppc': ppc,
-    '--about-me-pad': pad
-  }"
-       id="about-me-scroll-trigger"
-       class="
-         h-[calc(((var(--about-me-ppc)*var(--about-me-content-length)+(var(--about-me-pad)*var(--about-me-buffer)))*1px)+100vh)]
-       "
-  >
-    <div
-      class="
-        sticky top-0 mx-auto my-0 grid min-h-lvh place-items-center text-[40px]
-        leading-none font-bold
-        lg:text-7xl
-      "
-    >
-      <h2 class="sr-only">{{ secondSplitText }} {{ thirdSplitText }} {{ fourthSplitText }}</h2>
-      <p class="sr-only" lang="en">{{ firstSplitText }}</p>
-      <div class="text-center" aria-hidden="true">
-        @for (detailListEntry of detailList; track detailListEntry) {
-          <app-about-me-detail
-            [scrolledDistance]="scrolledDistance()"
-            [detail]="detailListEntry"
-            [ppc]="ppc"
-          />
-        }
+  <div #scrollTrack class="h-[300lvh]">
+    <!-- On narrow views the record slides out below the sleeve, on wider ones
+         beside it. The pair moves back, so it stays in the middle -->
+    <div #stage class="
+      sticky top-0 grid h-lvh place-items-center overflow-hidden
+      [--about-me-axis-x:0] [--about-me-axis-y:1] [--about-me-record-out:0.2]
+      [--about-me-sleeve:min(80vw,44lvh)] [--about-me-spin:1]
+      motion-reduce:[--about-me-spin:0]
+      md:[--about-me-axis-x:1] md:[--about-me-axis-y:0]
+      md:[--about-me-sleeve:min(36rem,42vw,72lvh)]
+    ">
+      <h2 class="sr-only">{{ secondLine }} {{ thirdLine }} {{ fourthLine }}</h2>
+      <p class="sr-only" lang="en">{{ quote }} ({{ quoteAuthor }})</p>
+      <div aria-hidden="true" class="
+        relative size-(--about-me-sleeve)
+        translate-x-[calc(var(--about-me-record-out)*var(--about-me-axis-x)*-43%)]
+        translate-y-[calc(var(--about-me-record-out)*var(--about-me-axis-y)*-28%)]
+      ">
+        <div class="
+          absolute inset-[4%]
+          translate-x-[calc(var(--about-me-record-out)*var(--about-me-axis-x)*93%)]
+          translate-y-[calc(var(--about-me-record-out)*var(--about-me-axis-y)*60%)]
+        ">
+          <div class="
+            @container grid size-full
+            rotate-[calc(var(--about-me-record-out)*var(--about-me-spin)*200deg)]
+            place-items-center rounded-full bg-dark-void-dark
+            shadow-[0_10px_40px_rgb(0_0_0/0.25)]
+          ">
+            <span class="
+              absolute inset-[2%] rounded-full
+              bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.07)_0_0.6px,transparent_0.6px_2.4px)]
+            "></span>
+            <span class="
+              relative grid size-[28%] place-items-center rounded-full
+              bg-vanilla text-center text-[3.2cqw] leading-tight font-black
+              text-dark-void
+            ">julian<br>scholz</span>
+          </div>
+          <!-- The sheen stays put while the record turns below it -->
+          <span class="
+            absolute inset-0 rounded-full
+            bg-[conic-gradient(from_-60deg,transparent_0_6%,rgb(255_255_255/0.16)_12%,transparent_18%_56%,rgb(255_255_255/0.16)_62%,transparent_68%)]
+          "></span>
+        </div>
+        <div class="
+          @container absolute inset-0 overflow-hidden rounded-xs bg-dark-void
+          text-snow
+          shadow-[inset_0_0_0_1px_rgb(251_251_251/0.07),0_18px_50px_rgb(0_0_0/0.22)]
+          dark:bg-dark-void-light
+        ">
+          <!-- Cardboard: a faint gloss and a folded spine on the closed side -->
+          <span class="
+            absolute inset-0
+            bg-[linear-gradient(115deg,rgb(255_255_255/0.07),transparent_35%_65%,rgb(255_255_255/0.03))]
+          "></span>
+          <span class="
+            absolute inset-x-0 top-0 h-[3cqw] border-b border-dark-void-dark/80
+            bg-snow/4
+            md:inset-x-auto md:inset-y-0 md:left-0 md:h-auto md:w-[3cqw]
+            md:border-r md:border-b-0
+          "></span>
+          <div class="relative flex size-full flex-col p-[8cqw]">
+            <div class="
+              flex justify-between text-[2.3cqw] tracking-[0.18em] uppercase
+              opacity-55
+            ">
+              <span>julian-scholz.dev</span><span class="font-mono">JS-001</span>
+            </div>
+            @for (track of tracks; track track.number; let i = $index) {
+              @let isLit = i < litTrackCount();
+              @let isPlaying = i === litTrackCount() - 1;
+              @if (track.side) {
+                <div class="
+                  mt-[6cqw] text-[2.3cqw] tracking-[0.18em] uppercase opacity-45
+                ">{{ track.side }}</div>
+              }
+              <div [class.opacity-20]="!isLit" class="
+                mt-[2cqw] flex items-baseline gap-[3cqw] transition-opacity
+                duration-500
+              ">
+                <span class="
+                  relative w-[5cqw] font-mono text-[2.6cqw] opacity-70
+                ">
+                  @if (isPlaying) {
+                    <span class="
+                      absolute top-1/2 left-[-3cqw] size-[1.2cqw]
+                      -translate-y-1/2 rounded-full bg-vanilla
+                    "></span>
+                  }
+                  {{ track.number }}
+                </span>
+                <span [class.text-vanilla]="isPlaying" class="
+                  flex-1 text-[8.5cqw] leading-[1.05] font-bold
+                  transition-colors duration-500
+                ">{{ track.encrypted ? encryptedTitle() : track.title }}</span>
+                <span class="font-mono text-[2.6cqw] opacity-50">{{ track.length }}</span>
+              </div>
+            }
+            <p class="
+              mt-auto max-w-[75cqw] text-[2.6cqw] leading-snug italic opacity-60
+            ">
+              {{ quote }}
+              <span class="
+                mt-[1cqw] block text-[2.2cqw] font-semibold tracking-widest
+                uppercase not-italic
+              ">{{ quoteAuthor }} · Liner Notes</span>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

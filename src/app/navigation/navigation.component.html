@@ -27,41 +27,39 @@
         place-items-center pl-(--header-nav-logo-gap) outline-none
       " (click)="navigateToTop()"
               i18n-aria-label="@@backToTopLabel" aria-label="Zurück zum Seitenanfang">
-        <!-- The platter rim with strobe dots stands still, only the record turns -->
         <span class="
-          grid size-10 place-items-center rounded-full border-2 border-dotted
-          border-snow/12 bg-dark-void-dark
+          grid size-10 place-items-center rounded-full bg-dark-void-dark
           shadow-[inset_0_1px_3px_rgb(0_0_0/0.6)]
           group-focus-visible:outline-2 group-focus-visible:outline-offset-2
           group-focus-visible:outline-vanilla
           dark:bg-dark-void
         ">
         <span #record class="
-          relative grid size-9 place-items-center rounded-full bg-dark-void-dark
+          relative grid size-9 place-items-center
           [--navigation-record-turn:0deg]
         ">
           <span aria-hidden="true" class="
-            absolute inset-0.5 rounded-full
-            bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.14)_0_0.5px,transparent_0.5px_1.75px)]
-          "></span>
-          <span aria-hidden="true" class="
-            absolute inset-0 rounded-full
-            bg-[conic-gradient(from_-60deg,transparent_0_6%,rgb(255_255_255/0.22)_12%,transparent_18%_56%,rgb(255_255_255/0.22)_62%,transparent_68%)]
-          "></span>
-          <span aria-hidden="true" class="
-            absolute inset-0 rotate-(--navigation-record-turn)
-            *:absolute *:rounded-full *:border
+            grid size-full rotate-(--navigation-record-turn) place-items-center
+            rounded-full bg-dark-void-dark
           ">
-            <span class="inset-1 border-transparent border-t-vanilla/35"></span>
-            <span class="inset-2 border-transparent border-b-vanilla/25"></span>
+            <span class="
+              absolute inset-[2%] rounded-full
+              bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.07)_0_0.6px,transparent_0.6px_2.4px)]
+            "></span>
+            <span class="
+              relative grid size-4
+              rotate-[calc(var(--header-nav-intent,0)*360deg)]
+              place-items-center rounded-full bg-vanilla text-[0.5rem]
+              leading-none font-black tracking-tight text-dark-void
+              transition-transform duration-500
+              hover:[--header-nav-intent:1]
+            ">JS</span>
           </span>
+          <!-- The sheen stays put while the record turns below it -->
           <span aria-hidden="true" class="
-            relative grid size-4
-            rotate-[calc(var(--header-nav-intent,0)*360deg)] place-items-center
-            rounded-full bg-vanilla text-[0.5rem] leading-none font-black
-            tracking-tight text-dark-void transition-transform duration-500
-            hover:[--header-nav-intent:1]
-          ">JS</span>
+            pointer-events-none absolute inset-0 rounded-full
+            bg-[conic-gradient(from_-60deg,transparent_0_6%,rgb(255_255_255/0.16)_12%,transparent_18%_56%,rgb(255_255_255/0.16)_62%,transparent_68%)]
+          "></span>
         </span>
         </span>
       </button>

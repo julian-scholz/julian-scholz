@@ -35,8 +35,8 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
   private readonly viewportScroller: ViewportScroller =
     inject(ViewportScroller);
 
-  // The back-to-top button is a small record with a "JS" label. Scrolling
-  // turns its grooves, the label stays upright to stay readable
+  // The back-to-top button is a small record with a "JS" label, which
+  // scrolling turns
   private readonly record =
     viewChild.required<ElementRef<HTMLElement>>('record');
   private readonly recordTurnPerPixel: number = 360 / 600;
