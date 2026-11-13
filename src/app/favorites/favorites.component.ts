@@ -169,6 +169,12 @@ export class FavoritesComponent {
     }
   }
 
+  // The pictures stay invisible until the tv comes on or switches the channel.
+  // Decoding them right after loading keeps that frame from waiting for it
+  protected decodeBackgroundImage(event: Event): void {
+    (event.target as HTMLImageElement).decode().catch(() => undefined);
+  }
+
   protected zapChannel(): void {
     this.channelSwitchId.update((id) => id + 1);
     this.switchBackgroundImage();

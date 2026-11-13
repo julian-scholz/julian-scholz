@@ -108,6 +108,7 @@
                      [loaderParams]="{dynamicWidth: true, imageFormat: 'webp'}"
                      [attr.data-active]="isActive || null"
                      [alt]="isActive ? backgroundImageAlt : ''"
+                     (load)="decodeBackgroundImage($event)"
                      class="
                        object-cover opacity-0
                        data-active:opacity-100
