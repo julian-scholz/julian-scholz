@@ -225,6 +225,18 @@
       transform: none;
     }
   }
+  /* A header single drops into its stand, settling with a small bounce */
+  @keyframes headerNavSleeveDrop {
+    0% {
+      translate: 0 0 calc(var(--sleeve) * 0.9);
+    }
+    75% {
+      translate: 0 0 calc(var(--sleeve) * -0.02);
+    }
+    100% {
+      translate: 0 0 0;
+    }
+  }
   @keyframes shelfDustFloat {
     0% {
       opacity: 0;
@@ -634,6 +646,94 @@
     animation-timeline: view();
     animation-range: cover 0% cover 8rem;
   }
+}
+
+/* The social links as 7" singles standing one behind the other on a stand in
+   3d. The scene looks at them from the front left and above */
+@utility header-nav-scene {
+  transform-style: preserve-3d;
+  transform: rotateX(62deg) rotateZ(-38deg);
+}
+
+/* A box in that scene: x runs to the right, y to the back, z up. It is
+   --box-w wide, --box-d deep and --box-h high, sits at --box-x/-y/-z and has
+   its upright edges rounded by --box-r */
+@utility iso-box {
+  position: absolute;
+  inset: 0 auto auto 0;
+  transform-style: preserve-3d;
+  transform: translate3d(var(--box-x, 0px), var(--box-y, 0px), var(--box-z, 0px));
+}
+
+@utility iso-box-top {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: calc(var(--box-w) - 2 * var(--box-r, 0px));
+  height: var(--box-d);
+  transform: translate3d(var(--box-r, 0px), 0, var(--box-h));
+}
+
+@utility iso-box-front {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--box-w);
+  height: var(--box-h);
+  border-radius: var(--box-r, 0px);
+  transform-origin: 0 0;
+  transform: translateY(var(--box-d)) rotateX(-90deg) translateY(calc(var(--box-h) * -1));
+}
+
+@utility iso-box-back {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--box-w);
+  height: var(--box-h);
+  border-radius: var(--box-r, 0px);
+  transform-origin: 0 0;
+  transform: rotateX(-90deg) translateY(calc(var(--box-h) * -1));
+}
+
+/* The left side, the one that faces the viewer */
+@utility iso-box-side {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--box-d);
+  height: calc(var(--box-h) - 2 * var(--box-r, 0px));
+  transform-origin: 0 0;
+  transform: rotateZ(90deg) rotateX(-90deg)
+    translateY(calc((var(--box-h) - var(--box-r, 0px)) * -1));
+}
+
+/* The open top of a sleeve: its two walls with the dark inside between */
+@utility header-nav-sleeve-opening {
+  --sleeve-edge: var(--color-dark-void-light);
+  background: linear-gradient(
+    var(--sleeve-edge) 0 22%,
+    var(--color-dark-void-dark) 22% 78%,
+    var(--sleeve-edge) 78%
+  );
+
+  @variant dark {
+    --sleeve-edge: color-mix(in oklab, var(--color-dark-void-light) 70%, var(--color-snow));
+  }
+}
+
+/* Each sleeve is --sleeve square and --sleeve-depth thick, its record lifts
+   out of it by --record-lift on hover or by --record-peek when it is picked
+   while browsing the crate */
+@utility header-nav-record {
+  --record: calc(var(--sleeve) * 0.94);
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--record);
+  height: var(--record);
+  transform-origin: 0 0;
+  transform: translate3d(
+      calc(var(--sleeve) * 0.03),
+      calc(var(--sleeve-depth) / 2),
+      calc(var(--sleeve) * 0.03 + max(var(--record-lift, 0px), var(--record-peek, 0px)))
+    )
+    rotateX(-90deg) translateY(calc(var(--record) * -1));
 }
 
 @utility divider {
