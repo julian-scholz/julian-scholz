@@ -45,9 +45,8 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
   protected navbarExpanded = signal<number>(0);
 
   private readonly arm = viewChild.required<ElementRef<HTMLElement>>('arm');
-  protected readonly armIndex = signal<number>(0);
+  private armIndex = 0;
   protected readonly armDown = signal<boolean>(false);
-  protected readonly isArmJumping = signal<boolean>(false);
   private readonly armJumpDuration: number = 300;
   private armJumpTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
@@ -87,26 +86,29 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
   }
 
   // The arm stays above the last entry when it lifts, so it sets down there
-  // again instead of sliding in from the first entry
+  // again instead of sliding in from the first entry. Index, glide and
+  // progress go to the arm right away, so they always land in the same frame
   protected setEntryActive(index: number, active: boolean): void {
     if (active) {
-      if (index !== this.armIndex()) {
-        this.isArmJumping.set(true);
+      if (index !== this.armIndex) {
+        const arm = this.arm().nativeElement;
+        arm.toggleAttribute('data-jumping', true);
+        arm.style.setProperty('--navigation-arm-index', `${index}`);
+        this.armIndex = index;
         clearTimeout(this.armJumpTimeoutId);
         this.armJumpTimeoutId = setTimeout(
-          () => this.isArmJumping.set(false),
+          () => arm.toggleAttribute('data-jumping', false),
           this.armJumpDuration,
         );
       }
-      this.armIndex.set(index);
       this.armDown.set(true);
-    } else if (index === this.armIndex()) {
+    } else if (index === this.armIndex) {
       this.armDown.set(false);
     }
   }
 
   protected moveArm(index: number, progress: number): void {
-    if (index === this.armIndex()) {
+    if (index === this.armIndex) {
       this.arm().nativeElement.style.setProperty(
         '--navigation-arm-progress',
         `${progress}`,

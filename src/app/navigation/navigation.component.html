@@ -88,17 +88,17 @@
           [--navigation-arm-slot:calc(100%/var(--header-nav-item-count))]
         ">
           <!-- The stylus follows the scroll directly and only glides when it
-               moves on to another entry -->
-          <span #arm [ngStyle]="{'--navigation-arm-index': armIndex()}"
-                [attr.data-jumping]="isArmJumping() || null" class="
-                  absolute bottom-2
-                  left-[calc(var(--navigation-arm-index)*var(--navigation-arm-slot)+0.75rem+var(--navigation-arm-progress)*(var(--navigation-arm-slot)-1.5rem))]
-                  flex -translate-x-1/2 flex-col items-center
-                  transition-[translate,opacity] duration-300 ease-out
-                  [--navigation-arm-progress:0]
-                  data-jumping:transition-[left,translate,opacity]
-                  motion-reduce:transition-none
-                " [class]="armDown()
+               moves on to another entry. Its index, progress and glide are set
+               by the component -->
+          <span #arm class="
+            absolute bottom-2
+            left-[calc(var(--navigation-arm-index)*var(--navigation-arm-slot)+0.75rem+var(--navigation-arm-progress)*(var(--navigation-arm-slot)-1.5rem))]
+            flex -translate-x-1/2 flex-col items-center
+            transition-[translate,opacity] duration-300 ease-out
+            [--navigation-arm-index:0] [--navigation-arm-progress:0]
+            data-jumping:transition-[left,translate,opacity]
+            motion-reduce:transition-none
+          " [class]="armDown()
             ? 'translate-y-0 opacity-100'
             : '-translate-y-1 opacity-0'">
             <span class="h-0.75 w-2 rounded-[1px] bg-vanilla"></span>
