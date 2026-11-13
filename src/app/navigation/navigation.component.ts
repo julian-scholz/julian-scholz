@@ -47,6 +47,9 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
   private readonly arm = viewChild.required<ElementRef<HTMLElement>>('arm');
   protected readonly armIndex = signal<number>(0);
   protected readonly armDown = signal<boolean>(false);
+  protected readonly isArmJumping = signal<boolean>(false);
+  private readonly armJumpDuration: number = 300;
+  private armJumpTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   private headerIntersectionObserver: IntersectionObserver | undefined;
 
@@ -87,6 +90,14 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
   // again instead of sliding in from the first entry
   protected setEntryActive(index: number, active: boolean): void {
     if (active) {
+      if (index !== this.armIndex()) {
+        this.isArmJumping.set(true);
+        clearTimeout(this.armJumpTimeoutId);
+        this.armJumpTimeoutId = setTimeout(
+          () => this.isArmJumping.set(false),
+          this.armJumpDuration,
+        );
+      }
       this.armIndex.set(index);
       this.armDown.set(true);
     } else if (index === this.armIndex()) {
@@ -109,5 +120,6 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.headerIntersectionObserver?.disconnect();
+    clearTimeout(this.armJumpTimeoutId);
   }
 }
