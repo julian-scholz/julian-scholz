@@ -1,7 +1,7 @@
 <div
   [ngStyle]="{
     '--header-nav-i': navigationEntryIndex(),
-    '--header-nav-active': opacity()
+    '--header-nav-active': active() ? 1 : 0
   }"
   class="
     h-full opacity-(--header-nav-expanded) transition-opacity
@@ -10,12 +10,23 @@
     *:focus-visible:opacity-100
   "
 >
-  <button class="
-    grid size-full place-items-center whitespace-nowrap text-snow
-    opacity-[calc(0.55+(var(--header-nav-active)))] transition-opacity
-    duration-200
-  "
-          (click)="navigateTo(navigationEntry().id)">
+  <a [href]="'#' + navigationEntry().id"
+     [attr.aria-current]="active() ? 'location' : null"
+     class="
+       relative grid size-full place-items-center whitespace-nowrap text-snow
+       no-underline opacity-[calc(0.55+(var(--header-nav-active)))]
+       transition-opacity duration-200
+     "
+     (click)="navigateTo($event)">
     <span>{{ navigationEntry().title }}</span>
-  </button>
+    <span aria-hidden="true" class="
+      absolute inset-x-3 bottom-2 h-px bg-snow/15 opacity-(--header-nav-active)
+      transition-opacity duration-500
+    ">
+      <span #groove class="
+        block h-full origin-left scale-x-(--navigation-entry-progress)
+        bg-vanilla/50 [--navigation-entry-progress:0]
+      "></span>
+    </span>
+  </a>
 </div>

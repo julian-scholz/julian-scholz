@@ -23,14 +23,18 @@
          "
     >
       <button class="
-        grid w-[calc(--spacing(10)+var(--header-nav-logo-gap))]
-        place-items-center pl-(--header-nav-logo-gap)
+        group grid w-[calc(--spacing(10)+var(--header-nav-logo-gap))]
+        place-items-center pl-(--header-nav-logo-gap) outline-none
       " (click)="navigateToTop()"
               i18n-aria-label="@@backToTopLabel" aria-label="Zurück zum Seitenanfang">
         <!-- The platter rim with strobe dots stands still, only the record turns -->
         <span class="
           grid size-10 place-items-center rounded-full border-2 border-dotted
-          border-snow/12
+          border-snow/12 bg-dark-void-dark
+          shadow-[inset_0_1px_3px_rgb(0_0_0/0.6)]
+          group-focus-visible:outline-2 group-focus-visible:outline-offset-2
+          group-focus-visible:outline-vanilla
+          dark:bg-dark-void
         ">
         <span #record class="
           relative grid size-9 place-items-center rounded-full bg-dark-void-dark
@@ -61,18 +65,45 @@
         </span>
         </span>
       </button>
-      <ul class="m-0 flex list-none items-center px-(--header-nav-ul-gap) py-0">
-        @for (navigationEntry of sortedRouteEntries; track navigationEntry; let i = $index; let isLast = $last) {
-          <li
-            class="size-full">
-            <app-navigation-entry
-              [navigationEntry]="navigationEntry"
-              [navigationEntryIndex]="i"
-              [navigationLastEntry]="isLast"
-            />
-          </li>
-        }
-      </ul>
+      <div class="relative">
+        <ul class="
+          m-0 flex h-full list-none items-center px-(--header-nav-ul-gap) py-0
+        ">
+          @for (navigationEntry of sortedRouteEntries; track navigationEntry; let i = $index; let isLast = $last) {
+            <li
+              class="size-full">
+              <app-navigation-entry
+                [navigationEntry]="navigationEntry"
+                [navigationEntryIndex]="i"
+                [navigationLastEntry]="isLast"
+                (activeChange)="setEntryActive(i, $event)"
+                (progressChange)="moveArm(i, $event)"
+              />
+            </li>
+          }
+        </ul>
+        <!-- The stylus rides the groove of the active entry -->
+        <div aria-hidden="true" class="
+          pointer-events-none absolute inset-x-(--header-nav-ul-gap) inset-y-0
+          opacity-(--header-nav-expanded) transition-opacity
+          delay-[calc(750ms+(var(--header-nav-item-count)*50ms))] duration-200
+          [--navigation-arm-slot:calc(100%/var(--header-nav-item-count))]
+        ">
+          <span #arm [ngStyle]="{'--navigation-arm-index': armIndex()}" class="
+            absolute bottom-2
+            left-[calc(var(--navigation-arm-index)*var(--navigation-arm-slot)+0.75rem+var(--navigation-arm-progress)*(var(--navigation-arm-slot)-1.5rem))]
+            flex -translate-x-1/2 flex-col items-center
+            transition-[left,translate,opacity] duration-300 ease-out
+            [--navigation-arm-progress:0]
+            motion-reduce:transition-none
+          " [class]="armDown()
+            ? 'translate-y-0 opacity-100'
+            : '-translate-y-1 opacity-0'">
+            <span class="h-0.75 w-2 rounded-[1px] bg-vanilla"></span>
+            <span class="h-1 w-px bg-vanilla"></span>
+          </span>
+        </div>
+      </div>
       <div class="
         relative flex items-center gap-x-0 gap-y-(--header-nav-logo-gap)
         bg-dark-void px-(--header-nav-logo-gap) transition-[padding]

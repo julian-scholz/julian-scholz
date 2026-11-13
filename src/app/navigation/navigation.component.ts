@@ -44,6 +44,10 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
 
   protected navbarExpanded = signal<number>(0);
 
+  private readonly arm = viewChild.required<ElementRef<HTMLElement>>('arm');
+  protected readonly armIndex = signal<number>(0);
+  protected readonly armDown = signal<boolean>(false);
+
   private headerIntersectionObserver: IntersectionObserver | undefined;
 
   protected readonly sortedRouteEntries: NavigationEntryModel[] = Object.values(
@@ -77,6 +81,26 @@ export class NavigationComponent implements AfterViewInit, OnDestroy {
         ),
       this.destroyRef,
     );
+  }
+
+  // The arm stays above the last entry when it lifts, so it sets down there
+  // again instead of sliding in from the first entry
+  protected setEntryActive(index: number, active: boolean): void {
+    if (active) {
+      this.armIndex.set(index);
+      this.armDown.set(true);
+    } else if (index === this.armIndex()) {
+      this.armDown.set(false);
+    }
+  }
+
+  protected moveArm(index: number, progress: number): void {
+    if (index === this.armIndex()) {
+      this.arm().nativeElement.style.setProperty(
+        '--navigation-arm-progress',
+        `${progress}`,
+      );
+    }
   }
 
   protected navigateToTop(): void {

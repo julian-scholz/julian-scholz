@@ -14,11 +14,14 @@
 <main id="main" tabindex="-1" class="outline-none">
   <app-about-me/>
 
-  <app-book-recommendations [id]="navigationEntries.bookRecommendations.id"/>
+  <app-book-recommendations [id]="navigationEntries.bookRecommendations.id"
+                            tabindex="-1" class="outline-none"/>
 
-  <app-vita [id]="navigationEntries.vita.id"/>
+  <app-vita [id]="navigationEntries.vita.id" tabindex="-1"
+            class="outline-none"/>
 
-  <app-favorites [id]="navigationEntries.favorites.id"/>
+  <app-favorites [id]="navigationEntries.favorites.id" tabindex="-1"
+                 class="outline-none"/>
 </main>
 
 <app-back-to-top-button/>
