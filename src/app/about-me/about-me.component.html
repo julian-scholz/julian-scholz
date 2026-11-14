@@ -13,6 +13,9 @@
       md:pt-0 md:[--about-me-axis-x:1] md:[--about-me-axis-y:0]
       md:[--about-me-pair-shift:-43%] md:[--about-me-record-travel:93%]
       md:[--about-me-sleeve:min(36rem,42vw,72lvh)]
+      short:h-svh
+      md:short:pt-22 md:short:pb-3
+      md:short:[--about-me-sleeve:min(42vw,100svh-7rem)]
     ">
       <h2 class="sr-only">{{ secondLine }} {{ thirdLine }} {{ fourthLine }}</h2>
       <p class="sr-only" lang="en">{{ quote }} ({{ quoteAuthor }})</p>
@@ -85,6 +88,7 @@
           <div class="
             relative flex size-full flex-col p-[6cqw]
             md:p-[8cqw]
+            md:short:p-[6cqw]
           ">
             <div class="
               flex justify-between text-[max(2.3cqw,0.625rem)] tracking-[0.18em]
@@ -100,6 +104,7 @@
                   mt-[4cqw] text-[max(2.3cqw,0.625rem)] tracking-[0.18em]
                   uppercase opacity-55
                   md:mt-[6cqw]
+                  md:short:mt-[3cqw]
                 ">{{ track.side }}</div>
               }
               <div [class.opacity-20]="!isLit" class="
@@ -122,6 +127,7 @@
                   flex-1 text-[7.5cqw] leading-[1.05] font-bold
                   transition-colors duration-500
                   md:text-[8.5cqw]
+                  md:short:text-[6.5cqw]
                 ">{{ track.encrypted ? encryptedTitle() : track.title }}</span>
                 <span class="font-mono text-[max(2.6cqw,0.6875rem)] opacity-60">{{ track.length }}</span>
               </div>
