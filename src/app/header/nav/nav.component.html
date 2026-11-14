@@ -1,113 +1,71 @@
-<div
-  class="
-    bg-linear-to-r from-dark-void to-vanilla-darker py-20 text-center text-base
-    dark:from-dark-void-light dark:to-vanilla-dark
+<!-- A waveform from dark to vanilla, with the social links as records on it,
+     on phones in a row below it. The records play one after another: the
+     playing one turns, the bars jump where the playback is and are coloured
+     behind it -->
+<div class="
+  relative flex flex-col items-center justify-center gap-3.5 bg-snow py-3
+  sm:h-47.5 sm:flex-row sm:py-0
+  dark:bg-dark-void
+">
+  <div #wave aria-hidden="true" class="
+    relative flex h-25 w-full items-center
+    sm:absolute sm:inset-x-0 sm:top-1/2 sm:h-35 sm:-translate-y-1/2
   ">
-  <!-- 7" singles standing one behind the other on a stand, the record of the
-       hovered or focused link lifts out of its sleeve. The stack rises above
-       its layout box in 3d, so it moves down to sit in the middle of the band -->
-  <ul [style.--sleeve-count]="sortedNavEntries.length"
-      (pointerenter)="isBrowsedByUser = true"
-      (pointerleave)="isBrowsedByUser = false"
-      (focusin)="isBrowsedByUser = true" (focusout)="isBrowsedByUser = false" class="
-        relative mx-auto size-(--sleeve) translate-y-[calc(var(--sleeve)*0.3)]
-        header-nav-scene [--sleeve-depth:calc(var(--sleeve)*0.07)]
-        [--sleeve-gap:calc(var(--sleeve)*0.32)]
-        [--sleeve-radius:calc(var(--sleeve)*0.06)] [--sleeve:7rem]
-        [--stand-height:calc(var(--sleeve)*0.11)]
-        [--stand-padding-back:calc(var(--sleeve)*0.14)]
-        [--stand-padding:calc(var(--sleeve)*0.05)]
-        sm:[--sleeve:9rem]
-      ">
-    <li aria-hidden="true" class="
-      iso-box
-      [--box-d:calc(var(--sleeve-count)*var(--sleeve-depth)+(var(--sleeve-count)-1)*var(--sleeve-gap)+var(--stand-padding)+var(--stand-padding-back))]
-      [--box-h:var(--stand-height)]
-      [--box-w:calc(var(--sleeve)+2*var(--stand-padding))]
-      [--box-x:calc(var(--stand-padding)*-1)]
-      [--box-y:calc(var(--stand-padding-back)*-1)]
-      [--box-z:calc(var(--stand-height)*-1)]
-    ">
-      <span class="
-        absolute top-0 left-0 h-(--box-d) w-(--box-w) -translate-z-px scale-105
-        rounded-xl bg-dark-void/50 blur-lg
-      "></span>
-      <span class="
-        iso-box-top
-        bg-[linear-gradient(color-mix(in_oklab,var(--color-dark-void-light)_60%,var(--color-dark-void)),var(--color-dark-void-light))]
-      "></span>
-      <span class="
-        iso-box-side bg-dark-void
-        dark:bg-[color-mix(in_oklab,var(--color-dark-void-light)_40%,var(--color-dark-void))]
-      "></span>
-      <span class="
-        iso-box-front
-        bg-[color-mix(in_oklab,var(--color-dark-void-light)_35%,var(--color-dark-void))]
-        dark:bg-[color-mix(in_oklab,var(--color-dark-void-light)_60%,var(--color-dark-void))]
-      "></span>
-    </li>
+    @for (bar of bars; track $index) {
+      <span #bar
+            [style.--bar-x]="bar.x"
+            [style.--bar-distance]="bar.distance"
+            [style.--bar-noise]="bar.noise"
+            [style.animation-delay.ms]="barRiseDelay + bar.distance * barRiseSpread"
+            class="
+              header-nav-bar
+              motion-safe:animate-[headerNavBarRise_0.6s_ease-out_backwards]
+              max-sm:odd:hidden
+            "></span>
+    }
+  </div>
+  <ul class="
+    relative flex gap-4
+    sm:gap-10
+  ">
     @for (navEntry of sortedNavEntries; track navEntry; let i = $index) {
-      <li [style.--sleeve-index]="i"
-          [style.animation-delay.ms]="sleeveDropDelay + i * sleeveDropStagger"
-          [attr.data-peek]="peekedSleeve() === i || null" class="
-            group iso-box [--box-d:var(--sleeve-depth)] [--box-h:var(--sleeve)]
-            [--box-r:var(--sleeve-radius)] [--box-w:var(--sleeve)]
-            [--box-y:calc(var(--sleeve-index)*(var(--sleeve-depth)+var(--sleeve-gap)))]
-            hover:[--record-lift:calc(var(--sleeve)*0.55)]
-            has-focus-visible:[--record-lift:calc(var(--sleeve)*0.55)]
-            has-active:[--record-lift:calc(var(--sleeve)*0.55)]
-            data-peek:[--record-peek:calc(var(--sleeve)*0.25)]
-            motion-safe:animate-[headerNavSleeveDrop_0.7s_ease-in_both]
-          ">
-        <span aria-hidden="true" class="
-          iso-box-back bg-dark-void
-          dark:bg-dark-void-light
-        "></span>
-        <span aria-hidden="true" class="
-          header-nav-record grid place-items-center rounded-full
-          bg-dark-void-dark transition-transform duration-500 ease-out
-          backface-hidden
-          motion-reduce:transition-none
-        ">
-          <span class="
+      <li #record
+          [attr.data-playing]="playingRecord() === i || null"
+          (pointerenter)="swell(i)" (pointerleave)="swell(null)"
+          (focusin)="swell(i)" (focusout)="swell(null)" class="group">
+        <a [href]="navEntry.url" target="_blank" [attr.aria-label]="navEntry.name"
+           [style.animation-delay.ms]="recordDropDelay + i * recordDropStagger" class="
+             relative grid size-17 place-items-center rounded-full
+             bg-dark-void-dark ring-5 ring-snow transition-[scale] duration-500
+             ease-out outline-none
+             group-hover:scale-106
+             focus-visible:outline-2 focus-visible:outline-offset-9
+             focus-visible:outline-vanilla
+             motion-safe:animate-[headerNavRecordDrop_0.5s_ease-out_backwards]
+             motion-reduce:transition-none
+             sm:size-19 sm:ring-7
+             dark:ring-dark-void
+           ">
+          <span aria-hidden="true" class="
             absolute inset-[2%] rounded-full
             bg-[repeating-radial-gradient(circle,rgb(255_255_255/0.07)_0_0.6px,transparent_0.6px_2.4px)]
           "></span>
-          <span class="
-            absolute inset-0 rounded-full
+          <span aria-hidden="true" class="
+            relative grid size-[40%] place-items-center rounded-full bg-vanilla
+            text-sm text-dark-void transition-[rotate,background-color]
+            duration-600 ease-[cubic-bezier(0.3,0.7,0.2,1)]
+            group-hover:rotate-200 group-hover:bg-snow
+            group-has-focus-visible:rotate-200 group-has-focus-visible:bg-snow
+            group-data-playing:bg-vanilla-light
+            motion-safe:group-data-playing:animate-[headerNavLabelSpin_1.8s_linear_infinite]
+            motion-reduce:transition-none
+            sm:text-[0.9375rem]
+          "><app-icon [icon]="navEntry.iconDefinition" /></span>
+          <!-- The sheen stays put while the label turns below it -->
+          <span aria-hidden="true" class="
+            pointer-events-none absolute inset-0 rounded-full
             bg-[conic-gradient(from_-60deg,transparent_0_6%,rgb(255_255_255/0.16)_12%,transparent_18%_56%,rgb(255_255_255/0.16)_62%,transparent_68%)]
           "></span>
-          <span class="
-            relative grid size-[34%] place-items-center rounded-full bg-vanilla
-            text-[calc(var(--sleeve)*0.16)] text-dark-void
-            dark:bg-snow
-          "><app-icon [icon]="navEntry.iconDefinition" /></span>
-        </span>
-        <span aria-hidden="true" class="iso-box-top header-nav-sleeve-opening"></span>
-        <span aria-hidden="true" class="
-          iso-box-side bg-dark-void-dark
-          dark:bg-dark-void
-        "></span>
-        <a [href]="navEntry.url" target="_blank" [attr.aria-label]="navEntry.name" class="
-          iso-box-front flex flex-col justify-between bg-dark-void
-          bg-[linear-gradient(115deg,rgb(255_255_255/0.07),transparent_35%_65%,rgb(255_255_255/0.03))]
-          p-[12%] text-left text-snow
-          shadow-[inset_0_0_0_1px_rgb(251_251_251/0.07)] outline-none
-          backface-hidden
-          focus-visible:outline-2 focus-visible:outline-offset-2
-          focus-visible:outline-vanilla
-          dark:bg-dark-void-light
-        ">
-          <span class="
-            font-mono text-[calc(var(--sleeve)*0.08)] tracking-[0.15em]
-            opacity-55
-          ">JS-00{{ i + 2 }}</span>
-          <span class="
-            flex items-center gap-[8%] text-[calc(var(--sleeve)*0.22)]
-            transition-colors duration-300
-            group-hover:text-vanilla
-            group-has-focus-visible:text-vanilla
-          "><app-icon [icon]="navEntry.iconDefinition" /></span>
         </a>
       </li>
     }
