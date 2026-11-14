@@ -1,41 +1,43 @@
-<footer class="rounded-5xl bg-custom-light-dark-90">
+<!-- A dark panel with the scanlines of the teletext above it -->
+<footer class="
+  relative grid gap-3 overflow-hidden rounded-2xl bg-dark-void-dark/90 p-5
+  text-center font-mono text-[0.6875rem]/snug tracking-[0.12em] text-snow/70
+  uppercase
+  after:pointer-events-none after:absolute after:inset-0
+  after:bg-[repeating-linear-gradient(to_bottom,transparent_0_2px,--theme(--color-snow/0.03)_2px_3px)]
+  sm:px-7 sm:text-xs/snug sm:tracking-[0.18em]
+">
+  <button i18n="@@footerCopyright" (click)="openInspirationsModal()" class="
+    justify-self-center text-snow/50 uppercase transition-colors duration-300
+    hover:text-vanilla
+    focus-visible:text-vanilla
+  ">JS-001 · © {{ currentYear }} Julian Scholz</button>
   <div class="
-    px-8 py-6
-    md:not-short:flex md:not-short:items-center
+    flex justify-center gap-6.5 text-lg
+    sm:gap-7.5 sm:text-xl
   ">
-    <div class="
-      flex justify-center space-x-6
-      md:not-short:order-2 md:not-short:ml-12
-    ">
-      <a href="mailto:mail@julian-scholz.dev" class="
-        motion-safe:animate-bounce
-      " i18n-aria-label="@@footerMailLabel" aria-label="Mail">
-        <app-icon [icon]="faEnvelope" size="xl" class="text-custom-light-dark" />
-      </a>
-      @for (footerLink of sortedFooterLinkEntries; track footerLink) {
-        <a
-          [href]="footerLink.url" target="_blank" [attr.aria-label]="footerLink.name">
-          <app-icon [icon]="footerLink.iconDefinition" size="xl" class="
-            text-custom-light-dark
-          " />
-        </a>
-      }
-    </div>
-    <div class="
-      mt-6 flex flex-col gap-0.5 text-center text-xs/5
-      md:not-short:order-1 md:not-short:mt-0
-    ">
-      <button i18n="@@footerCopyright" (click)="openInspirationsModal()" class="
-        py-0.5
-      ">&copy; {{ currentYear }} Julian Scholz, Alle Rechte vorbehalten.
-      </button>
-      <div class="
-        flex justify-center gap-x-6
-        *:py-0.5
+    @for (footerLink of sortedFooterLinkEntries; track footerLink) {
+      <a [href]="footerLink.url" target="_blank" [attr.aria-label]="footerLink.name" class="
+        transition-colors duration-300
+        hover:text-vanilla
+        focus-visible:text-vanilla
       ">
-        <button i18n="@@legalNoticeTitle" (click)="openLegalNoticeModal()">Impressum</button>
-        <button i18n="@@privacyPolicyTitle" (click)="openPrivacyPolicyModal()">Datenschutzerklärung</button>
-      </div>
-    </div>
+        <app-icon [icon]="footerLink.iconDefinition" />
+      </a>
+    }
+  </div>
+  <div class="
+    flex flex-wrap justify-center gap-x-5.5 gap-y-1.5
+    *:transition-colors *:duration-300
+    *:hover:text-vanilla
+    *:focus-visible:text-vanilla
+  ">
+    <button i18n="@@legalNoticeTitle" (click)="openLegalNoticeModal()" class="
+      uppercase
+    ">Impressum</button>
+    <button i18n="@@privacyPolicyTitle" (click)="openPrivacyPolicyModal()" class="
+      uppercase
+    ">Datenschutzerklärung</button>
+    <a href="mailto:mail@julian-scholz.dev">mail&#64;julian-scholz.dev</a>
   </div>
 </footer>
