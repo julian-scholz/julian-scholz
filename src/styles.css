@@ -56,29 +56,41 @@
 
   @keyframes themeModeToggleRevealDark {
     from {
-      clip-path: circle(60% at 200% -200%);
+      --theme-mode-reveal-radius: 60%;
+      --theme-mode-reveal-x: 200%;
+      --theme-mode-reveal-y: -200%;
       filter: brightness(0.2);
     }
     40% {
-      clip-path: circle(60% at 50% 50%);
+      --theme-mode-reveal-radius: 60%;
+      --theme-mode-reveal-x: 50%;
+      --theme-mode-reveal-y: 50%;
       filter: brightness(0.2);
     }
     to {
-      clip-path: circle(100% at 50% 50%);
+      --theme-mode-reveal-radius: 100%;
+      --theme-mode-reveal-x: 50%;
+      --theme-mode-reveal-y: 50%;
       filter: brightness(1);
     }
   }
   @keyframes themeModeToggleRevealLight {
     0% {
-      clip-path: circle(100% at 50% 50%);
+      --theme-mode-reveal-radius: 100%;
+      --theme-mode-reveal-x: 50%;
+      --theme-mode-reveal-y: 50%;
       filter: brightness(1);
     }
     20% {
-      clip-path: circle(60% at 50% 50%);
+      --theme-mode-reveal-radius: 60%;
+      --theme-mode-reveal-x: 50%;
+      --theme-mode-reveal-y: 50%;
       filter: brightness(0.2);
     }
     100% {
-      clip-path: circle(60% at -200% 200%);
+      --theme-mode-reveal-radius: 60%;
+      --theme-mode-reveal-x: -200%;
+      --theme-mode-reveal-y: 200%;
       filter: brightness(0.2);
     }
   }
@@ -392,6 +404,34 @@
 @utility favorites-zoom {
   transform: translateY(var(--favorites-zoom-offset))
     scale(var(--favorites-zoom-scale));
+}
+
+/* The theme mode switch animates these variables instead of clip-path. Chrome
+   runs clip-path animations on the compositor, where the circle was missing in
+   single frames and the snapshot showed in its full box */
+@property --theme-mode-reveal-radius {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --theme-mode-reveal-x {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 50%;
+}
+
+@property --theme-mode-reveal-y {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 50%;
+}
+
+@utility theme-mode-reveal {
+  clip-path: circle(
+    var(--theme-mode-reveal-radius) at var(--theme-mode-reveal-x)
+      var(--theme-mode-reveal-y)
+  );
 }
 
 /* The transparent screen of the tv, relative to the tv itself */
@@ -791,16 +831,16 @@
     /* The old view is only visible while its animations show it, towards
        light it has left the screen at about 50% */
     ::view-transition-old(root) {
-      @apply animate-[themeModeToggleRevealLight_2.25s_both,themeModeToggleHideOld_2.25s_both] z-100 opacity-0;
+      @apply animate-[themeModeToggleRevealLight_2.25s_both,themeModeToggleHideOld_2.25s_both] z-100 opacity-0 theme-mode-reveal;
     }
 
     .dark::view-transition-new(root) {
-      @apply animate-[themeModeToggleRevealDark_2.25s_both] z-101;
+      @apply animate-[themeModeToggleRevealDark_2.25s_both] z-101 theme-mode-reveal;
     }
 
     /* The dark circle covers the whole old view from about 55% on */
     .dark::view-transition-old(root) {
-      @apply animate-[themeModeToggleHideOld_2.25s_both] z-auto;
+      @apply animate-[themeModeToggleHideOld_2.25s_both] z-auto [clip-path:none];
     }
   }
 
