@@ -197,12 +197,17 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
           }
         });
 
-      setTimeout(() => {
+      // The canvas takes its size and the shape of the text from the font, so
+      // it is only built once the font is there
+      Promise.all([
+        this.angularDocument.fonts.load(`${this.fontWeight} 1em "${this.font}"`),
+        new Promise((resolve) => setTimeout(resolve, 500)),
+      ]).then(() => {
         this.initComponent();
         this.startRingAnimations();
         listenToScroll(() => this.measureRingArea(), this.destroyRef);
         this.showCanvas.set(true);
-      }, 500);
+      });
     }
   }
 
