@@ -511,7 +511,7 @@
   );
 }
 
-/* Test card with SMPTE colour bars, as on the 404 page */
+/* Test card with SMPTE color bars, as on the 404 page */
 @utility favorites-tv-test-card {
   background:
     linear-gradient(
@@ -591,7 +591,7 @@
     );
 }
 
-/* Light the screen casts on the wall. It fades into the opaque colour of the
+/* Light the screen casts on the wall. It fades into the opaque color of the
    page, as fading to transparent left a darker ring where the nearly
    transparent edge is rounded. The box stays inside the frame: above the tv
    only within the top padding of the tv wrapper, and beside the tv only where
@@ -625,7 +625,7 @@
     color-mix(in oklab, var(--color-dark-void) 32%, transparent);
 }
 
-/* Colour of the light the screen casts on the shelf and the wall, it fades
+/* Color of the light the screen casts on the shelf and the wall, it fades
    between channels */
 @property --favorites-tv-light {
   syntax: '<color>';
@@ -657,9 +657,9 @@
   }
 }
 
-/* Short burst of static with a rolling bar, like a channel switch. The grey
+/* Short burst of static with a rolling bar, like a channel switch. The gray
    noise lightens and darkens the picture below, so the grains take on its
-   colours instead of covering it */
+   colors instead of covering it */
 @utility favorites-tv-static {
   @apply pointer-events-none overflow-hidden contrast-200;
   background-image: url("/assets/images/tv-static.png");
@@ -700,7 +700,7 @@
 /* A bar of the header waveform at --bar-x (0 to 1) across the width. Its
    level comes from --bar-noise and gets quieter towards the edges. From sm on
    the records lie on it, so within --quiet of the middle (--bar-distance) it
-   also gets quieter by up to --quiet-depth. It is coloured up to
+   also gets quieter by up to --quiet-depth. It is colored up to
    --header-nav-progress and faded by --header-nav-fade, the rest waits in a
    faint tone */
 @utility header-nav-bar {

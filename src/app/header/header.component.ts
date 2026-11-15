@@ -84,7 +84,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   private readonly ringSpinDuration: number = 1200;
   private readonly ringSpinBoost: number = 5;
 
-  // A theme switch changes the record: it brakes, the new colours are put
+  // A theme switch changes the record: it brakes, the new colors are put
   // on while it stands, then it spins up again
   private pendingRingSet: RingSet | undefined;
   private ringChangeStart = -Infinity;
@@ -156,7 +156,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
         () => {
           const mode = this.themeMode();
           // The view transition of the theme switch already reveals the
-          // new colours, so they come without a wave of their own
+          // new colors, so they come without a wave of their own
           untracked(() => {
             if (!this.ringSet) {
               return;
@@ -355,7 +355,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
     this.isRingRedrawPending = true;
   }
 
-  // The text is drawn centred around the middle of the canvas, so the "c"
+  // The text is drawn centered around the middle of the canvas, so the "c"
   // starts after the "s" from there on, kerning included
   private measureRecordMiddle(): void {
     const textContext = this.textContext;
@@ -383,7 +383,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   }
 
   // Without a template, all rings are new. With one, they keep its spread and
-  // turning and only get new colours
+  // turning and only get new colors
   private createRings(mode: ThemeMode, template?: RingModel[]): RingModel[] {
     return Array.from({ length: this.ringCount }, (_, id) => ({
       id,

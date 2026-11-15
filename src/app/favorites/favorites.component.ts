@@ -61,7 +61,7 @@ export class FavoritesComponent {
     '--favorites-tv-screen-height': 1 - this.tvScreen.top - this.tvScreen.bottom,
   };
 
-  // Each picture with its average colour, brightened to full intensity, for
+  // Each picture with its average color, brightened to full intensity, for
   // the light the screen casts on the shelf in dark mode
   private readonly backgroundImages: BackgroundImage[] = [
     '#ff7b79', '#ff7788', '#ff87a0', '#ff9d92', '#ffd1e1', '#ffb7d9',
@@ -102,7 +102,7 @@ export class FavoritesComponent {
   protected readonly isTvImageLoaded = signal<boolean>(false);
   protected readonly isTvOn = signal<boolean>(false);
   protected readonly isChannelOn = signal<boolean>(false);
-  // After a minute without any input while the tv is on, the programme ends
+  // After a minute without any input while the tv is on, the program ends
   // with a test card. The next input brings it back on another channel
   protected readonly isOffAir = signal<boolean>(false);
   protected readonly isChannelShown = computed(

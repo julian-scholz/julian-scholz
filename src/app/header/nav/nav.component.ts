@@ -59,7 +59,7 @@ export class HeaderNavComponent {
   protected readonly barRiseDelay: number = 700;
   protected readonly barRiseSpread: number = 1400;
 
-  // Each record plays over the whole waveform, then its colour fades out and
+  // Each record plays over the whole waveform, then its color fades out and
   // the next one starts. The bars jump around the playhead
   protected readonly playingRecord = signal<number | null>(null);
   private readonly playbackDelay: number = 2200;
@@ -103,11 +103,11 @@ export class HeaderNavComponent {
     const wave = this.wave().nativeElement.getBoundingClientRect();
     const record =
       this.records()[recordIndex].nativeElement.getBoundingClientRect();
-    const centre = (record.left + record.width / 2 - wave.left) / wave.width;
+    const center = (record.left + record.width / 2 - wave.left) / wave.width;
     const reach = (record.width / wave.width) * this.swellReachInRecords;
     this.swellTargets = this.bars.map(
       (bar) =>
-        Math.max(0, 1 - Math.abs(bar.x - centre) / reach) * this.maxSwell,
+        Math.max(0, 1 - Math.abs(bar.x - center) / reach) * this.maxSwell,
     );
   }
 
